@@ -8,10 +8,9 @@
             if:true={displayCombinedPurchaseQuantityRule}>
             <slot name="combinedPurchaseQuantityRuleInfo"></slot>
         </div>
-        <div
-            class="quantity-list-action"
-            if:true={displayAddQuantity}>
+        <div class="quantity-list-action">
             <site-product-add-quantity
+                if:true={displayAddQuantity}
                 class="slds-m-vertical_small"
                 button-text={computedAddToCartButtonText}
                 disabled={isAddToCartButtonDisabled}
@@ -27,6 +26,20 @@
                 is-out-of-stock={isOutOfStock}
                 out-of-stock-text={outOfStockText}
                 available-quantity={availableQuantity}></site-product-add-quantity>
+            <site-product-configure-button
+                if:true={product}
+                product={product}
+                selected-product-selling-model={selectedProductSellingModel}
+                configure-button-text={configureButtonText}
+                configure-button-background-color={configureButtonBackgroundColor}
+                configure-button-background-hover-color={configureButtonBackgroundHoverColor}
+                configure-button-border-color={configureButtonBorderColor}
+                configure-button-border-radius={configureButtonBorderRadius}
+                configure-button-text-color={configureButtonTextColor}
+                configure-button-text-hover-color={configureButtonTextHoverColor}
+                product-pricing={productPricing}
+                errors={errors}
+                out-of-stock-text={outOfStockText}></site-product-configure-button>
             <site-common-button-ui
                 if:true={showAddToListButton}
                 disabled={isAddToListButtonDisabled}
