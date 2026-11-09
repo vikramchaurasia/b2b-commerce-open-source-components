@@ -31,3 +31,7 @@
     height: 1rem;
     flex-shrink: 0;
 }
+
+.secondary-cart-menu-item {
+    --dxp-s-dropdown-text-color-hover: var(--dxp-s-dropdown-text-color, var(--dxp-g-root-contrast));
+}

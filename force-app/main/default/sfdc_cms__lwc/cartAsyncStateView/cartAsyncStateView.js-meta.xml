@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Cart State Progress</masterLabel>
+  <description>Shows progress for the cart operations.</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartData" label="Cart Details Expression" type="String" default="{!Cart.Details}"></property>
+      <property name="cancelButtonLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="showImportAgainOption" label="Show Import Again Option" type="Boolean" default="true" description="Show the Import Again option on a failed import banner. Buyers can retry the import."></property>
+      <property name="importAgainButtonLabel" label="Import Again Button Label" type="String" default="Import Again" translatable="true"></property>
+      <property name="importModalTitleLabel" label="Import Modal Title" type="String" default="Import Cart" translatable="true"></property>
+      <property name="importModalSubtitleLabel" label="Import Modal Subtitle" type="String" default="Import using CSV" translatable="true"></property>
+      <property name="importUploadFileLabel" label="Upload File Button Label" type="String" default="Upload File" translatable="true"></property>
+      <property name="importDropFileLabel" label="Drag &amp;amp; Drop File Label" type="String" default="or drop file" translatable="true"></property>
+      <property name="importStartImportLabel" label="Start Import Button Label" type="String" default="Start Import" translatable="true"></property>
+      <property name="importMappingTitleLabel" label="Mapping Title" type="String" default="Cart Item Identifiers" translatable="true"></property>
+      <property name="importCancelButtonLabel" label="Import Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="viewErrorsButtonLabel" label="View Errors Button Label" type="String" default="View Errors" translatable="true"></property>
+      <property name="mappingErrorPopupLabel" label="Mapping Error Popup Label" type="String" default="Error Report" translatable="true"></property>
+      <property name="mappingErrorMessageLabel" label="Mapping Error Message Label" type="String" default="{0} Field Mapping Errors Found..." translatable="true"></property>
+      <property name="mappingErrorCloseButtonLabel" label="Mapping Error Popup Close Button" type="String" default="Close" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="cartData"></designLayoutProperty>
+            <designLayoutProperty name="cancelButtonLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Import Again">
+          <designLayoutItems>
+            <designLayoutProperty name="showImportAgainOption"></designLayoutProperty>
+            <designLayoutProperty name="importAgainButtonLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importModalTitleLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importModalSubtitleLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importUploadFileLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importDropFileLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importStartImportLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importMappingTitleLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importCancelButtonLabel" cbVisibleIf="showImportAgainOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Error State">
+          <designLayoutItems>
+            <designLayoutProperty name="viewErrorsButtonLabel"></designLayoutProperty>
+            <designLayoutProperty name="mappingErrorPopupLabel"></designLayoutProperty>
+            <designLayoutProperty name="mappingErrorMessageLabel"></designLayoutProperty>
+            <designLayoutProperty name="mappingErrorCloseButtonLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

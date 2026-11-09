@@ -1,0 +1,56 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartAsyncStateViewUi",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "clearingCartLabel",
+      "value" : "Clearing your cart..."
+    }, {
+      "name" : "cancelOperationLabel",
+      "value" : "Abort"
+    }, {
+      "name" : "cancelOperationSuccessMessage",
+      "value" : "The import was canceled."
+    }, {
+      "name" : "cancelOperationErrorMessage",
+      "value" : "We couldn't cancel the operation. Please try again."
+    }, {
+      "name" : "cartClearedLabel",
+      "value" : "Cart cleared"
+    }, {
+      "name" : "cartClearedFailedLabel",
+      "value" : "We couldn't clear your cart. Please try again!"
+    }, {
+      "name" : "defaultErrorMessage",
+      "value" : "An unexpected error occurred. Try again later."
+    }, {
+      "name" : "clearingCartAriaLabel",
+      "value" : "Clearing cart {cart_name}"
+    }, {
+      "name" : "cartClearedAriaLabel",
+      "value" : "Cleared cart {cart_name}"
+    }, {
+      "name" : "cartClearedFailedAriaLabel",
+      "value" : "Failed to clear cart {cart_name}"
+    }, {
+      "name" : "importInProgressLabel",
+      "value" : "Import In Progress..."
+    }, {
+      "name" : "importSuccessLabel",
+      "value" : "Import Successful"
+    }, {
+      "name" : "importFailedLabel",
+      "value" : "Import Failed With Errors"
+    }, {
+      "name" : "importCancelLabel",
+      "value" : "Cancel"
+    }, {
+      "name" : "importViewErrorsLabel",
+      "value" : "View Errors"
+    }, {
+      "name" : "importReimportLabel",
+      "value" : "Import Again"
+    } ]
+  },
+  "urlName" : "cartasyncstateviewui"
+}

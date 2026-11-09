@@ -16,6 +16,7 @@
       <property name="items" type="String" default="{!Cart.Items}" translatable="true"></property>
       <property name="pagination" type="String" default="{!Cart.Pagination}" translatable="true"></property>
       <property name="hasNextPageItems" type="String" default="{!Cart.Pagination.hasNextPage}"></property>
+      <property name="isSecondary" type="String" default="{!Cart.Details.isSecondary}"></property>
       <property name="currencyIsoCode" type="String" default="{!Cart.Details.currencyIsoCode}" translatable="true"></property>
       <property name="showRemoveItem" type="Boolean" default="true" label="Show remove item option"></property>
       <property name="showModifyItem" type="Boolean" default="true" label="Show modify item option"></property>
@@ -53,14 +54,18 @@
       <property name="minimumValueGuideText" type="String" default="Minimum quantity is {0}" translatable="true" label="Minimum Text" description="Display text for this rule. The value for {0} populates from product settings. Place {0}, untranslated, anywhere in the text. For example, “Buy {0} to start”. The text is shown on the product and as hover text for the quantity selector’s information icon."></property>
       <property name="maximumValueGuideText" type="String" default="Maximum quantity is {0}" translatable="true" label="Maximum Text" description="Display text for this rule. The value for {0} populates from product settings. Place {0}, untranslated, anywhere in the text. For example, “Buy up to {0}”. The text is shown on the product and as hover text for the quantity selector’s information icon."></property>
       <property name="incrementValueGuideText" type="String" default="Sold in increments of {0}" translatable="true" label="Increment Text" description="Display text for this rule. The value for {0} populates from product settings. Place {0}, untranslated, anywhere in the text. For example, “Sold in increments of {0}”. The text is shown on the product and as hover text for the quantity selector’s information icon."></property>
+      <property name="showSeeConfiguration" type="Boolean" default="false" label="Show configuration details option"></property>
+      <property name="viewBundleLabel" type="String" default="View Details" translatable="true" label="View Details Label"></property>
+      <property name="quantityLabel" type="String" default="Qty" translatable="true" label="Quantity Label"></property>
+      <property name="modalSkuLabel" type="String" default="SKU" translatable="true" label="SKU Label"></property>
       <designLayout>
         <designSection>
           <designLayoutItems>
             <designLayoutProperty name="items" cbVisibleIf="items=false"></designLayoutProperty>
             <designLayoutProperty name="pagination" cbVisibleIf="items=false"></designLayoutProperty>
             <designLayoutProperty name="hasNextPageItems" cbVisibleIf="items=false"></designLayoutProperty>
+            <designLayoutProperty name="isSecondary" cbVisibleIf="items=false"></designLayoutProperty>
             <designLayoutProperty name="currencyIsoCode" cbVisibleIf="items=false"></designLayoutProperty>
-            <designLayoutProperty name="showModifyItem"></designLayoutProperty>
             <designLayoutProperty name="showRemoveItem"></designLayoutProperty>
             <designLayoutProperty name="showTotalPrices"></designLayoutProperty>
             <designLayoutProperty name="paginationType"></designLayoutProperty>
@@ -123,6 +128,15 @@
             <designLayoutProperty name="minimumValueGuideText"></designLayoutProperty>
             <designLayoutProperty name="maximumValueGuideText"></designLayoutProperty>
             <designLayoutProperty name="incrementValueGuideText"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Configuration Details">
+          <designLayoutItems>
+            <designLayoutProperty name="showModifyItem"></designLayoutProperty>
+            <designLayoutProperty name="showSeeConfiguration"></designLayoutProperty>
+            <designLayoutProperty name="viewBundleLabel" cbVisibleIf="showSeeConfiguration=true"></designLayoutProperty>
+            <designLayoutProperty name="quantityLabel" cbVisibleIf="showSeeConfiguration=true"></designLayoutProperty>
+            <designLayoutProperty name="modalSkuLabel" cbVisibleIf="showSeeConfiguration=true"></designLayoutProperty>
           </designLayoutItems>
         </designSection>
       </designLayout>

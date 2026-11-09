@@ -1,0 +1,32 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartLockBanner",
+                "type": "component",
+                "attributes": {
+                    "cartSummary": "{!Cart.Details}",
+                    "alignItems": "start"
+                },
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "{!Cart.Details.collaborationLockDetail.lockedByName} ({!Cart.Details.collaborationLockDetail.lockedByEmail}) is checking out this cart.",
+                                    "textAlign": "left",
+                                    "textDisplayInfo": "{\"textStyle\": \"heading-small\", \"headingTag\": \"p\"}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "message",
+                        "title": "Message",
+                        "type": "region"
+                    }
+                ]
+            }
+        }
+    ]
+}

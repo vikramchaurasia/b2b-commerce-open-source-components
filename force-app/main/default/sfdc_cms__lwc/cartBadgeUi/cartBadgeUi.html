@@ -36,7 +36,7 @@
                     onclose={handleCartsListClose}>
                     <!-- Loading State -->
                     <template lwc:if={_isCartsLoading}>
-                        <div
+                        <li
                             class="cart-list-menu-item cart-list-menu-item_loading"
                             role="status"
                             aria-live="polite">
@@ -44,7 +44,7 @@
                                 alternative-text={_loadingCartsLabel}
                                 size="x-small"></lightning-spinner>
                             <span>{_loadingCartsLabel}</span>
-                        </div>
+                        </li>
                     </template>
 
                     <!-- Error State -->

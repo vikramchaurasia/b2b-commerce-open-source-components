@@ -2,6 +2,8 @@
     <button
         lwc:ref="actionButton"
         aria-label={assistiveText}
+        aria-haspopup={popupType}
+        aria-expanded={expanded}
         class={buttonClasses}
         disabled={disabled}>
         <slot></slot>

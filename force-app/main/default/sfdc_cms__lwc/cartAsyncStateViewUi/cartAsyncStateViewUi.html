@@ -1,0 +1,50 @@
+<template lwc:render-mode="light">
+    <span
+        class="slds-assistive-text"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true">
+        {_cartStatusAriaLabel}
+    </span>
+    <template lwc:if={_isVisible}>
+        <div
+            class="cart-operation-footer"
+            tabindex="0"
+            role="status"
+            aria-label={_cartStatusAriaLabel}
+            data-cart-async-banner>
+            <div
+                class="cart-operation-footer-status"
+                aria-hidden="true">
+                <svg
+                    class="cart-operation-footer-icon"
+                    aria-hidden="true">
+                    <use xlink:href={_iconPath}></use>
+                </svg>
+                <span class="cart-operation-footer-label">{_label}</span>
+            </div>
+            <div class="cart-operation-footer-actions">
+                <site-common-button-ui
+                    lwc:if={_showReimportAction}
+                    variant="secondary"
+                    class="cart-operation-footer-reimport"
+                    onclick={handleReimport}>
+                    {_reimportLabel}
+                </site-common-button-ui>
+                <button
+                    lwc:if={_showViewErrorsAction}
+                    class="cart-operation-footer-view-errors"
+                    onclick={handleViewErrors}>
+                    {_viewErrorsLabel}
+                </button>
+                <button
+                    lwc:if={_showCancelAction}
+                    class="cart-operation-footer-cancel"
+                    aria-label={_cancelLabel}
+                    onclick={handleCancelOperation}>
+                    {_cancelLabel}
+                </button>
+            </div>
+        </div>
+    </template>
+</template>

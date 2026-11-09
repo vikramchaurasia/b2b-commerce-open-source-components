@@ -1,0 +1,19 @@
+<template lwc:render-mode="light">
+    <!--
+        Rendered only while the cart is locked. The banner's background, border and radius are set as
+        `--com-c-cart-lock-*` custom properties via `bannerStyle`; text color and typography are
+        owned by the slotted message, not by this component.
+
+        The `message` slot carries the lock message, authored as a `dxp_base:textBlock` whose default
+        content is declared in this bundle's `editor.json` preset (bound to
+        `{!Cart.Details.collaborationLockDetail.lockedByName}` / `.lockedByEmail`). It is forwarded
+        into the leaf's own `message` slot.
+    -->
+    <site-cart-lock-banner-ui
+        lwc:if={showBanner}
+        style={bannerStyle}>
+        <slot
+            name="message"
+            slot="message"></slot>
+    </site-cart-lock-banner-ui>
+</template>

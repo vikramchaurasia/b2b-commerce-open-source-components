@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Status Pill</masterLabel>
+  <description>A small, reusable label that displays a short tag at a glance. For example, use it to tag a cart as Default.</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="labelText" label="Label" type="String" default="Default" translatable="true"></property>
+      <property name="textColor" label="Text Color" type="Color"></property>
+      <property name="backgroundColor" label="Background Color" type="Color" default="#d9dfe7"></property>
+      <property name="borderColor" label="Border Color" type="Color" default="#d9dfe7"></property>
+      <property name="borderRadius" label="Border Radius (0px-50px)" type="Integer" min="0" max="50" default="8"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="labelText"></designLayoutProperty>
+            <designLayoutProperty name="textColor"></designLayoutProperty>
+            <designLayoutProperty name="backgroundColor"></designLayoutProperty>
+            <designLayoutProperty name="borderColor"></designLayoutProperty>
+            <designLayoutProperty name="borderRadius"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

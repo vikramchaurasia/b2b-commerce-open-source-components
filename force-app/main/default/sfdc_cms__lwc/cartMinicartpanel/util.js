@@ -15,7 +15,8 @@ const cartItemDescDataMap = {
   productClass: 'productClass',
   childProductCount: 'childProductCount',
   subType: 'subType',
-  promotionDisplayName: 'promotionDisplayName'
+  promotionDisplayName: 'promotionDisplayName',
+  isConfigurationAllowed: 'isConfigurationAllowed'
 };
 const cartItemNumberDataMap = {
   quantity: 'quantity',

@@ -1,20 +1,44 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
+import { CartStatusAdapter } from 'commerce/checkoutCartApi';
 import { GO_TO_PAGE, SHOW_MORE_EVENT } from './constants';
 import { DEFAULT_CART_ITEMS_PAGE_SIZE } from 'commerce/checkoutCartApi';
 export { SHOW_MORE_EVENT, GO_TO_PAGE };
 import { Labels } from './labels';
 export default class CartItemsUi extends LightningElement {
   static renderMode = 'light';
+  @wire(CartStatusAdapter)
+  _cartStatus;
+  _hasActiveAsyncOperation = false;
+  @api
+  get hasActiveAsyncOperation() {
+    return this._hasActiveAsyncOperation || Boolean(this._cartStatus?.data?.isAsyncOperationInProgress);
+  }
+  set hasActiveAsyncOperation(value) {
+    this._hasActiveAsyncOperation = value;
+  }
   @api
   items;
   get _cartItems() {
-    return this.items?.filter(item => item.subType !== 'Bonus');
+    return this.items?.filter(item => item.subType !== 'Bonus').map(item => ({
+      ...item,
+      isConfigurationAllowed: item.isConfigurationAllowed ?? false,
+      _disableQuantitySelector: (item.isConfigurationAllowed ?? false) || this.disableQuantitySelector
+    }));
   }
   get _bonusCartItems() {
-    return this.items?.filter(item => item.subType === 'Bonus');
+    return this.items?.filter(item => item.subType === 'Bonus').map(item => ({
+      ...item,
+      isConfigurationAllowed: item.isConfigurationAllowed ?? false
+    }));
   }
   get hasBonusCartItems() {
-    return Array.isArray(this._bonusCartItems) && this._bonusCartItems?.length > 0;
+    return Array.isArray(this._bonusCartItems) && this._bonusCartItems.length > 0;
+  }
+  get hasRegularCartItems() {
+    return Array.isArray(this._cartItems) && this._cartItems.length > 0;
+  }
+  get hasBonusAndRegularCartItems() {
+    return this.hasBonusCartItems && this.hasRegularCartItems;
   }
   @api
   currencyIsoCode;
@@ -22,6 +46,10 @@ export default class CartItemsUi extends LightningElement {
   showRemoveItem = false;
   @api
   showModifyItem = false;
+  @api
+  disableModifyItem = false;
+  @api
+  lockedForViewer = false;
   @api
   showProductImage = false;
   @api
@@ -41,15 +69,13 @@ export default class CartItemsUi extends LightningElement {
   @api
   hideQuantitySelector = false;
   @api
+  disableQuantitySelector = false;
+  @api
   showCountInName = false;
   @api
   removeProductLinks = false;
   @api
   showSku = false;
-  @api
-  showViewBundleDetail = false;
-  @api
-  viewBundleDetailLabel;
   @api
   skuLabel;
   @api
@@ -68,6 +94,10 @@ export default class CartItemsUi extends LightningElement {
   pagination;
   @api
   paginationType;
+  @api
+  showViewBundleDetail = false;
+  @api
+  viewBundleDetailLabel;
   _containerWidth;
   _resizeAnimationFrame = null;
   _resizeObserver;
@@ -117,18 +147,18 @@ export default class CartItemsUi extends LightningElement {
     const targetElement = this.refs?.ul;
     this._resizeObserver?.unobserve(targetElement);
     this._resizeObserver?.observe(targetElement);
-    const lastListItem = this.refs?.section?.lastElementChild;
+    const lastListItem = this.refs?.ul?.lastElementChild;
     if (this.paginationType === 'scroll' && lastListItem) {
       this.observer?.observe(lastListItem);
     }
   }
   updateAriaBusy(ariaBusy) {
-    const section = this.refs?.section;
-    if (section) {
+    const ul = this.refs?.ul;
+    if (ul) {
       if (ariaBusy) {
-        section.ariaBusy = 'true';
+        ul.ariaBusy = 'true';
       } else if (!ariaBusy && this.items && this.items?.length !== this.cartItemsLength) {
-        section.ariaBusy = 'false';
+        ul.ariaBusy = 'false';
         this.cartItemsLength = this.items?.length;
       }
     }

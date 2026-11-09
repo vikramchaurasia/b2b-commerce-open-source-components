@@ -1,0 +1,87 @@
+<template>
+    <lightning-modal-header label={_headerLabel}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <!-- Always-present live region — must exist in DOM before content is written so screen readers announce the loading→populated transition (SC 4.1.3) -->
+        <div
+            role="status"
+            aria-live="polite"
+            class="slds-assistive-text">
+            {_liveRegionText}
+        </div>
+
+        <!-- Loading -->
+        <div
+            lwc:if={_isLoadingState}
+            role="status"
+            class="modal-contents">
+            <div class="spinner-loading-group">
+                <div class="spinner-container">
+                    <lightning-spinner
+                        aria-hidden="true"
+                        alternative-text={_labels.loadingErrorsText}></lightning-spinner>
+                </div>
+                <h2 class="slds-text-align_center slds-text-heading_small">{_labels.loadingErrorsText}</h2>
+            </div>
+        </div>
+
+        <!-- Fetch failure -->
+        <div
+            lwc:elseif={_isErrorState}
+            role="alert"
+            class="error-report-modal-content error-report-fetch-error slds-text-align_center">
+            {_labels.fetchErrorText}
+        </div>
+
+        <!-- Populated -->
+        <div
+            lwc:elseif={_hasErrors}
+            class="error-report-modal-content error-report-body">
+            <div class="error-report-summary">
+                <!-- role/aria-level expose the summary as the heading for the error list (SC 1.3.1) without visually changing the styled span -->
+                <span
+                    class="error-report-summary-count"
+                    role="heading"
+                    aria-level="2">
+                    {_summaryLabel}
+                </span>
+            </div>
+
+            <!-- tabindex makes the scrollable region keyboard-focusable (SC 2.1.1) so keyboard-only users can scroll to rows below the fold (up to ~2000 rows); native <ul> list semantics are preserved. No aria-label — the summary heading and the persistent live region already announce the count. -->
+            <ul
+                class="error-report-list"
+                tabindex="0">
+                <template
+                    for:each={_errorRows}
+                    for:item="error">
+                    <li
+                        key={error.key}
+                        class="error-report-row">
+                        <span class="error-report-row-label">{error.rowLabel}</span>
+                        <span class="error-report-row-message">{error.message}</span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <!-- Empty -->
+        <div
+            lwc:else
+            role="status"
+            class="error-report-modal-content error-report-empty slds-text-align_center">
+            {_labels.noErrorsText}
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer lwc:if={_isNotLoadingState}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                name="closeButton"
+                onclick={handleClose}>
+                {_closeButtonLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+</template>

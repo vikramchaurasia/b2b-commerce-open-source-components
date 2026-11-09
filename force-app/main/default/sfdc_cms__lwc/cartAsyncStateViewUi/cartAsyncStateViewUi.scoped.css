@@ -1,0 +1,128 @@
+:host {
+    --cart-operation-footer-background: var(--slds-g-color-neutral-base-95, #f3f3f3);
+}
+
+.cart-operation-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    padding-inline: var(--com-c-cart-async-state-view-padding-inline, 1rem);
+    /* Space above the banner. Overridable by a parent (e.g. the cart-detail items state sets
+       it to 0 so the banner sits flush below the header). Defaults to 12px otherwise. */
+    margin-top: var(--com-c-cart-async-state-view-margin-top, 0.75rem);
+    background-color: var(--cart-operation-footer-background, #f3f3f3);
+    border: none;
+    border-radius: var(--com-c-cart-async-state-view-border-radius, 1rem);
+}
+
+.cart-operation-footer .cart-operation-footer-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cart-operation-footer .cart-operation-footer-status .cart-operation-footer-icon {
+    height: 1.25rem;
+    width: 1.25rem;
+    flex-shrink: 0;
+}
+
+.cart-operation-footer .cart-operation-footer-label {
+    font-size: var(--dxp-g-font-size-4, 1rem);
+    color: var(--dxp-s-body-text-color, #1c1c1c);
+}
+
+.cart-operation-footer .cart-operation-footer-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    --dxp-s-button-font-size: 14px;
+}
+
+/* "View Errors" button — tertiary text-link (brand-colored underlined), right of "Import Again". */
+.cart-operation-footer .cart-operation-footer-view-errors {
+    background: none;
+    border: none;
+    /* No chrome, but keep a 24px pointer target (WCAG 2.5.8) without looking padded. */
+    padding: 10px 0 10px 0;
+    min-height: 24px;
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: var(--dxp-g-font-size-4, 1rem);
+    font-weight: var(--dxp-s-button-font-weight, 600);
+    color: var(--dxp-s-tertiary-button-text-color, var(--dxp-g-brand, #0176d3));
+    line-height: 1.25;
+    text-decoration: underline;
+}
+
+.cart-operation-footer .cart-operation-footer-view-errors:hover {
+    color: var(--dxp-s-tertiary-button-text-color-hover, var(--dxp-g-brand, #0176d3));
+}
+
+.cart-operation-footer .cart-operation-footer-view-errors:focus-visible {
+    outline: 2px solid var(--dxp-g-brand, #0176d3);
+    outline-offset: 1px;
+}
+
+/* Cancel link on the in-progress banner — destructive text link (no chrome). */
+.cart-operation-footer .cart-operation-footer-cancel {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    font-size: var(--dxp-g-font-size-4, 1rem);
+    font-weight: var(--dxp-c-strong-text-weight, 700);
+    color: var(--dxp-g-destructive, #ba0517);
+    text-decoration: underline;
+}
+
+.cart-operation-footer .cart-operation-footer-cancel:hover {
+    color: var(--dxp-g-destructive-1, #8e030f);
+}
+
+/* Mobile (≤48em): stack status on top with actions below; failed-import buttons split 50/50 */
+@media (max-width: 48em) {
+    .cart-operation-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+        gap: 0.75rem;
+    }
+
+    .cart-operation-footer-actions {
+        width: 100%;
+    }
+
+    /* In-progress state (Cancel only): keep the label and Cancel on one row (label left, Cancel right)
+       instead of stacking. Overrides the column layout above for this single-action case only. */
+    .cart-operation-footer:has(.cart-operation-footer-cancel):not(:has(.cart-operation-footer-reimport)) {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .cart-operation-footer:has(.cart-operation-footer-cancel):not(:has(.cart-operation-footer-reimport))
+        .cart-operation-footer-actions {
+        width: auto;
+    }
+
+    /* Failed-import state (Import Again + View Errors): each button takes 50% and centers within its half */
+    .cart-operation-footer-actions:has(.cart-operation-footer-reimport) .cart-operation-footer-reimport,
+    .cart-operation-footer-actions:has(.cart-operation-footer-reimport) .cart-operation-footer-view-errors {
+        flex: 1 1 0;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* In-progress state (Cancel only): let it keep natural width at end of row */
+    .cart-operation-footer-actions:has(.cart-operation-footer-cancel):not(:has(.cart-operation-footer-reimport)) {
+        justify-content: flex-end;
+    }
+
+    .cart-operation-footer:not(:has(.cart-operation-footer-reimport)) {
+        gap: 0;
+    }
+}
