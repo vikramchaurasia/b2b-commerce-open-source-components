@@ -51,6 +51,11 @@
     display: flex;
     flex-direction: column;
     row-gap: var(--dxp-g-spacing-xxsmall);
+    /* Hug the content instead of stretching to the grid row's height (the image
+       spans both rows and drives row-2 height). Without this, a top-aligned flex
+       column leaves empty stretch space below the quantity control. Keeps the SKU
+       tucked directly under the product name. */
+    align-self: start;
 }
 .item-unit-price {
     grid-area: unit;
@@ -216,6 +221,10 @@ site-common-quantity-selector {
     }
     .item-actions {
         justify-self: start;
+    }
+
+    .delete-button {
+        margin-top: 0.25rem;
     }
 }
 .item-image figure {

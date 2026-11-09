@@ -235,9 +235,11 @@ export default class CartMinicartpanel extends LightningElement {
   handleUpdateCartItem(event) {
     const {
       cartItemId,
-      quantity
+      quantity,
+      onUpdateFailed
     } = event.detail;
     cartItemUpdate(cartItemId, quantity).catch(err => {
+      onUpdateFailed?.();
       this.debounceToastMessage(this, toCommerceError(err).message);
     });
   }
@@ -265,12 +267,28 @@ export default class CartMinicartpanel extends LightningElement {
   }
   handleViewCart(event) {
     event.preventDefault();
-    this.navContext && navigate(this.navContext, {
-      type: 'comm__namedPage',
-      attributes: {
-        name: 'Current_Cart'
-      }
-    });
+    if (!this.navContext) {
+      this.handleCloseMiniCart(event);
+      return;
+    }
+    if (this.cartId) {
+      navigate(this.navContext, {
+        type: 'comm__namedPage',
+        attributes: {
+          name: 'Current_Cart'
+        },
+        state: {
+          recordId: this.cartId
+        }
+      });
+    } else {
+      navigate(this.navContext, {
+        type: 'comm__namedPage',
+        attributes: {
+          name: 'Current_Cart'
+        }
+      });
+    }
     this.handleCloseMiniCart(event);
   }
   handleOrderPageNavigation(event) {

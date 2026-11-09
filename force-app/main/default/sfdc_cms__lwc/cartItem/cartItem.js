@@ -1,4 +1,5 @@
 import { LightningElement, api, wire } from 'lwc';
+import { CartStatusAdapter } from 'commerce/checkoutCartApi';
 import { debounce, clearDebounceTimeout } from 'experience/utils';
 import { displayDiscountPrice } from 'site/promotionEvaluatePriceDiscount';
 import canDisplayOriginalPrice from 'site/cartEvaluatePriceOriginal';
@@ -24,8 +25,16 @@ export default class CartItem extends LightningElement {
   _item;
   @api
   set item(value) {
+    if (this.shouldReleaseOverride(value)) {
+      this._overrideOuantity = undefined;
+    }
     this._item = value;
-    this._overrideOuantity = undefined;
+  }
+  shouldReleaseOverride(value) {
+    const isDifferentItem = value?.id !== this._item?.id;
+    const committedQuantityChanged = value?.quantity !== this._item?.quantity;
+    const serverConfirmedOverride = value?.quantity === this._overrideOuantity;
+    return isDifferentItem || committedQuantityChanged || serverConfirmedOverride;
   }
   get item() {
     return this._item;
@@ -46,6 +55,18 @@ export default class CartItem extends LightningElement {
   disableQuantitySelector = false;
   @api
   disableModifyButton = false;
+  @api
+  lockedForViewer = false;
+  @wire(CartStatusAdapter)
+  _cartStatus;
+  _hasActiveAsyncOperation = false;
+  @api
+  get hasActiveAsyncOperation() {
+    return this._hasActiveAsyncOperation || Boolean(this._cartStatus?.data?.isAsyncOperationInProgress);
+  }
+  set hasActiveAsyncOperation(value) {
+    this._hasActiveAsyncOperation = value;
+  }
   @api
   showProductImage = false;
   @api
@@ -120,13 +141,13 @@ export default class CartItem extends LightningElement {
     return this.item?.quoteLineItemId != null;
   }
   get _disableQuantitySelector() {
-    return this.disableQuantitySelector || this._isAssociatedWithQuoteLineItem;
+    return this.disableQuantitySelector || this._isAssociatedWithQuoteLineItem || this.hasActiveAsyncOperation || this.lockedForViewer;
   }
   get _disableDeleteButton() {
-    return this._isAssociatedWithQuoteLineItem;
+    return this._isAssociatedWithQuoteLineItem || this.hasActiveAsyncOperation || this.lockedForViewer;
   }
   get _disableModifyButton() {
-    return this.disableModifyButton || this._isAssociatedWithQuoteLineItem;
+    return this.disableModifyButton || this._isAssociatedWithQuoteLineItem || this.hasActiveAsyncOperation || this.lockedForViewer;
   }
   get quantity() {
     if (this.item?.quantity === undefined) {
@@ -138,6 +159,9 @@ export default class CartItem extends LightningElement {
     return displayDiscountPrice(this.showPromotions, this.item?.itemizedAdjustmentAmount?.toString());
   }
   get bonusProductPromotionLabel() {
+    if (this.item?.tierLabel) {
+      return getProductLabel(Labels.bonusProductText, this.item.tierLabel, '{0}');
+    }
     return this.item?.promotionDisplayName;
   }
   get minimum() {
@@ -233,7 +257,10 @@ export default class CartItem extends LightningElement {
     this.dispatchEvent(new CustomEvent(UPDATE_ITEM_EVENT, {
       detail: {
         cartItemId: this.item?.id,
-        quantity
+        quantity,
+        onUpdateFailed: () => {
+          this._overrideOuantity = undefined;
+        }
       },
       composed: true,
       bubbles: true

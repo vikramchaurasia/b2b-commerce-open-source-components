@@ -22,6 +22,7 @@ import modifyButtonText from '@salesforce/label/site.cartItem.modifyButtonText';
 import modifyItemAssistiveText from '@salesforce/label/site.cartItem.modifyItemAssistiveText';
 import ConfiguredText from '@salesforce/label/site.cartItem.ConfiguredText';
 import seeConfigButtonText from '@salesforce/label/site.cartItem.seeConfigButtonText';
+import bonusProductText from '@salesforce/label/site.cartItem.bonusProductText';
 export const Labels = {
   pricePerItem,
   actualPricePerMonthSubscriptionText,
@@ -46,5 +47,6 @@ export const Labels = {
   modifyButtonText,
   modifyItemAssistiveText,
   ConfiguredText,
-  seeConfigButtonText
+  seeConfigButtonText,
+  bonusProductText
 };

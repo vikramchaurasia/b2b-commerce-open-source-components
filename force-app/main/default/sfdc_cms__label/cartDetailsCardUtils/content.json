@@ -1,0 +1,14 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartDetailsCardUtils",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "itemsLabel",
+      "value" : "Items"
+    }, {
+      "name" : "defaultCartTypePillLabel",
+      "value" : "Default"
+    } ]
+  },
+  "urlName" : "cartdetailscardutils"
+}

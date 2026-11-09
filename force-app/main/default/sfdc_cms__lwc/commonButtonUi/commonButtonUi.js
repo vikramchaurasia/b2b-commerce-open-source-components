@@ -7,6 +7,10 @@ export default class CommonButtonUi extends LightningElement {
   @api
   assistiveText;
   @api
+  popupType;
+  @api
+  expanded;
+  @api
   variant;
   @api
   size;

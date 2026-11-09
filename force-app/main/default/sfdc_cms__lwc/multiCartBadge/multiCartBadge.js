@@ -1,5 +1,5 @@
 import { LightningElement, api, wire } from 'lwc';
-import { AppContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
+import { SessionContextAdapter } from 'commerce/contextApi';
 export default class MultiCartBadge extends LightningElement {
   static renderMode = 'light';
   @api
@@ -48,11 +48,9 @@ export default class MultiCartBadge extends LightningElement {
   showCartDropdown = false;
   @api
   defaultPillLabel = 'Default';
-  @wire(AppContextAdapter)
-  appContext;
   @wire(SessionContextAdapter)
   sessionContext;
   get _showCartsList() {
-    return Boolean(this.appContext?.data?.commerceMultiCartEnabled && this.sessionContext?.data?.isLoggedIn && !this.showMiniCart && this.showCartDropdown);
+    return Boolean(this.sessionContext?.data?.isLoggedIn && !this.showMiniCart && this.showCartDropdown);
   }
 }

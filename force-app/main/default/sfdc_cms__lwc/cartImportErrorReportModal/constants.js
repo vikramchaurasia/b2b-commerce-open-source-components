@@ -1,0 +1,1 @@
+export const LABEL_PARAM_TOKEN = '{0}';

@@ -10,6 +10,7 @@ import { generateStyleProperties } from 'experience/styling';
 import { ProductErrors } from 'site/commerceErrors';
 import { createCartItemAddAction, createProductQuantityUpdateAction, createWishlistItemAddAction, dispatchAction } from 'commerce/actionApi';
 const GUEST_INSUFFICIENT_ACCESS = 'GUEST_INSUFFICIENT_ACCESS';
+const INSUFFICIENT_ACCESS = 'INSUFFICIENT_ACCESS';
 
 /**
  * @slot combinedPurchaseQuantityRuleInfo
@@ -101,6 +102,12 @@ export default class ProductPurchaseOptions extends LightningElement {
   @api
   secondaryCartCountType;
   @api
+  showOrderTemplateButton;
+  @api
+  showItemCountInDropdown;
+  @api
+  orderTemplateCountType;
+  @api
   outOfStockText;
   @api
   configureButtonText;
@@ -184,16 +191,20 @@ export default class ProductPurchaseOptions extends LightningElement {
       },
       onError: error => {
         this.isAddToCartInProgress = false;
-        const {
-          code
-        } = toCommerceError(error);
-        if (code === GUEST_INSUFFICIENT_ACCESS) {
-          this.navigateToLogin();
-        } else {
-          handleAddToCartErrorWithToast(toCommerceError(error), this);
-        }
+        this.handleAddToCartError(error);
       }
     });
+  }
+  handleAddToCartError(error) {
+    const commerceError = toCommerceError(error, [INSUFFICIENT_ACCESS]);
+    if (commerceError.code === GUEST_INSUFFICIENT_ACCESS) {
+      this.navigateToLogin();
+      return;
+    }
+    const showApiMessageOnly = commerceError.code === INSUFFICIENT_ACCESS && Boolean(commerceError.message);
+    handleAddToCartErrorWithToast(showApiMessageOnly ? {
+      message: commerceError.message
+    } : commerceError, this);
   }
   handleAddToWishlist() {
     if (this.product) {
@@ -236,16 +247,42 @@ export default class ProductPurchaseOptions extends LightningElement {
     return this.isProductLoaded && !this.isConfigurableProduct;
   }
   get displayAddToSecondaryCartMenu() {
-    return this.showAddToSecondaryCartMenu !== false && this.product !== undefined && this.product !== null && !this.product?.isConfigurationAllowed;
+    return !!this.showAddToSecondaryCartMenu && this.isProductLoaded && !this.isConfigurableProduct;
   }
   get isAddToSecondaryCartMenuDisabled() {
-    const hasPricing = this.productPricing && Object.keys(this.productPricing).length > 0;
-    const invalidVariant = this.productVariant?.isValid === false;
-    const isVariationParent = this.product?.productClass === 'VariationParent';
-    return this.isAddToCartButtonDisabled || hasPricing && this.productPricing.error !== undefined || invalidVariant && !isVariationParent;
+    const isPricingMissing = !this.productPricing || Object.keys(this.productPricing).length === 0;
+    return isPricingMissing || this.productVariant?.isValid === false || this.product?.productClass === 'VariationParent' || this.isSellingModelSelectionRequired;
+  }
+  get isSellingModelSelectionRequired() {
+    const selectedPriceError = this.selectedProductSellingModel?.price?.error;
+    const hasSelectedPriceError = Boolean(selectedPriceError && Object.keys(selectedPriceError).length > 0);
+    const hasSellingModels = Boolean(this.product?.productSellingModels?.length);
+    return this.shouldIncludePSMs(this.appContext?.data) && hasSellingModels && (!this.selectedProductSellingModel || hasSelectedPriceError);
+  }
+  shouldIncludePSMs(appContext) {
+    if (appContext?.subscriptionConfig) {
+      const {
+        subscriptionPlusEnabled,
+        rlmSubscriptionEnabled
+      } = appContext.subscriptionConfig;
+      return subscriptionPlusEnabled === true || rlmSubscriptionEnabled === true;
+    }
+    return false;
+  }
+  get displayOrderTemplateButton() {
+    return !!this.showOrderTemplateButton && this.isProductLoaded;
+  }
+  get isAddToOrderTemplateButtonDisabled() {
+    return this.isAddToSecondaryCartMenuDisabled;
   }
   get isConfigurableProduct() {
     return Boolean(this.product?.isConfigurationAllowed);
+  }
+  get orderTemplateProductSellingModelId() {
+    return this.selectedProductSellingModel?.productSellingModelId;
+  }
+  get orderTemplateSubscriptionTerm() {
+    return this.selectedProductSellingModel?.subscriptionTerm;
   }
   get productId() {
     return this.product?.id;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-  <masterLabel>Multiple Carts Menu</masterLabel>
-  <description>Lets buyers view a list of four saved carts and access all carts.</description>
+  <masterLabel>Cart Menu</masterLabel>
+  <description>Lets buyers view and access their carts.</description>
   <apiVersion>67</apiVersion>
   <isExposed>true</isExposed>
   <targets>
@@ -16,7 +16,7 @@
       <property name="showCount" type="Boolean" label="Show number of items in cart"></property>
       <property name="countType" translatable="false" type="String" datasource="java://siteforce.customComponent.datasource.B2BCartCountDataSource" default="TotalProductCount" label="Shows the total quantity or the number of unique products in the cart."></property>
       <property name="showMiniCartProperties" type="Boolean" default="true"></property>
-      <property name="showMiniCart" type="Boolean" default="true" label="Enable Mini Cart" description="Enables a sliding mini cart that showcases cart items."></property>
+      <property name="showMiniCart" type="Boolean" default="false" label="Enable Mini Cart" description="Enables a sliding mini cart that showcases cart items."></property>
       <property name="headerText" translatable="true" type="String" default="My Cart" label="Header Text"></property>
       <property name="checkoutButtonText" translatable="true" type="String" default="Checkout" label="Checkout Button Text"></property>
       <property name="checkoutButtonSize" type="String" default="standard" datasource="java://siteforce.customComponent.datasource.ButtonSizeDataSource" label="Checkout Button Size"></property>

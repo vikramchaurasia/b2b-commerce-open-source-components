@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Cart Import Error Report Modal</masterLabel>
+  <description>Modal component that lists the row-level field-mapping errors of a failed cart-item import job</description>
+</LightningComponentBundle>

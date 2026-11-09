@@ -12,9 +12,7 @@
             <div
                 slot="clearCart"
                 data-automation="clearCart"
-                onclick={handleClearCartButton}
-                role="button"
-                aria-label={confirmClearCartButtonText}>
+                onclick={handleClearCartButton}>
                 <slot name="footerClearCart"></slot>
             </div>
         </div>
@@ -28,5 +26,6 @@
         placeholder={_sortOrder.label}
         options={sortingOptions}
         onchange={handleChangeSortSelection}
-        variant="label-hidden"></lightning-combobox>
+        variant="label-hidden"
+        disabled={hasActiveAsyncOperation}></lightning-combobox>
 </template>

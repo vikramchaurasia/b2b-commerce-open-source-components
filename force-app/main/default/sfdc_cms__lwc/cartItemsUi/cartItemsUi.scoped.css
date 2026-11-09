@@ -34,14 +34,14 @@
     height: auto;
     clip: auto;
 }
-li {
-    padding: 2.5rem 0;
+li:not(.separator) {
+    padding: 0.75rem 0;
 }
 li.large-layout {
-    padding: 2.5rem 0;
+    padding: 0.75rem 0;
 }
 li.small-layout {
-    padding: 1rem 0;
+    padding: 0.75rem 0;
 }
 .show-more-button {
     display: flex;
@@ -55,12 +55,12 @@ li.small-layout {
 }
 @media only screen and (max-width: 31em) {
     .li-layout {
-        padding: 1rem 0;
+        padding: 0.75rem 0;
     }
 }
 @media only screen and (min-width: 31.1em) {
     .li-layout {
-        padding: 2.5rem 0;
+        padding: 0.75rem 0;
     }
 }
 @media only screen and (max-width: 78em) {

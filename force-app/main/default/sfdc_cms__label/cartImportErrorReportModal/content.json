@@ -1,0 +1,32 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartImportErrorReportModal",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "errorReportHeader",
+      "value" : "Error Report"
+    }, {
+      "name" : "fieldMappingErrorFound",
+      "value" : "{0} field mapping error found"
+    }, {
+      "name" : "fieldMappingErrorsFound",
+      "value" : "{0} field mapping errors found"
+    }, {
+      "name" : "rowPrefix",
+      "value" : "Row {0}:"
+    }, {
+      "name" : "closeButtonLabel",
+      "value" : "Close"
+    }, {
+      "name" : "loadingErrorsText",
+      "value" : "Loading..."
+    }, {
+      "name" : "fetchErrorText",
+      "value" : "We couldn't load the error report. Try again."
+    }, {
+      "name" : "noErrorsText",
+      "value" : "No errors to display."
+    } ]
+  },
+  "urlName" : "cartimporterrorreportmodal"
+}

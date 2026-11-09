@@ -12,9 +12,7 @@
         display-mini-cart={displayMiniCart}
         show-carts-list={showCartsList}
         default-pill-label={defaultPillLabel}
-        cart-id={_cartId}
-        is-logged-in={_isLoggedIn}
-        is-b2b-store={isB2bStore}></site-cart-badge-ui>
+        cart-id={_cartId}></site-cart-badge-ui>
 
     <template if:true={displayMiniCart}>
         <site-cart-minicartpanel
@@ -34,7 +32,6 @@
             view-cart-button-size={viewCartButtonSize}
             recommendation-header-text={recommendationHeaderText}
             recommendation-price-display-type={recommendationPriceDisplayType}
-            show-recommendation={showRecommendation}
-            is-b2b-store={isB2bStore}></site-cart-minicartpanel>
+            show-recommendation={showRecommendation}></site-cart-minicartpanel>
     </template>
 </template>

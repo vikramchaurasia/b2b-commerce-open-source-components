@@ -1,20 +1,67 @@
-import { LightningElement, api, wire } from 'lwc';
-import { navigate, NavigationContext } from 'lightning/navigation';
+import { LightningElement, api, track, wire } from 'lwc';
+import { navigate, NavigationContext, CurrentPageReference } from 'lightning/navigation';
 import currency from '@salesforce/i18n/currency';
-import { createCartItemDeleteAction, createCartItemsLoadAction, createCartItemsLoadPageAction, createCartItemUpdateAction, dispatchAction } from 'commerce/actionApi';
+import { cartReload, CartContentsAdapter } from 'commerce/checkoutCartApi';
+import ProductConfigureFlowModal from 'site/productConfigureFlowModal';
+import { AppContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
+import { asNonEmptyString, isCartLocked, isLockHolder, getCurrentUserAccessLevel, isChildCartItemsData } from './cartItemsUtils';
+import { hasActiveAsyncOperation as summaryHasActiveAsyncOperation } from 'site/commonUtils';
+import { convertCartItemToOrderItem, defaultSkuLabel, defaultQuantityLabel } from './transformer';
+import { Labels } from './labels';
+import { createCartItemDeleteAction, createCartItemsLoadAction, createCartItemsLoadPageAction, createCartItemUpdateAction, dispatchAction, dispatchActionAsync, createChildCartItemsLoadAction } from 'commerce/actionApi';
 import { generateStyleProperties, generateTextFontSize } from 'experience/styling';
+import ProductBundleDetailsModal from 'site/productBundleDetailsModal';
 
 /**
  * @slot showMore
  */
 export default class CartItems extends LightningElement {
   static renderMode = 'light';
+  @wire(AppContextAdapter)
+  appContext;
+  @wire(SessionContextAdapter)
+  sessionContext;
+  _currentPageReference;
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  get effectiveCartId() {
+    const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
+    return cartIdFromRecordId ?? 'current';
+  }
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
+  cartContentsEntry;
+  get cartSummary() {
+    return this.cartContentsEntry?.data?.cartSummary;
+  }
+  get lockedForViewer() {
+    return isCartLocked(this.cartSummary) && !isLockHolder(this.cartSummary, this.sessionContext?.data?.userId);
+  }
+  get _isViewOnlyCollaborator() {
+    return getCurrentUserAccessLevel(this.cartSummary, this.sessionContext?.data?.userId) === 'View';
+  }
+  get _effectiveShowRemoveItem() {
+    return this.showRemoveItem && !this._isViewOnlyCollaborator;
+  }
+  get _effectiveDisableQuantitySelector() {
+    return this._isViewOnlyCollaborator;
+  }
+  get hasActiveAsyncOperation() {
+    return summaryHasActiveAsyncOperation(this.cartSummary);
+  }
   @api
   items;
   @api
   pagination;
   @api
   hasNextPageItems = false;
+  @api
+  isSecondary = false;
   @api
   displayShowMoreItems = false;
   @api
@@ -23,6 +70,9 @@ export default class CartItems extends LightningElement {
   currencyIsoCode;
   get _currencyIsoCode() {
     return this.currencyIsoCode || currency;
+  }
+  get _showModifyItem() {
+    return this.showModifyItem && !this.isSecondary;
   }
   @api
   showRemoveItem = false;
@@ -116,6 +166,18 @@ export default class CartItems extends LightningElement {
   imageAspectRatio;
   @api
   imageSize;
+  @api
+  showSeeConfiguration = false;
+  @api
+  get disableModifyButton() {
+    return !this.configuratorFlowApiName;
+  }
+  @api
+  viewBundleLabel;
+  @api
+  quantityLabel;
+  @api
+  modalSkuLabel;
   get paginationTypeValue() {
     if (!this.paginationType) {
       if (this.displayPagination) {
@@ -206,9 +268,12 @@ export default class CartItems extends LightningElement {
   handleUpdateCartItem(event) {
     const {
       cartItemId,
-      quantity
+      quantity,
+      onUpdateFailed
     } = event.detail;
-    dispatchAction(this, createCartItemUpdateAction(cartItemId, quantity));
+    dispatchAction(this, createCartItemUpdateAction(cartItemId, quantity), {
+      onError: onUpdateFailed
+    });
   }
   @wire(NavigationContext)
   navContext;
@@ -224,5 +289,82 @@ export default class CartItems extends LightningElement {
         })
       }
     });
+  }
+  handleModifyButtonAction(event) {
+    this.childCartItems = {};
+    const {
+      itemData
+    } = event.detail;
+    ProductConfigureFlowModal.open({
+      label: Labels.productConfigureFlowModalTitle,
+      flowApiName: this.configuratorFlowApiName,
+      configureContext: {
+        cartId: itemData?.cartId,
+        cartItemId: itemData?.id,
+        cartItemProductId: itemData?.ProductDetails.productId
+      }
+    }).then(result => {
+      if (result === 'save') {
+        cartReload();
+      }
+    });
+  }
+  get configuratorFlowApiName() {
+    return this.appContext?.data?.productConfig?.configuratorFlowApiName || '';
+  }
+  childCartItems = {};
+  @track
+  modalTitle;
+  @track
+  isLoadingConfiguration = false;
+  async handleSeeConfiguration(event) {
+    const {
+      cartItemId
+    } = event.detail;
+    const itemData = this.items?.find(item => item.id === cartItemId);
+    try {
+      this.isLoadingConfiguration = true;
+      const shouldLoadChildItems = (itemData?.childProductCount || 0) > 0;
+      const childCartItems = shouldLoadChildItems ? await this.getChildCartItemsForItem(cartItemId) : undefined;
+      this.modalTitle = Labels.productBundleDetailsTitle;
+      const modalLabels = {
+        skuLabel: this.modalSkuLabel || defaultSkuLabel,
+        quantityLabel: this.quantityLabel || defaultQuantityLabel
+      };
+      const orderItem = convertCartItemToOrderItem(itemData, childCartItems, this._currencyIsoCode, modalLabels);
+      this.isLoadingConfiguration = false;
+      ProductBundleDetailsModal.open({
+        headerTitle: this.modalTitle,
+        currencyIsoCode: this._currencyIsoCode,
+        orderItem: orderItem,
+        navContext: this.navContext,
+        label: this.modalTitle,
+        customCssStyles: this.cartItemsStyles
+      });
+    } finally {
+      this.isLoadingConfiguration = false;
+    }
+  }
+  async getChildCartItemsForItem(cartItemId) {
+    if (this.hasChildCartItems(cartItemId)) {
+      return this.childCartItems?.[cartItemId];
+    }
+    const data = await dispatchActionAsync(this, createChildCartItemsLoadAction({
+      cartItemId: cartItemId
+    }));
+    if (!isChildCartItemsData(data)) {
+      return {};
+    }
+    if (data.childCartItems.length > 0) {
+      this.childCartItems[cartItemId] = data;
+    }
+    return data;
+  }
+  hasChildCartItems(cartItemId) {
+    const childItems = this.childCartItems[cartItemId];
+    return Boolean(childItems && childItems.childCartItems && childItems.childCartItems.length > 0);
+  }
+  get viewBundleButtonLabel() {
+    return this.viewBundleLabel || Labels.seeConfigButtonText;
   }
 }

@@ -1,7 +1,7 @@
 import { LightningElement, wire, api } from 'lwc';
 import { NavigationContext, generateUrl, navigate } from 'lightning/navigation';
 import { CartStatusAdapter, cartStatusUpdate, getCarts } from 'commerce/checkoutCartApi';
-import { AppContextAdapter } from 'commerce/contextApi';
+import { SessionContextAdapter } from 'commerce/contextApi';
 import generateLabel from './textGenerator';
 import { generateStyleProperties } from 'experience/styling';
 import Toast from 'site/commonToast';
@@ -27,13 +27,9 @@ export default class CartBadgeUi extends LightningElement {
   @api
   showCartsList = false;
   @api
-  isB2bStore = false;
-  @api
   defaultPillLabel;
   @api
   cartId;
-  @api
-  isLoggedIn;
   get iconUrl() {
     return `${BasePath}/assets/icons/cart.svg#cart`;
   }
@@ -53,8 +49,8 @@ export default class CartBadgeUi extends LightningElement {
   totalCartCount;
   @api
   badgeItemsCount;
-  @wire(AppContextAdapter)
-  _appContext;
+  @wire(SessionContextAdapter)
+  _sessionContext;
   get customStyles() {
     return generateStyleProperties([{
       name: '--com-c-unified-cart-badge-link-color',
@@ -125,20 +121,13 @@ export default class CartBadgeUi extends LightningElement {
     if (this.showMiniCart) {
       this.handleOpenMiniCart();
     } else if (this.navContext) {
-      const isMultiCartEnabled = Boolean(this._appContext?.data?.commerceMultiCartEnabled);
-      let pageName;
-      if (isMultiCartEnabled && this.isLoggedIn && this.isB2bStore) {
-        pageName = this.cartId ? 'Cart_Detail' : 'Cart_List';
-      } else {
-        pageName = 'Current_Cart';
-      }
       const pageRef = {
         type: 'comm__namedPage',
         attributes: {
-          name: pageName
+          name: 'Current_Cart'
         }
       };
-      if (pageName === 'Cart_Detail' && this.cartId) {
+      if (this.cartId) {
         pageRef.state = {
           recordId: this.cartId
         };
@@ -189,7 +178,7 @@ export default class CartBadgeUi extends LightningElement {
     if (value === VIEW_ALL_CARTS_MENU_VALUE) {
       this.navigateToCartListPage();
     } else {
-      this.navigateToCartDetailPage(value);
+      this.navigateToCartPage(value);
     }
   }
   handleKeyboardClick(event) {
@@ -274,7 +263,9 @@ export default class CartBadgeUi extends LightningElement {
   fetchCarts() {
     this._cartsFetchState = 'loading';
     getCarts({
-      pageSize: CART_LIST_PAGE_SIZE
+      pageSize: CART_LIST_PAGE_SIZE,
+      pageNumber: 1,
+      collaborationFilter: 'All'
     }).then(data => {
       const carts = Array.isArray(data?.carts) ? data.carts : [];
       this._totalCartsCount = data?.total ?? carts.length;
@@ -282,7 +273,7 @@ export default class CartBadgeUi extends LightningElement {
       this._cartMenuItems = cartsToShow.map(cart => ({
         id: cart.cartId ?? '',
         label: this.buildCartMenuLabel(cart.name, cart.totalProductCount, cart.uniqueProductCount, cart.cartId),
-        isDefault: cart.isSecondary === false
+        isDefault: cart.isSecondary === false && this.isOwnedByCurrentUser(cart.ownerId)
       }));
       this._cartsFetchState = 'success';
     }).catch(() => {
@@ -291,9 +282,16 @@ export default class CartBadgeUi extends LightningElement {
       this._cartsFetchState = 'error';
     });
   }
+  isOwnedByCurrentUser(ownerId) {
+    const currentUserId = this._sessionContext?.data?.userId?.substring(0, 15);
+    if (!currentUserId || !ownerId) {
+      return true;
+    }
+    return ownerId.substring(0, 15) === currentUserId;
+  }
   getCartsToShow(carts) {
-    const primaryCart = carts.find(cart => cart.isSecondary === false);
-    const secondaryCarts = carts.filter(cart => cart.isSecondary === true);
+    const primaryCart = carts.find(cart => cart.isSecondary === false && this.isOwnedByCurrentUser(cart.ownerId));
+    const secondaryCarts = carts.filter(cart => cart !== primaryCart);
     if (primaryCart) {
       return [primaryCart, ...secondaryCarts.slice(0, MAX_CART_LIST_ITEMS - 1)];
     }
@@ -309,12 +307,12 @@ export default class CartBadgeUi extends LightningElement {
       });
     }
   }
-  navigateToCartDetailPage(cartId) {
+  navigateToCartPage(cartId) {
     if (this.navContext) {
       navigate(this.navContext, {
         type: 'comm__namedPage',
         attributes: {
-          name: 'Cart_Detail'
+          name: 'Current_Cart'
         },
         state: {
           recordId: cartId

@@ -54,11 +54,7 @@ button.slds-button_icon:focus {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: var(--dxp-s-header-background-color, var(--lwc-colorBackground, #fff));
-    background-image: var(--cart-list-icon-url);
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    background-color: var(--com-c-layout-header-background-color, var(--dxp-g-root, #fff));
     pointer-events: none;
     z-index: 1;
 }
@@ -69,20 +65,30 @@ button.slds-button_icon:focus {
 .cart-list-wrapper::after {
     content: '';
     position: absolute;
-    left: -3px;
-    top: -3px;
-    right: -3px;
-    bottom: -3px;
-    border: 2px solid transparent;
-    border-radius: 4px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--com-c-unified-cart-badge-link-color, var(--dxp-s-button-color, var(--dxp-g-brand)));
+    -webkit-mask: var(--cart-list-icon-url) no-repeat center / contain;
+    mask: var(--cart-list-icon-url) no-repeat center / contain;
     pointer-events: none;
     z-index: 2;
 }
+.cart-list-wrapper:hover::after,
 .cart-list-wrapper:focus-within::after {
-    border-color: var(--dxp-g-brand, #0176d3);
+    background-color: var(
+        --com-c-unified-cart-badge-link-color-hover,
+        var(--dxp-s-button-color-hover, var(--dxp-g-brand-1))
+    );
 }
-.cart-list-wrapper.menu-open:focus-within::after {
-    border-color: transparent;
+.cart-list-wrapper:focus-within {
+    outline: 2px solid var(--dxp-g-brand, #0176d3);
+    outline-offset: 1px;
+    border-radius: 4px;
+}
+.cart-list-wrapper.menu-open:focus-within {
+    outline-color: transparent;
 }
 .cart-list-wrapper ~ .slds-notification-badge.show-notification {
     all: unset !important;
@@ -117,6 +123,7 @@ button.slds-button_icon:focus {
 }
 .cart-list-item:hover {
     background-color: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    color: var(--dxp-g-root-contrast, #1c1c1c);
 }
 .cart-list-item-label {
     flex: 1;

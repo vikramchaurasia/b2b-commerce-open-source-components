@@ -74,6 +74,9 @@
     }, {
       "name" : "seeConfigButtonText",
       "value" : "See Configuration"
+    }, {
+      "name" : "bonusProductText",
+      "value" : "Bonus Product: {0}"
     } ]
   },
   "urlName" : "cartitem"

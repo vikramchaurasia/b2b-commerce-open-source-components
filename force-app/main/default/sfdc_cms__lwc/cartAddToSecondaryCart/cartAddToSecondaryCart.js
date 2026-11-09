@@ -4,7 +4,7 @@ import { createCartsGetAction, createCartItemAddAction, dispatchAction } from 'c
 import { SessionContextAdapter } from 'commerce/contextApi';
 import { addToSecondaryCart, addToSecondaryCartFailureToast, addToSecondaryCartSuccessToast, fetchSecondaryCartsErrorLine1, fetchSecondaryCartsErrorLine2, fetchSecondaryCartsLoading, fetchSecondaryCartsNoResult, itemsLabel } from './labels';
 import { MAX_SECONDARY_CARTS } from './constants';
-import { getCartCountByType, getCartMenuLabel, getTruncatedName, showAddToSecondaryCartErrorToast, showAddToSecondaryCartSuccessToast } from './utils';
+import { getCartCountByType, getCartMenuLabel, getApiErrorMessage, getTruncatedName, isSecondaryOrSharedCart, showAddToSecondaryCartErrorToast, showAddToSecondaryCartSuccessToast } from './utils';
 export { MAX_NAME_LENGTH, MAX_SECONDARY_CARTS, TRAILING_DOTS } from './constants';
 export { getCartCountByType, getCartMenuLabel, getTruncatedName, showSecondaryCartErrorToast } from './utils';
 export default class CartAddToSecondaryCart extends LightningElement {
@@ -78,14 +78,17 @@ export default class CartAddToSecondaryCart extends LightningElement {
   }
   populateSecondaryCartMenuItems() {
     this._isMenuPopulated = false;
-    const payload = {
+    const cartsRequest = {
+      collaborationFilter: 'All',
+      pageNumber: 1,
       pageSize: MAX_SECONDARY_CARTS + 1
     };
-    dispatchAction(this, createCartsGetAction(payload), {
+    dispatchAction(this, createCartsGetAction(cartsRequest), {
       onSuccess: data => {
         const carts = Array.isArray(data?.carts) ? data.carts : [];
         const showItemCount = this.showItemCount !== false;
-        this.secondaryCarts = carts.filter(cart => cart.isSecondary === true).slice(0, MAX_SECONDARY_CARTS).map(cart => {
+        const userId15 = this.sessionContext?.data?.userId?.slice(0, 15);
+        this.secondaryCarts = carts.filter(cart => isSecondaryOrSharedCart(cart, userId15)).slice(0, MAX_SECONDARY_CARTS).map(cart => {
           const count = getCartCountByType(this.countType, cart.totalProductCount, cart.uniqueProductCount);
           return {
             id: cart.cartId,
@@ -133,8 +136,9 @@ export default class CartAddToSecondaryCart extends LightningElement {
       onSuccess: () => {
         showAddToSecondaryCartSuccessToast(this.formatToastMessage(addToSecondaryCartSuccessToast, selectedProductName, selectedCartName), this);
       },
-      onError: () => {
-        showAddToSecondaryCartErrorToast(this.formatToastMessage(addToSecondaryCartFailureToast, selectedProductName, selectedCartName), this);
+      onError: error => {
+        const failureMessage = getApiErrorMessage(error) ?? this.formatToastMessage(addToSecondaryCartFailureToast, selectedProductName, selectedCartName);
+        showAddToSecondaryCartErrorToast(failureMessage, this);
       }
     });
   }

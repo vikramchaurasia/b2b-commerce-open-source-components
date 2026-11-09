@@ -1,0 +1,127 @@
+/* Adds to lightning-modal-body's 16px base: +8px desktop (=24px), +0 mobile (=16px). */
+.error-report-modal-content {
+    padding: 8px;
+}
+
+@media (max-width: 64em) {
+    .error-report-modal-content {
+        padding: 0;
+    }
+}
+
+/* Light-gray rounded summary box with a bold red count */
+.error-report-summary {
+    background: var(--slds-g-color-neutral-base-95, #f3f3f3);
+    border-radius: 12px;
+    padding: var(--dxp-g-spacing-medium, 16px);
+    margin-bottom: 16px;
+}
+
+.error-report-summary-count {
+    font-family: var(--lwc-fontFamily, 'Salesforce Sans', Arial, sans-serif);
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--dxp-g-destructive, #da0000);
+}
+
+/* Scrollable list (up to ~2000 rows, no pagination); row spacing 24px desktop / 16px mobile. */
+.error-report-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: var(--dxp-g-spacing-large, 24px);
+}
+
+/* Mobile: tighten the inter-row spacing to 16px. */
+@media (max-width: 64em) {
+    .error-report-list {
+        gap: var(--dxp-g-spacing-medium, 16px);
+    }
+}
+
+/* Visible focus indicator for the keyboard-focusable scroll region (SC 2.4.7) */
+.error-report-list:focus-visible {
+    outline: 2px solid var(--slds-g-color-border-brand-1, #0176d3);
+    outline-offset: 2px;
+}
+
+.error-report-row {
+    font-family: var(--lwc-fontFamily, 'Salesforce Sans', Arial, sans-serif);
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--slds-g-color-neutral-base-10, #181818);
+}
+
+.error-report-row-label {
+    font-weight: 700;
+    /* logical property so the gap sits between the label and message in RTL too */
+    margin-inline-end: 4px;
+}
+
+.error-report-row-message {
+    font-weight: 400;
+}
+
+/* Fetch-failure alert */
+.error-report-fetch-error {
+    color: var(--slds-g-color-error-base-30, #ba0517);
+    font-family: var(--lwc-fontFamily, 'Salesforce Sans', Arial, sans-serif);
+    font-size: 14px;
+    line-height: 18px;
+}
+
+/* Empty state */
+.error-report-empty {
+    color: var(--slds-g-color-on-surface-3, #5c5c5c);
+    font-family: var(--lwc-fontFamily, 'Salesforce Sans', Arial, sans-serif);
+    font-size: 14px;
+    line-height: 18px;
+}
+
+/* Loading state — flex-centered column: spinner above the status text with a fixed gap. */
+.modal-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+}
+
+.spinner-loading-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Match the create/edit cart modal's spinner↔text spacing. */
+    gap: var(--dxp-g-spacing-large, 1.5rem);
+}
+
+/* Bound the position:absolute spinner to a fixed box so it doesn't overlap the label below. */
+.spinner-container {
+    position: relative;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+}
+
+/* Footer */
+.footer-content-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+}
+
+/* Stack button full-width on mobile */
+@media (max-width: 64em) {
+    .footer-content-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}

@@ -1,5 +1,5 @@
 import Toast from 'site/commonToast';
-import { MAX_NAME_LENGTH, TRAILING_DOTS } from './constants';
+import { INSUFFICIENT_ACCESS, MAX_NAME_LENGTH, TRAILING_DOTS } from './constants';
 export function getTruncatedName(name) {
   if (name === undefined || name.length <= MAX_NAME_LENGTH) {
     return name;
@@ -29,6 +29,10 @@ export function getCartMenuLabel(cartName, count, itemsLabel, showItemCount = tr
   const itemCount = getTotalProductCount(count);
   return `${cartName} (${itemCount} ${itemsLabel})`;
 }
+export function isSecondaryOrSharedCart(cart, currentUserId) {
+  const isSharedWithUser = Boolean(currentUserId && cart.ownerId && cart.ownerId.slice(0, 15) !== currentUserId);
+  return cart.isSecondary === true || isSharedWithUser;
+}
 export function showAddToSecondaryCartSuccessToast(label, target) {
   Toast.show({
     label,
@@ -43,4 +47,16 @@ export function showSecondaryCartErrorToast(label, target) {
 }
 export function showAddToSecondaryCartErrorToast(label, target) {
   showSecondaryCartErrorToast(label, target);
+}
+export function getApiErrorMessage(error) {
+  const errors = error?.errors;
+  const firstError = Array.isArray(errors) ? errors[0] : undefined;
+  if (typeof firstError !== 'object' || firstError === null) {
+    return undefined;
+  }
+  const {
+    type,
+    message
+  } = firstError;
+  return type === INSUFFICIENT_ACCESS && typeof message === 'string' ? message : undefined;
 }

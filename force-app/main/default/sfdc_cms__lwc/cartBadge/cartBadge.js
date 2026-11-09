@@ -63,8 +63,6 @@ export default class CartBadge extends LightningElement {
   showRecommendation = false;
   @api
   defaultPillLabel;
-  @api
-  isB2bStore = false;
   @wire(AppContextAdapter)
   appContext;
   @wire(SessionContextAdapter)
@@ -74,9 +72,6 @@ export default class CartBadge extends LightningElement {
   }
   get _miniCartEnabled() {
     return this.showMiniCart && Boolean(this.sessionContext?.data?.isLoggedIn || this.appContext?.data?.guestCartEnabled);
-  }
-  get _isLoggedIn() {
-    return Boolean(this.sessionContext?.data?.isLoggedIn);
   }
   cart;
   @wire(CartAdapter)
