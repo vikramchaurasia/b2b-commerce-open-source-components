@@ -1,0 +1,31 @@
+/* Light-DOM custom elements default to display: inline. Make the host a block
+   so consumers can size it via flex, width, or inline-size without first
+   having to flex-blockify it. Width is intentionally left to the consumer. */
+:host {
+    display: block;
+}
+
+.new-cart-button {
+    background: transparent;
+    border: 0;
+    padding: 0 0 0.75rem 0;
+    font-size: 1rem;
+    line-height: 1.25rem;
+    font-weight: 700;
+    text-decoration: underline;
+    color: var(--dxp-g-root-contrast, #1c1c1c);
+    margin-bottom: -1px;
+}
+
+.new-cart-button-content {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.add-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    fill: currentColor;
+}

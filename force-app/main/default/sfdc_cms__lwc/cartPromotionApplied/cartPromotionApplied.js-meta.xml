@@ -20,6 +20,7 @@
       <property name="showTermsAndConditions" type="Boolean" default="false" label="Show terms and conditions" description="Terms and conditions are based on the promotion&amp;apos;s settings."></property>
       <property name="termsAndConditionsTitleText" type="String" default="Terms and Conditions" translatable="true" label="Terms and Conditions Header" description="Header for the window that shows terms and conditions for a promotion."></property>
       <property name="name" type="String" default="{!Promotion.name}" label="Promotion Name" description="This expression provides the name that&amp;apos;s shown for an automatic promotion."></property>
+      <property name="tierLabel" type="String" default="{!Promotion.tierLabel}" label="Promotion Tier Label" description="This expression provides the tier-specific label that&amp;apos;s shown for a tiered promotion."></property>
       <property name="couponId" type="String" default="{!Promotion.couponId}" label="Coupon ID" description="This expression provides the coupon ID that&amp;apos;s required to show an applied manual promotion."></property>
       <property name="termsAndConditions" type="String" default="{!Promotion.termsAndConditions}" label="Terms and Conditions" description="This expression provides the terms and conditions for an applied promotion."></property>
       <property name="couponCode" type="String" default="{!Promotion.couponCode}" label="Coupon Code" description="This expression provides the coupon code that&amp;apos;s shown for a manual promotion."></property>
@@ -50,6 +51,7 @@
         <designSection name="promotionExpressions">
           <designLayoutItems>
             <designLayoutProperty name="name"></designLayoutProperty>
+            <designLayoutProperty name="tierLabel"></designLayoutProperty>
             <designLayoutProperty name="couponId"></designLayoutProperty>
             <designLayoutProperty name="termsAndConditions"></designLayoutProperty>
             <designLayoutProperty name="couponCode"></designLayoutProperty>

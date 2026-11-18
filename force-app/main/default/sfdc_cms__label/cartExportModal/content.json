@@ -1,0 +1,50 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartExportModal",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "exportCartHeader",
+      "value" : "Export Cart"
+    }, {
+      "name" : "exportNameLabel",
+      "value" : "Export Name"
+    }, {
+      "name" : "mandatoryFieldsLabel",
+      "value" : "Mandatory Export Fields"
+    }, {
+      "name" : "optionalFieldsLabel",
+      "value" : "Optional Export Fields (Select up to {0})"
+    }, {
+      "name" : "exportAsLabel",
+      "value" : "Export As"
+    }, {
+      "name" : "exportAsCsvLabel",
+      "value" : "CSV"
+    }, {
+      "name" : "exportingSpinnerText",
+      "value" : "Exporting cart items..."
+    }, {
+      "name" : "cancelButtonLabel",
+      "value" : "Cancel"
+    }, {
+      "name" : "confirmExportButtonLabel",
+      "value" : "Confirm and Export"
+    }, {
+      "name" : "exportSuccessMessage",
+      "value" : "Your cart is being exported. You can track it under My Account."
+    }, {
+      "name" : "exportFailedError",
+      "value" : "We couldn't export your cart. Try again."
+    }, {
+      "name" : "exportRateLimitError",
+      "value" : "You can only export up to 15 carts within 48 hours. Please try again later or delete an export from Cart Exports."
+    }, {
+      "name" : "exportNameRequired",
+      "value" : "Complete this field."
+    }, {
+      "name" : "defaultCartTypePillLabel",
+      "value" : "Default"
+    } ]
+  },
+  "urlName" : "cartexportmodal"
+}

@@ -1,24 +1,39 @@
 <template lwc:render-mode="light">
     <div class="options-menu-container">
         <lightning-button-menu
+            lwc:if={hasVisibleOptions}
+            class="options-button-menu"
+            style={buttonStyle}
             label={_optionsLabel}
             icon-name="utility:chevrondown"
-            menu-alignment="right"
+            menu-alignment="auto"
             variant={variant}
-            disabled={isLoading}
+            data-variant={variant}
+            disabled={isDisabled}
             onselect={handleSelect}>
             <template
                 for:each={options}
                 for:item="option">
                 <lightning-menu-item
+                    if:false={option.isSeparator}
                     key={option.value}
                     value={option.value}
-                    label={option.label}></lightning-menu-item>
+                    label={option.label}
+                    disabled={option.disabled}
+                    class={option.itemClass}></lightning-menu-item>
+                <div
+                    if:true={option.isSeparator}
+                    key={option.value}
+                    role="separator"
+                    class="options-separator"></div>
             </template>
-            <lightning-menu-item
-                class="destructive-menu-item"
-                value="delete"
-                label={_deleteCartLabel}></lightning-menu-item>
+            <template lwc:if={showDeleteOption}>
+                <lightning-menu-item
+                    lwc:if={_showDelete}
+                    class={_deleteMenuClass}
+                    value="delete"
+                    label={_deleteCartLabel}></lightning-menu-item>
+            </template>
         </lightning-button-menu>
     </div>
 </template>

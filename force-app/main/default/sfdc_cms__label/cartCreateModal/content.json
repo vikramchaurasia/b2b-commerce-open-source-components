@@ -56,6 +56,18 @@
     }, {
       "name" : "cartDescInvalidCharactersErrMsg",
       "value" : "Enter only letters, numbers, and spaces."
+    }, {
+      "name" : "finishAndCreateButton",
+      "value" : "Create and Import"
+    }, {
+      "name" : "createWithoutImportButton",
+      "value" : "Create Without Import"
+    }, {
+      "name" : "createCartWithImportSuccessMessage",
+      "value" : "Cart created. Import in progress."
+    }, {
+      "name" : "importFailedError",
+      "value" : "We couldn't start the import. Try again."
     } ]
   },
   "urlName" : "cartcreatemodal"

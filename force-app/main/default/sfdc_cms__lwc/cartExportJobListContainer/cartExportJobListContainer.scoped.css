@@ -1,0 +1,54 @@
+.export-job-list-container {
+    display: block;
+    min-width: 0;
+}
+
+.export-job-list-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.export-job-list-header-left {
+    text-align: left;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+/* Title textBlock + live count inline on the first line ("Cart Exports (N)").
+   Baseline alignment keeps the count on the title's text baseline.
+   The subtitle slot flows below this group. */
+.export-job-list-heading-group {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.export-job-list-count {
+    color: #5c5c5c;
+    white-space: nowrap;
+}
+
+.export-job-list-header-right {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* Mobile: stack heading and full-width Delete All button. */
+@media (max-width: 48em) {
+    .export-job-list-header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .export-job-list-header-right {
+        justify-content: stretch;
+        width: 100%;
+    }
+}

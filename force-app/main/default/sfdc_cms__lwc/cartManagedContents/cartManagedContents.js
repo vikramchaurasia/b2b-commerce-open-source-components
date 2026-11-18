@@ -9,6 +9,8 @@ export default class CartManagedContents extends LightningElement {
   showFooter = false;
   @api
   sortOrder;
+  @api
+  hasActiveAsyncOperation = false;
   get messageSeverity() {
     return this.message?.severity?.toLocaleLowerCase();
   }

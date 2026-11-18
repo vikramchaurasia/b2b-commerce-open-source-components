@@ -4,4 +4,7 @@
   <isExposed>true</isExposed>
   <masterLabel>Cart Import Error Report Modal</masterLabel>
   <description>Modal component that lists the row-level field-mapping errors of a failed cart-item import job</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
 </LightningComponentBundle>

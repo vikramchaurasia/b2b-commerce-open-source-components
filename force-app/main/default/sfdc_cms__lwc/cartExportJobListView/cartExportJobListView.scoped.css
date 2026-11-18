@@ -1,0 +1,26 @@
+.export-job-list-loading {
+    position: relative;
+    min-height: 6rem;
+}
+
+.export-job-list-empty-image img {
+    width: 280px;
+    max-width: 100%;
+    height: auto;
+}
+
+.export-job-list-empty-body {
+    --dxp-c-component-wrapper-spacer-size: 16px;
+}
+
+.export-job-list-empty-message {
+    font-weight: 700;
+}
+
+/* Full-screen overlay spinner blocking interaction during cancel/delete or delete-all mutations */
+.export-job-list-mutation-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background-color: rgba(255, 255, 255, 0.75);
+}

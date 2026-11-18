@@ -1,7 +1,7 @@
 <template lwc:render-mode="light">
     <experience-responsive size="m-">
         <site-checkout-button-ui
-            lwc:if={hasProducts}
+            lwc:if={showButton}
             cart-id={cartId}
             cart-total={mediumCartTotal}
             can-checkout={canCheckout}
@@ -17,7 +17,7 @@
     </experience-responsive>
     <experience-responsive size="s">
         <site-checkout-button-ui
-            lwc:if={hasProducts}
+            lwc:if={showButton}
             cart-id={cartId}
             cart-total={smallCartTotal}
             can-checkout={canCheckout}

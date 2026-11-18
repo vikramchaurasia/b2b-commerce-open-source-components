@@ -2,6 +2,7 @@
     display: flex;
     justify-content: end;
 }
+
 @media (max-width: 48em) {
     .footer-content-container {
         flex-direction: column-reverse;
@@ -9,39 +10,53 @@
         align-items: stretch;
         gap: 0.75rem;
     }
+
     .footer-content-container button {
         width: 100%;
         margin-left: 0rem;
     }
 }
+
 .modal-contents {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
+
+.loading-contents {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Keep a clear visual gap between spinner and loading text. */
 .spinner-loading-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: var(--dxp-g-spacing-x-small, 0.5rem);
+    gap: 1.5rem;
 }
+
 .spinner-loading-group .spinner-container {
-    display: flex;
-    justify-content: center;
+    position: relative;
+    width: 2.25rem;
+    height: 2.25rem;
 }
-.icon-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
-    border-radius: 50%;
-    font-size: 1.5rem;
-    font-weight: bold;
+
+.loading-text {
+    margin-top: 0;
+    line-height: normal;
+    font-weight: 400;
 }
-.icon-confirmDelete {
-    background-color: var(--dxp-g-destructive, #ea001e);
-    color: var(--dxp-g-destructive-contrast, #fff);
+
+/* Warning/info icon, 36x36 (matches deleteAllExportsConfirmModal). Color comes from the SVG asset. */
+.confirmation-icon {
+    width: 2.25rem;
+    height: 2.25rem;
 }
+
+/* info-filled.svg has no fill of its own, so tint it with the theme's brand color. */
 .icon-confirmSave {
-    background-color: var(--dxp-g-brand, #0070d2);
-    color: var(--dxp-g-brand-contrast, #fff);
+    fill: var(--dxp-g-brand);
 }

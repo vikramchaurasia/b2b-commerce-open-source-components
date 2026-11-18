@@ -2,26 +2,39 @@
     <lightning-modal-header label={headerText}></lightning-modal-header>
     <lightning-modal-body>
         <div class="slds-p-vertical_x-large modal-contents">
+            <div
+                class="slds-assistive-text loading-status"
+                role="status"
+                aria-live="polite">
+                <template lwc:if={_isLoading}>{spinnerHelpText}</template>
+            </div>
             <div lwc:if={_isNotLoading}>
                 <div
                     lwc:if={_showIcon}
                     class="slds-m-bottom_small">
-                    <span
+                    <svg
                         class={_iconClass}
-                        aria-hidden="true">
-                        {_iconText}
-                    </span>
+                        aria-hidden="true"
+                        focusable="false">
+                        <use href={_iconUrl}></use>
+                    </svg>
                 </div>
                 <div class="slds-text-heading_small">{confirmationMessage}</div>
             </div>
             <div
                 lwc:else
-                class="modal-contents">
+                class="loading-contents">
                 <div class="spinner-loading-group">
                     <div class="spinner-container">
-                        <lightning-spinner alternative-text={spinnerHelpText}></lightning-spinner>
+                        <lightning-spinner
+                            aria-hidden="true"
+                            alternative-text={spinnerHelpText}></lightning-spinner>
                     </div>
-                    <div class="slds-text-align_center slds-text-heading_small">{spinnerHelpText}</div>
+                    <h2
+                        class="loading-text slds-text-align_center slds-text-heading_small"
+                        aria-hidden="true">
+                        {spinnerHelpText}
+                    </h2>
                 </div>
             </div>
         </div>

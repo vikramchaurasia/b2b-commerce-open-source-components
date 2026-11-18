@@ -1,0 +1,159 @@
+<template>
+    <lightning-modal-header label={_headerLabel}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <!-- Always-present live region - must exist in DOM before content is written so screen readers announce the transition (SC 4.1.3) -->
+        <div
+            role="status"
+            aria-live="polite"
+            class="slds-assistive-text">
+            <template lwc:if={isExportInProgress}>{_labels.exportingSpinnerText}</template>
+        </div>
+
+        <div
+            lwc:if={_isNotLoading}
+            class="export-modal-body">
+            <!-- Cart Info Card -->
+            <div class="cart-info-card">
+                <div class="cart-info-body">
+                    <div class="cart-info-details">
+                        <p
+                            class="cart-info-name"
+                            title={_cartName}>
+                            {_cartName}
+                        </p>
+                        <p class="cart-info-meta">{_cartMeta}</p>
+                        <p
+                            lwc:if={_cartDescription}
+                            class="cart-info-description">
+                            {_cartDescription}
+                        </p>
+                    </div>
+                    <div class="cart-info-right">
+                        <site-common-pill
+                            lwc:if={_isDefaultCart}
+                            label-text={_labels.defaultCartTypePillLabel}
+                            class="cart-header-pill"></site-common-pill>
+                        <span
+                            lwc:if={_hasCartTotal}
+                            class="cart-info-total">
+                            <lightning-formatted-number
+                                value={_cartTotalAmount}
+                                format-style="currency"
+                                currency-code={_cartCurrencyCode}
+                                currency-display-as="symbol"></lightning-formatted-number>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Export Name -->
+            <div class="form-group">
+                <lightning-input
+                    data-name="exportName"
+                    label={_labels.exportNameLabel}
+                    value={_exportName}
+                    onchange={handleExportNameChange}
+                    onblur={handleExportNameBlur}
+                    data-validate="true"
+                    required
+                    class="export-name-field"></lightning-input>
+            </div>
+
+            <!-- Export As -->
+            <fieldset class="form-group export-fieldset">
+                <legend class="section-label">{_labels.exportAsLabel}</legend>
+                <div class="radio-option">
+                    <input
+                        id="formatCsv"
+                        type="radio"
+                        name="exportFormat"
+                        value="csv"
+                        checked={_isCsvSelected}
+                        disabled />
+                    <label for="formatCsv">{_labels.exportAsCsvLabel}</label>
+                </div>
+            </fieldset>
+
+            <!-- Mandatory Export Fields -->
+            <fieldset class="form-group export-fieldset">
+                <legend class="section-label">{_labels.mandatoryFieldsLabel}</legend>
+                <div class="fields-grid">
+                    <template
+                        for:each={_mandatoryFields}
+                        for:item="field">
+                        <div
+                            key={field.name}
+                            class="field-item">
+                            <input
+                                type="checkbox"
+                                id={field.inputId}
+                                checked
+                                disabled />
+                            <label for={field.inputId}>{field.label}</label>
+                        </div>
+                    </template>
+                </div>
+            </fieldset>
+
+            <!-- Optional Export Fields -->
+            <fieldset
+                lwc:if={_hasOptionalFields}
+                class="form-group export-fieldset">
+                <legend class="section-label">{_labels.optionalFieldsLabel}</legend>
+                <div class="fields-grid">
+                    <template
+                        for:each={_optionalFieldOptions}
+                        for:item="field">
+                        <div
+                            key={field.name}
+                            class="field-item">
+                            <input
+                                type="checkbox"
+                                id={field.inputId}
+                                checked={field.selected}
+                                disabled={field.disabled}
+                                data-field-key={field.name}
+                                onchange={handleOptionalFieldChange} />
+                            <label for={field.inputId}>{field.label}</label>
+                        </div>
+                    </template>
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Loading State -->
+        <div
+            lwc:else
+            class="modal-contents slds-p-vertical_x-large">
+            <div class="slds-align_absolute-center slds-is-relative spinner-container">
+                <lightning-spinner
+                    aria-hidden="true"
+                    alternative-text={_labels.exportingSpinnerText}></lightning-spinner>
+            </div>
+            <h2 class="slds-text-align_center slds-text-heading_small">{_labels.exportingSpinnerText}</h2>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer lwc:if={_isNotLoading}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                assistive-text={_labels.cancelButtonLabel}
+                name="cancelExportButton"
+                onclick={handleClose}>
+                {_labels.cancelButtonLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
+                variant="primary"
+                width="stretch"
+                disabled={_isExportButtonDisabled}
+                assistive-text={_labels.confirmExportButtonLabel}
+                name="confirmExportButton"
+                onclick={handleConfirmExport}>
+                {_labels.confirmExportButtonLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+</template>

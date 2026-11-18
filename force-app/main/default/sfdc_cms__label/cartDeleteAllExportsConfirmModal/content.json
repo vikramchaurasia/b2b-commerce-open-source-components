@@ -1,0 +1,20 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartDeleteAllExportsConfirmModal",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "deleteAllConfirmTitle",
+      "value" : "Delete all exports?"
+    }, {
+      "name" : "deleteAllConfirmBody",
+      "value" : "Deleted exports are permanently removed. You won't be able to access or download them."
+    }, {
+      "name" : "deleteAllConfirmButton",
+      "value" : "Delete All"
+    }, {
+      "name" : "deleteAllCancelButton",
+      "value" : "Cancel"
+    } ]
+  },
+  "urlName" : "cartdeleteallexportsconfirmmodal"
+}

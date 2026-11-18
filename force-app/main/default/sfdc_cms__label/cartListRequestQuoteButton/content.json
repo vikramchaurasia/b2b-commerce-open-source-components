@@ -1,0 +1,17 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartListRequestQuoteButton",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "quoteRequestError",
+      "value" : "We couldn’t submit your request. Refresh the page and try again."
+    }, {
+      "name" : "bundleRequestError",
+      "value" : "You can't request quotes for product bundles."
+    }, {
+      "name" : "subscriptionRequestError",
+      "value" : "You can't request quotes for subscription products."
+    } ]
+  },
+  "urlName" : "cartlistrequestquotebutton"
+}

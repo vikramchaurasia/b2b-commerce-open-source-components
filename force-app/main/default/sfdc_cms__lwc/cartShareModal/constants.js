@@ -1,0 +1,17 @@
+export const MIN_SEARCH_CHARS = 3;
+export const SEARCH_DEBOUNCE_MS = 300;
+export const BLUR_DISMISS_MS = 200;
+export const ACCESS_LEVEL_VIEW = 'View';
+export const ACCESS_LEVEL_EDIT = 'Edit';
+export const SHARE_ELIGIBLE_USER_TYPE = 'PowerCustomerSuccess';
+export const ACCESS_LEVEL_CHECKOUT = 'Checkout';
+export const ACCESS_LEVEL_VALUES = [ACCESS_LEVEL_VIEW, ACCESS_LEVEL_EDIT, ACCESS_LEVEL_CHECKOUT];
+export const DEFAULT_ACCESS_LEVEL = ACCESS_LEVEL_VIEW;
+export const SALESFORCE_ID_15_LENGTH = 15;
+export const SHARE_INPUT_ID = 'share-with-input';
+export const SHARE_LISTBOX_ID = 'share-suggestions';
+export const SUGGESTION_OPTION_ID_PREFIX = 'share-cart-suggestion-';
+export const NO_ACTIVE_INDEX = -1;
+export const EMPTY_DROPDOWN_GAP_PX = 4;
+export const COLLABORATOR_LIMIT_ERROR_CODE = 'LIMIT_EXCEEDED';
+export const COLLABORATOR_LIMIT_NUMBER_REGEX = /\((\d+)\)/;

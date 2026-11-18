@@ -1,0 +1,185 @@
+<template lwc:render-mode="light">
+    <div class="cart-import-form">
+        <div class={_uploadLabelClass}>{_labels.fileUploadLabel}</div>
+
+        <div
+            class={_fileContainerClass}
+            role="region"
+            aria-label={_labels.fileUploadLabel}
+            ondrop={handleFileDrop}
+            ondragover={handleDragOver}
+            ondragleave={handleDragLeave}>
+            <input
+                type="file"
+                lwc:ref="fileInput"
+                class="slds-hide"
+                accept=".csv"
+                onchange={handleFileChange}
+                data-id="file-input"
+                aria-label={_labels.uploadFileText} />
+
+            <template lwc:if={_showErrorFileCard}>
+                <div class="file-card file-card_error">
+                    <div class="file-card-icon">
+                        <svg
+                            class="gsheet-icon"
+                            aria-hidden="true"
+                            focusable="false">
+                            <use href={_gsheetIconUrl}></use>
+                        </svg>
+                    </div>
+                    <div class="file-card-info">
+                        <div
+                            class="file-card-name slds-truncate"
+                            title={selectedFileName}>
+                            {selectedFileName}
+                        </div>
+                        <div class="file-card-size">{fileCardStatusText}</div>
+                    </div>
+                    <div class="file-card-action">
+                        <button
+                            class="reupload-link"
+                            type="button"
+                            onclick={handleReupload}>
+                            {_labels.reuploadText}
+                        </button>
+                    </div>
+                </div>
+            </template>
+            <template lwc:elseif={selectedFileName}>
+                <!--
+                    Regular file card. Renders during validation, upload-in-flight,
+                    upload-success, AND upload-failure (the post-validation failure
+                    mode the host signals via fileCardStatusText, distinct from the
+                    rejected-file branch above which has its own Re-upload).
+                -->
+                <div class="file-card">
+                    <div class="file-card-icon">
+                        <svg
+                            class="gsheet-icon"
+                            aria-hidden="true"
+                            focusable="false">
+                            <use href={_gsheetIconUrl}></use>
+                        </svg>
+                    </div>
+                    <div class="file-card-info">
+                        <div
+                            class="file-card-name slds-truncate"
+                            title={selectedFileName}>
+                            {selectedFileName}
+                        </div>
+                        <template lwc:if={isFileUploading}></template>
+                        <template lwc:else>
+                            <div class="file-card-size">{fileCardStatusText}</div>
+                        </template>
+                    </div>
+                    <div class="file-card-action">
+                        <template lwc:if={isFileUploading}>
+                            <span
+                                class="file-card-progress"
+                                role="progressbar"
+                                aria-label={uploadProgressLabel}
+                                aria-valuenow={uploadProgressValue}
+                                aria-valuemin="0"
+                                aria-valuemax="100">
+                                <span class="file-card-progress-label">{uploadProgressLabel}</span>
+                                <span class="file-card-progress-percent">{uploadProgressPercent}</span>
+                            </span>
+                            <button
+                                class="slds-button slds-button_icon delete-button"
+                                title={_labels.cancelButtonLabel}
+                                onclick={handleCancelUpload}>
+                                <svg
+                                    class="close-icon"
+                                    aria-hidden="true"
+                                    focusable="false">
+                                    <use href={_closeIconUrl}></use>
+                                </svg>
+                                <span class="slds-assistive-text">{_labels.cancelButtonLabel}</span>
+                            </button>
+                        </template>
+                        <template lwc:else>
+                            <button
+                                class="slds-button slds-button_icon delete-button"
+                                title={_labels.removeFileText}
+                                onclick={handleRemoveFile}>
+                                <svg
+                                    class="trash-icon"
+                                    aria-hidden="true"
+                                    focusable="false">
+                                    <use href={_trashIconUrl}></use>
+                                </svg>
+                                <span class="slds-assistive-text">{_labels.removeFileText}</span>
+                            </button>
+                        </template>
+                    </div>
+                </div>
+
+                <div
+                    lwc:if={showMappings}
+                    class="identifiers-section"
+                    role="group"
+                    aria-labelledby="identifiers-header">
+                    <div
+                        id="identifiers-header"
+                        class="identifiers-header">
+                        {_labels.cartItemIdentifiersLabel}
+                    </div>
+
+                    <template
+                        for:each={_mappingRows}
+                        for:item="row">
+                        <hr
+                            lwc:if={row.showDivider}
+                            key={row.key}
+                            class="identifier-divider" />
+                        <div
+                            key={row.key}
+                            class="identifier-row">
+                            <span class="identifier-label">
+                                {row.label}
+                                <abbr
+                                    lwc:if={row.isRequired}
+                                    class="required-marker"
+                                    aria-hidden="true">
+                                    *
+                                </abbr>
+                            </span>
+                            <lightning-combobox
+                                name={row.fieldName}
+                                data-field-name={row.fieldName}
+                                label={row.label}
+                                value={row.value}
+                                placeholder={_labels.searchAndSelectPlaceholder}
+                                options={headerOptions}
+                                onchange={handleMappingChange}
+                                required={row.isRequired}
+                                variant="label-hidden"
+                                class="identifier-combobox"></lightning-combobox>
+                        </div>
+                    </template>
+                </div>
+            </template>
+            <template lwc:else>
+                <div
+                    class="upload-area"
+                    role="button"
+                    tabindex="0"
+                    aria-label={_labels.uploadFileText}
+                    onclick={handleUploadClick}
+                    onkeydown={handleUploadKeydown}>
+                    <span class="upload-link">{_labels.uploadFileText}</span>
+                    <div class="drop-file-text">{_labels.dropFileText}</div>
+                </div>
+            </template>
+        </div>
+
+        <template lwc:if={fileError}>
+            <p
+                class="file-error-text"
+                role="alert">
+                {fileError}
+            </p>
+        </template>
+    </div>
+</template>

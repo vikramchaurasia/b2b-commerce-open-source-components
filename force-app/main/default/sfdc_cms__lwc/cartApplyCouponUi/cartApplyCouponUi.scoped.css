@@ -21,3 +21,41 @@ p.error {
     --sds-c-input-color-border-focus: var(--dxp-g-destructive);
     overflow-wrap: anywhere;
 }
+
+.tooltip-content {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 20rem;
+    white-space: normal;
+    word-wrap: break-word;
+    background-color: var(--dxp-g-root-contrast);
+    color: var(--dxp-g-root);
+}
+
+.tooltip-container {
+    position: relative;
+}
+
+.tooltip-container:hover .tooltip-content,
+.tooltip-container:focus-within .tooltip-content {
+    display: block;
+}
+
+.disabled-reveal-button {
+    pointer-events: none;
+    opacity: 0.25;
+    cursor: default;
+}
+
+.quoted-items-info {
+    color: var(--dxp-g-text-color, #3e3e3c);
+    margin-bottom: var(--dxp-g-spacing-xsmall);
+}
+
+.quoted-items-info lightning-icon {
+    flex-shrink: 0;
+}

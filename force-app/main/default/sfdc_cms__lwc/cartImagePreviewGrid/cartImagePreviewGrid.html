@@ -1,0 +1,43 @@
+<template lwc:render-mode="light">
+    <div
+        class={gridClasses}
+        role="group"
+        aria-label={gridAriaLabel}
+        data-automation="cart-image-preview-grid">
+        <!--
+            Populated state: up to four thumbnails. `experience-picture` renders nothing when the
+            URL is invalid (no broken <img>), and each product falls back to a local default URL,
+            so a missing/failed image degrades gracefully. Duplicates are intentionally kept
+            (dynamic bundles are not deduped) — the index-based key gives each its own cell.
+        -->
+        <template lwc:if={hasProducts}>
+            <template
+                for:each={slots}
+                for:item="slot">
+                <div
+                    key={slot.key}
+                    class="preview-cell"
+                    data-automation="preview-cell">
+                    <experience-picture
+                        alternative-text={slot.altText}
+                        images={slot.images}
+                        url={slot.url}
+                        loading="lazy"
+                        disable-drag></experience-picture>
+                </div>
+            </template>
+        </template>
+        <!-- Empty state: single placeholder tile (empty-cart affordance). -->
+        <template lwc:else>
+            <div
+                class="preview-cell preview-cell_placeholder"
+                data-automation="preview-placeholder">
+                <experience-picture
+                    alternative-text={placeholderAltText}
+                    url={placeholderImageUrl}
+                    loading="lazy"
+                    disable-drag></experience-picture>
+            </div>
+        </template>
+    </div>
+</template>

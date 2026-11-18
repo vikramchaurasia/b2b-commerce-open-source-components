@@ -1,0 +1,234 @@
+.export-job-card {
+    border-radius: 16px;
+    padding: 24px;
+}
+
+.export-job-card__main {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+
+.export-job-card__info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    min-width: 0;
+}
+
+.export-job-card__name {
+    font-weight: 700;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.export-job-card__date-label {
+    margin-right: 0.25rem;
+}
+
+.export-job-card__deleted-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color: #080808;
+}
+
+.export-job-card__deleted-icon {
+    width: 16px;
+    height: 16px;
+    fill: #177eab;
+}
+
+.export-job-card__actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.export-job-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: var(--com-c-cart-export-job-badge-border-radius, 8px);
+    line-height: 1.125rem;
+    font-size: 0.75rem;
+}
+
+.export-job-badge_success {
+    background: var(--com-c-cart-export-job-badge-background-color, #e8fff9);
+    color: var(--com-c-cart-export-job-badge-text-color, #0d825d);
+    border: 0.5px solid var(--com-c-cart-export-job-badge-border-color, rgba(13, 130, 93, 0.2));
+}
+
+.export-job-badge_error {
+    background: var(--com-c-cart-export-job-badge-background-color, #fff0f0);
+    color: var(--com-c-cart-export-job-badge-text-color, #da0000);
+    border: 0.5px solid var(--com-c-cart-export-job-badge-border-color, rgba(218, 0, 0, 0.2));
+}
+
+.export-job-badge_warning {
+    background: var(--com-c-cart-export-job-badge-background-color, #fff2e5);
+    color: var(--com-c-cart-export-job-badge-text-color, #b25e00);
+    border: 0.5px solid var(--com-c-cart-export-job-badge-border-color, rgba(234, 178, 75, 0.2));
+}
+
+.export-job-badge_neutral {
+    background: var(--com-c-cart-export-job-badge-background-color, #f3f3f3);
+    color: var(--com-c-cart-export-job-badge-text-color, #444444);
+    border: 0.5px solid var(--com-c-cart-export-job-badge-border-color, rgba(68, 68, 68, 0.2));
+}
+
+.export-job-badge__label {
+    color: inherit;
+}
+
+.export-job-card__options {
+    display: inline-block;
+}
+
+.options-anchor {
+    position: relative;
+    display: inline-block;
+}
+
+.options-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.875rem;
+    color: #1c1c1c;
+    text-decoration: underline;
+    line-height: 1.25rem;
+}
+
+.options-trigger:focus-visible {
+    outline: 2px solid var(--dxp-g-brand, #0176d3);
+    outline-offset: 2px;
+}
+
+.options-trigger__chevron {
+    --slds-c-icon-color-foreground: #1c1c1c;
+    --slds-c-icon-color-foreground-default: #1c1c1c;
+}
+
+.options-dropdown {
+    position: absolute;
+    inset-inline-end: 0;
+    top: calc(100% + 4px);
+    width: max-content;
+    background: #ffffff;
+    box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 0.5rem; /* 8px */
+    padding: 0.25rem 0;
+    z-index: 1000;
+}
+
+.options-dropdown__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem; /* 12px */
+    padding: 0 0.75rem; /* 12px symmetric horizontal */
+    width: 100%;
+    height: 2.5rem; /* 40px */
+    background: #f7f9fa;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    border-radius: 0;
+    text-align: start;
+}
+
+.options-dropdown__item:hover,
+.options-dropdown__item:focus-visible {
+    background: #f7f9fa;
+    outline: none;
+}
+
+.options-dropdown__item:focus-visible {
+    outline: 2px solid var(--dxp-g-brand, #0176d3);
+    outline-offset: -2px;
+}
+
+.delete-icon {
+    flex: none;
+    width: 0.875rem; /* 14px */
+    height: 0.875rem; /* 14px */
+}
+
+.delete-label {
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.125rem; /* 18px */
+    color: #da0000;
+    letter-spacing: -0.01em;
+}
+
+.export-job-card__cancel {
+    color: #da0000;
+    font-weight: 700;
+    text-decoration: underline;
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Mobile (≤48em): Completed/Failed stacked with actions row+divider; InProgress non-stacked (Cancel top-right). */
+@media (max-width: 48em) {
+    .export-job-card {
+        padding: 16px;
+    }
+    /* Terminal statuses (Completed/Failed/Cancelled): stack info + actions with top border divider. */
+    .export-job-card__main--stacked {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        /* Completed status: Download + Options each take 50% and center within their half. */
+        /* Failed/Cancelled (Options only): right-align to trailing edge. */
+    }
+    .export-job-card__main--stacked .export-job-card__actions {
+        border-top: 1px solid var(--slds-g-color-border-base-1, #d9dfe7);
+        padding-top: 0.75rem;
+        margin-top: 0.75rem;
+        justify-content: flex-start;
+    }
+    .export-job-card__main--stacked
+        .export-job-card__actions:has(.export-job-card__download)
+        .export-job-card__download,
+    .export-job-card__main--stacked
+        .export-job-card__actions:has(.export-job-card__download)
+        .export-job-card__options {
+        flex: 1 1 0;
+        display: flex;
+        justify-content: center;
+    }
+    .export-job-card__main--stacked .export-job-card__actions:not(:has(.export-job-card__download)) {
+        justify-content: flex-end;
+    }
+    /* In-progress (Cancel only): row layout, Cancel top-right; no --stacked needed. */
+    /* Keep the dropdown right-aligned to the Options button on stacked cards too; capped to viewport width. */
+    .options-dropdown {
+        inset-inline-end: 0;
+        inset-inline-start: auto;
+        max-width: calc(100vw - 2rem);
+    }
+    .options-trigger {
+        padding-top: 6px;
+        padding-bottom: 6px;
+    }
+}

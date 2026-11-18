@@ -1,0 +1,16 @@
+<template lwc:render-mode="light">
+    <div class="export-job-list-container">
+        <div class="export-job-list-header-row">
+            <div class="export-job-list-header-left">
+                <div class="export-job-list-heading-group">
+                    <slot name="heading"></slot>
+                </div>
+                <slot name="subheading"></slot>
+            </div>
+            <div class="export-job-list-header-right">
+                <slot name="headerActions"></slot>
+            </div>
+        </div>
+        <slot name="jobListBody"></slot>
+    </div>
+</template>

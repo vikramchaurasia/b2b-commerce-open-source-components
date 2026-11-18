@@ -1,0 +1,487 @@
+<template>
+    <lightning-modal-header label={_headerLabel}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <!-- Fetch State: Loading -->
+        <template lwc:if={_isFetchLoading}>
+            <div
+                class="processing-loader fetch-state-loading slds-p-vertical_x-large"
+                role="status">
+                <div class="spinner-loading-group">
+                    <div class="spinner-container">
+                        <lightning-spinner alternative-text={_labels.fetchingCollaboratorsLabel}></lightning-spinner>
+                    </div>
+                    <p
+                        class="fetch-loading-text"
+                        aria-hidden="true">
+                        {_labels.fetchingCollaboratorsLabel}
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Fetch State: Error -->
+        <template lwc:elseif={_isFetchError}>
+            <div
+                class="fetch-state-container fetch-state-error"
+                role="alert">
+                <lightning-icon
+                    icon-name="utility:info"
+                    size="large"
+                    class="fetch-error-icon"
+                    alternative-text="Error"></lightning-icon>
+                <p class="fetch-loading-text">{_labels.fetchCollaboratorsErrorMessage}</p>
+            </div>
+        </template>
+
+        <!-- Action-in-flight State: Add/Edit/Remove is processing -->
+        <template lwc:elseif={_isProcessing}>
+            <div
+                lwc:ref="processingStatus"
+                class="processing-loader slds-p-vertical_x-large"
+                role="status"
+                tabindex="-1">
+                <div class="spinner-loading-group">
+                    <div class="spinner-container">
+                        <lightning-spinner alternative-text={_processingSpinnerAltText}></lightning-spinner>
+                    </div>
+                    <p
+                        class="fetch-loading-text"
+                        aria-hidden="true">
+                        {_processingLabel}
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Fetch State: Ready - normal modal content -->
+        <template lwc:else>
+            <div class="slds-p-top_medium slds-p-left_medium slds-p-right_medium share-modal-body">
+                <!-- Go back link for Screen 2 (same pattern as saveCartAsTemplateModal / PR #10983) -->
+                <button
+                    lwc:if={_isAddConfirmScreen}
+                    type="button"
+                    class="go-back-link slds-m-bottom_medium"
+                    onclick={handleBack}>
+                    <lightning-icon
+                        icon-name="utility:chevronleft"
+                        size="xx-small"
+                        class="go-back-icon slds-current-color"
+                        aria-hidden="true"></lightning-icon>
+                    {_goBackLabel}
+                </button>
+
+                <!-- Share With Section (present on both screens) -->
+                <div class="share-with-section">
+                    <div class="share-with-header">
+                        <label
+                            class="slds-form-element__label slds-text-body_small"
+                            for={_inputId}>
+                            {_shareWithLabel}
+                        </label>
+                    </div>
+
+                    <!-- Inline share-error banner: replaces the former error toast so the modal stays
+                         open and the buyer can read the reason (e.g. collaborator limit) and adjust. -->
+                    <div
+                        class={_shareErrorBannerClass}
+                        role="alert"
+                        aria-live="assertive">
+                        <template lwc:if={_hasShareError}>
+                            <svg
+                                class="share-error-icon"
+                                width="16"
+                                height="16"
+                                viewBox="0 0 16 16"
+                                fill="none"
+                                aria-hidden="true"
+                                focusable="false"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M5.19688 14.624C6.08754 15.008 7.02088 15.2 7.99688 15.2C8.97288 15.2 9.90354 15.008 10.7889 14.624C11.6795 14.2454 12.4449 13.7334 13.0849 13.088C13.7302 12.448 14.2422 11.6827 14.6209 10.792C15.0049 9.90671 15.1969 8.97605 15.1969 8.00005C15.1969 7.02405 15.0049 6.09072 14.6209 5.20005C14.2422 4.31472 13.7302 3.54938 13.0849 2.90405C12.4449 2.26405 11.6795 1.75472 10.7889 1.37605C9.90354 0.992049 8.97288 0.800049 7.99688 0.800049C7.02088 0.800049 6.08754 0.992049 5.19688 1.37605C4.31154 1.75472 3.54621 2.26405 2.90087 2.90405C2.26087 3.54938 1.74888 4.31472 1.36488 5.20005C0.986208 6.09072 0.796875 7.02405 0.796875 8.00005C0.796875 8.97605 0.986208 9.90671 1.36488 10.792C1.74888 11.6827 2.26087 12.448 2.90087 13.088C3.54621 13.7334 4.31154 14.2454 5.19688 14.624ZM8.55678 10.2321C8.40211 10.0774 8.21545 10.0001 7.99678 10.0001C7.77811 10.0001 7.58878 10.0774 7.42878 10.2321C7.27411 10.3921 7.19678 10.5814 7.19678 10.8001C7.19678 11.0187 7.27411 11.2054 7.42878 11.3601C7.58878 11.5201 7.77811 11.6001 7.99678 11.6001C8.21545 11.6001 8.40211 11.5201 8.55678 11.3601C8.71678 11.2054 8.79678 11.0187 8.79678 10.8001C8.79678 10.5814 8.71678 10.3921 8.55678 10.2321ZM8.42078 4.17607C8.30878 4.05874 8.16745 4.00007 7.99678 4.00007C7.82611 4.00007 7.68211 4.05607 7.56478 4.16807C7.45278 4.28541 7.39678 4.43207 7.39678 4.60807V8.19207C7.39678 8.36807 7.45278 8.51207 7.56478 8.62407C7.68211 8.74141 7.82611 8.80007 7.99678 8.80007C8.16745 8.80007 8.30878 8.74141 8.42078 8.62407C8.53811 8.51207 8.59678 8.36807 8.59678 8.19207V4.61607C8.59678 4.44007 8.53811 4.29341 8.42078 4.17607Z"
+                                    fill="#EAB24B"></path>
+                            </svg>
+                        </template>
+                        <span class="share-error-message">{_shareError}</span>
+                        <template lwc:if={_hasShareError}>
+                            <button
+                                type="button"
+                                class="slds-button slds-button_icon share-error-dismiss"
+                                aria-label={_labels.dismissErrorLabel}
+                                onclick={handleDismissShareError}>
+                                <lightning-icon
+                                    icon-name="utility:close"
+                                    size="xx-small"
+                                    alternative-text=""
+                                    aria-hidden="true"></lightning-icon>
+                            </button>
+                        </template>
+                    </div>
+
+                    <div class="search-container">
+                        <div class={searchInputWrapperClass}>
+                            <!-- Visual floating label only; the input is named by the "Share With" label above. -->
+                            <span
+                                class={searchLabelClass}
+                                aria-hidden="true">
+                                {_searchFieldLabel}
+                            </span>
+                            <input
+                                id={_inputId}
+                                lwc:ref="searchInput"
+                                type="text"
+                                class="slds-input search-input"
+                                placeholder={_placeholderText}
+                                value={_searchQuery}
+                                autofocus
+                                role="combobox"
+                                aria-autocomplete="list"
+                                aria-expanded={showUserSuggestionsOrEmpty}
+                                aria-controls={_ariaControls}
+                                aria-activedescendant={_activeDescendantId}
+                                oninput={handleSearchChange}
+                                onfocus={handleSearchFocus}
+                                onblur={handleSearchBlur}
+                                onkeydown={handleSearchKeydown} />
+                        </div>
+
+                        <!-- User Suggestions Dropdown - Searching State. aria-hidden is true and screen reader is
+                    taken care of by the slds-assistive-text div-->
+                        <div
+                            lwc:if={showSearchingState}
+                            lwc:ref="searchingDropdown"
+                            class="suggestions-dropdown suggestions-dropdown--empty suggestions-dropdown--searching"
+                            aria-hidden="true">
+                            <div class="suggestion-content--empty searching-content">
+                                <!-- Single medium spinner; the media query scales it down on mobile so it
+                                     reads as small without a second DOM element (SLDS size is an @api prop
+                                     and cannot be swapped via CSS, but the rendered size can be scaled). -->
+                                <div class="searching-spinner">
+                                    <lightning-spinner size="medium"></lightning-spinner>
+                                </div>
+                                <div class="empty-state-message">{_labels.searchingLabel}</div>
+                            </div>
+                        </div>
+
+                        <!-- User Suggestions Dropdown -->
+                        <ul
+                            lwc:if={showUserSuggestions}
+                            lwc:ref="userSuggestionsDropdown"
+                            id={_listboxId}
+                            class="suggestions-dropdown"
+                            role="listbox"
+                            aria-label={_shareWithLabel}>
+                            <template
+                                for:each={_suggestionOptions}
+                                for:item="user">
+                                <li
+                                    key={user.id}
+                                    id={user.optionId}
+                                    class="suggestion-item"
+                                    role="option"
+                                    aria-selected={user.isActive}
+                                    data-user-id={user.id}
+                                    onclick={handleUserSelect}
+                                    onmouseenter={handleSuggestionHover}>
+                                    <div class="suggestion-content">
+                                        <div class="suggestion-name">{user.name}</div>
+                                        <div class="suggestion-email">{user.email}</div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+
+                        <!-- User Suggestions Dropdown - Empty State -->
+                        <ul
+                            lwc:if={showEmptySuggestions}
+                            lwc:ref="emptySuggestionsDropdown"
+                            id={_listboxId}
+                            class="suggestions-dropdown suggestions-dropdown--empty"
+                            role="listbox"
+                            aria-label={_shareWithLabel}>
+                            <li
+                                class="suggestion-item suggestion-item--empty"
+                                role="option"
+                                aria-selected="false">
+                                <div class="suggestion-content suggestion-content--empty">
+                                    <img
+                                        src={_emptySvg}
+                                        class="empty-state-image"
+                                        alt="" />
+                                    <div class="empty-state-message">{_noSuggestionsAvailableLabel}</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div
+                        class="slds-assistive-text"
+                        role="status"
+                        aria-live="polite"
+                        aria-atomic="true">
+                        <template lwc:if={showSearchingState}>{_labels.searchingLabel}</template>
+                        <template lwc:elseif={showEmptySuggestions}>{_noSuggestionsAvailableLabel}</template>
+                    </div>
+
+                    <!-- Screen 1: Existing collaborators list -->
+                    <template lwc:if={_isManageScreen}>
+                        <ul
+                            class="recipients-list"
+                            aria-label={_shareWithLabel}>
+                            <template
+                                for:each={displayedRecipients}
+                                for:item="recipient">
+                                <li
+                                    key={recipient.id}
+                                    class="recipient-item">
+                                    <div class="user-info">
+                                        <div class="user-details">
+                                            <span class="user-name">{recipient.name}</span>
+                                            <span
+                                                lwc:if={recipient.email}
+                                                class="user-email">
+                                                {recipient.email}
+                                            </span>
+                                        </div>
+                                        <!-- No per-row "Removing…" indicator: while a delete is in flight the
+                                             blocking .processing-overlay covers the whole modal body with the same
+                                             centered spinner + "Removing…" text used by the Loading Collaborators /
+                                             Sharing Cart / Saving Permissions phases, so all four loading states use
+                                             one identical spinner. -->
+                                        <div
+                                            class="access-dropdown-container"
+                                            onfocusout={handleDropdownFocusOut}
+                                            onkeydown={handleDropdownKeydown}>
+                                            <button
+                                                class="access-dropdown-trigger"
+                                                data-user-id={recipient.id}
+                                                aria-label={recipient.accessAriaLabel}
+                                                aria-expanded={recipient.isDropdownOpen}
+                                                onclick={handleToggleAccessDropdown}>
+                                                <span class="access-level-text">{recipient.accessLevelLabel}</span>
+                                                <lightning-icon
+                                                    icon-name="utility:chevrondown"
+                                                    size="xx-small"
+                                                    class="chevron-icon slds-current-color"
+                                                    aria-hidden="true"></lightning-icon>
+                                            </button>
+                                            <ul
+                                                lwc:if={recipient.isDropdownOpen}
+                                                class="access-dropdown-menu"
+                                                role="menu"
+                                                onmousedown={handleMenuMousedown}>
+                                                <template
+                                                    for:each={recipient.accessOptions}
+                                                    for:item="option">
+                                                    <li
+                                                        key={option.value}
+                                                        class="access-option"
+                                                        role="menuitemradio"
+                                                        aria-checked={option.isSelected}
+                                                        tabindex="-1"
+                                                        data-value={option.value}
+                                                        data-user-id={recipient.id}
+                                                        onclick={handleAccessOptionSelect}
+                                                        onkeydown={handleMenuItemKeydown}>
+                                                        <span
+                                                            class="access-option-check"
+                                                            aria-hidden="true">
+                                                            <lightning-icon
+                                                                lwc:if={option.checkmark}
+                                                                icon-name="utility:check"
+                                                                size="xx-small"
+                                                                class="slds-current-color"></lightning-icon>
+                                                        </span>
+                                                        <span>{option.label}</span>
+                                                    </li>
+                                                </template>
+                                                <li
+                                                    class="access-option access-option--remove"
+                                                    role="menuitem"
+                                                    tabindex="-1"
+                                                    data-value="remove"
+                                                    data-user-id={recipient.id}
+                                                    onclick={handleAccessOptionSelect}
+                                                    onkeydown={handleMenuItemKeydown}>
+                                                    <span
+                                                        class="access-option-check"
+                                                        aria-hidden="true"></span>
+                                                    <span>{_removeActionLabel}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+
+                            <!-- Owner row (current user), always shown last and not removable -->
+                            <li class="recipient-item owner-display">
+                                <div class="user-info">
+                                    <div class="user-details">
+                                        <span class="user-name">{ownerRow.name}</span>
+                                        <span
+                                            lwc:if={ownerRow.email}
+                                            class="user-email">
+                                            {ownerRow.email}
+                                        </span>
+                                    </div>
+                                    <span class="owner-badge">{_ownerLabel}</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </template>
+
+                    <!-- Screen 2: Single new recipient confirmation -->
+                    <template lwc:if={_isAddConfirmScreen}>
+                        <ul
+                            class="recipients-list"
+                            aria-label={_shareWithLabel}>
+                            <template
+                                for:each={_confirmRecipientDisplay}
+                                for:item="recipient">
+                                <li
+                                    key={recipient.id}
+                                    class="recipient-item">
+                                    <div class="user-info">
+                                        <div class="user-details">
+                                            <span class="user-name">{recipient.name}</span>
+                                            <span
+                                                lwc:if={recipient.email}
+                                                class="user-email">
+                                                {recipient.email}
+                                            </span>
+                                        </div>
+                                        <div
+                                            class="access-dropdown-container"
+                                            onfocusout={handleDropdownFocusOut}
+                                            onkeydown={handleDropdownKeydown}>
+                                            <button
+                                                class="access-dropdown-trigger"
+                                                data-user-id={recipient.id}
+                                                aria-label={recipient.accessAriaLabel}
+                                                aria-expanded={recipient.isDropdownOpen}
+                                                onclick={handleToggleAccessDropdown}>
+                                                <span class="access-level-text">{recipient.accessLevelLabel}</span>
+                                                <lightning-icon
+                                                    icon-name="utility:chevrondown"
+                                                    size="xx-small"
+                                                    class="chevron-icon slds-current-color"
+                                                    aria-hidden="true"></lightning-icon>
+                                            </button>
+                                            <ul
+                                                lwc:if={recipient.isDropdownOpen}
+                                                class="access-dropdown-menu"
+                                                role="menu"
+                                                onmousedown={handleMenuMousedown}>
+                                                <template
+                                                    for:each={recipient.accessOptions}
+                                                    for:item="option">
+                                                    <li
+                                                        key={option.value}
+                                                        class="access-option"
+                                                        role="menuitemradio"
+                                                        aria-checked={option.isSelected}
+                                                        tabindex="-1"
+                                                        data-value={option.value}
+                                                        data-user-id={recipient.id}
+                                                        onclick={handleAccessOptionSelect}
+                                                        onkeydown={handleMenuItemKeydown}>
+                                                        <span
+                                                            class="access-option-check"
+                                                            aria-hidden="true">
+                                                            <lightning-icon
+                                                                lwc:if={option.checkmark}
+                                                                icon-name="utility:check"
+                                                                size="xx-small"
+                                                                class="slds-current-color"></lightning-icon>
+                                                        </span>
+                                                        <span>{option.label}</span>
+                                                    </li>
+                                                </template>
+                                                <li
+                                                    class="access-option access-option--remove"
+                                                    role="menuitem"
+                                                    tabindex="-1"
+                                                    data-value="remove"
+                                                    data-user-id={recipient.id}
+                                                    onclick={handleAccessOptionSelect}
+                                                    onkeydown={handleMenuItemKeydown}>
+                                                    <span
+                                                        class="access-option-check"
+                                                        aria-hidden="true"></span>
+                                                    <span>{_removeActionLabel}</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </template>
+                </div>
+            </div>
+        </template>
+    </lightning-modal-body>
+
+    <!-- Fetch Error Footer: Close button only -->
+    <lightning-modal-footer lwc:if={_isFetchError}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                assistive-text={_labels.closeButton}
+                name="closeModalButton"
+                onclick={handleClose}>
+                {_labels.closeButton}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+
+    <!-- Screen 1 Footer: Cancel + Done -->
+    <lightning-modal-footer lwc:if={_showManageFooter}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                assistive-text={_cancelButtonLabel}
+                name="closeModalButton"
+                onclick={handleClose}>
+                {_cancelButtonLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
+                variant="primary"
+                width="stretch"
+                disabled={_isDoneButtonDisabled}
+                assistive-text={_doneButtonLabel}
+                name="doneButton"
+                onclick={handleDone}>
+                {_doneButtonLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+
+    <!-- Screen 2 Footer: Cancel + Share Cart -->
+    <lightning-modal-footer lwc:if={_showAddConfirmFooter}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                assistive-text={_cancelButtonLabel}
+                name="closeModalButton"
+                onclick={handleClose}>
+                {_cancelButtonLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
+                variant="primary"
+                width="stretch"
+                disabled={_isShareCartButtonDisabled}
+                assistive-text={_shareCartButtonLabel}
+                name="shareCartButton"
+                onclick={handleShareCart}>
+                {_shareCartButtonLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+</template>

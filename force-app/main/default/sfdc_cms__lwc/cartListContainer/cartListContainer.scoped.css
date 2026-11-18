@@ -1,0 +1,53 @@
+@charset "UTF-8";
+.cart-list-container {
+    display: block;
+    min-width: 0;
+}
+
+.cart-list-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.cart-list-header-left {
+    text-align: left;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.cart-list-header-right {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.cart-list-container-spinner {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background-color: rgba(255, 255, 255, 0.75);
+}
+
+/* Mobile: stack heading and full-width New Cart button. The slotted
+   createCartButton sets :host { display: block } in its own scoped CSS, so a
+   block-level container here is enough — the button auto-fills the width. */
+@media (max-width: 64em) {
+    .cart-list-header-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .cart-list-header-right {
+        justify-content: stretch;
+        width: 100%;
+    }
+    .cart-list-header-right > * {
+        flex: 1 1 auto;
+        width: 100%;
+        min-width: 0;
+    }
+}

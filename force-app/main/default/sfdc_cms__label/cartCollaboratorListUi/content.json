@@ -1,0 +1,29 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartCollaboratorListUi",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "collaboratorsCountLabel",
+      "value" : "{0} Collaborators"
+    }, {
+      "name" : "currentUserNameLabel",
+      "value" : "{0} (You)"
+    }, {
+      "name" : "sharedWithOthersFullLabel",
+      "value" : "Shared with {0} Others"
+    }, {
+      "name" : "canView",
+      "value" : "Can View"
+    }, {
+      "name" : "canEdit",
+      "value" : "Can Edit"
+    }, {
+      "name" : "canCheckout",
+      "value" : "Can Checkout"
+    }, {
+      "name" : "sharedWithOneOtherLabel",
+      "value" : "Shared with 1 other"
+    } ]
+  },
+  "urlName" : "cartcollaboratorlistui"
+}

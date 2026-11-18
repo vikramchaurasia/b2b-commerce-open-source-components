@@ -11,9 +11,6 @@
     }, {
       "name" : "subscriptionRequestError",
       "value" : "You can't request quotes for subscription products."
-    }, {
-      "name" : "secondaryCartQuoteError",
-      "value" : "We couldn't send your quote request. Set this cart as default and try again."
     } ]
   },
   "urlName" : "quoterequestbutton"

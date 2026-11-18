@@ -1,0 +1,35 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartImportContainer",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "fileInvalidTypeError",
+      "value" : "Unsupported file type. Choose another."
+    }, {
+      "name" : "fileMaxSizeError",
+      "value" : "File size can't exceed {0}."
+    }, {
+      "name" : "fileMaxRowsError",
+      "value" : "The CSV file can contain up to {0} data rows. Remove some rows and try again."
+    }, {
+      "name" : "fileEmptyError",
+      "value" : "The CSV file doesn't contain any data rows. Add data rows and try again."
+    }, {
+      "name" : "fileMalformedCsvError",
+      "value" : "We couldn't upload the file. Try again."
+    }, {
+      "name" : "fileDuplicateColumnsError",
+      "value" : "The CSV file contains duplicate column headers. Make sure each column header is unique."
+    }, {
+      "name" : "fileUploadFailedError",
+      "value" : "We couldn't upload the file. Try again."
+    }, {
+      "name" : "uploadingFileText",
+      "value" : "Uploading file..."
+    }, {
+      "name" : "uploadFailedLabel",
+      "value" : "Upload Failed"
+    } ]
+  },
+  "urlName" : "cartimportcontainer"
+}

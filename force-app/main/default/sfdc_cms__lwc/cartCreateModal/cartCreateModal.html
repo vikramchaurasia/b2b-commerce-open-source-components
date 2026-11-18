@@ -2,34 +2,90 @@
     <lightning-modal-header label={_headerLabel}></lightning-modal-header>
 
     <lightning-modal-body>
-        <div
-            lwc:if={_isNotLoading}
-            class="slds-p-top_medium slds-p-left_medium slds-p-right_medium">
-            <lightning-input
-                data-name="name"
-                label={_cartNameLabelText}
-                value={name}
-                onchange={handleNameChange}
-                onblur={handleNameBlur}
-                required
-                class="slds-p-bottom_medium"
-                data-validate="true"></lightning-input>
+        <!--
+            The direct children of lightning-modal-body must stay stable across the create
+            flow. The fields/spinner region and the import section are two always-present
+            sibling divs; only their inner content toggles. Toggling the fields and spinner
+            blocks as direct siblings around the import section would re-distribute the
+            modal-body slot on every isCreateCartInProgress flip and transiently disconnect
+            the import container mid-create, which best-effort-deletes the staged upload
+            right before startImport consumes it.
+        -->
 
-            <lightning-textarea
-                data-name="cartDescription"
-                label={_cartDescriptionLabelText}
-                value={cartDescription}
-                onchange={handleDescriptionChange}
-                data-validate="true"></lightning-textarea>
-        </div>
-        <div
-            lwc:else
-            class="modal-contents slds-p-vertical_x-large">
-            <div class="spinner-loading-group">
-                <div class="spinner-container">
-                    <lightning-spinner alternative-text={_spinnerHelpText}></lightning-spinner>
+        <!-- 1) Fields + spinner region (always mounted; inner content toggles). -->
+        <div>
+            <div
+                class="slds-assistive-text loading-status"
+                role="status"
+                aria-live="polite">
+                <template lwc:if={isCreateCartInProgress}>{_spinnerHelpText}</template>
+            </div>
+            <!-- Cart fields (create + edit). Hidden during the create/edit spinner. -->
+            <div
+                lwc:if={_isNotLoading}
+                class="slds-p-top_medium slds-p-left_medium slds-p-right_medium">
+                <lightning-input
+                    data-name="name"
+                    label={_cartNameLabelText}
+                    value={name}
+                    onchange={handleNameChange}
+                    onblur={handleNameBlur}
+                    required
+                    class="slds-p-bottom_medium"
+                    data-validate="true"></lightning-input>
+
+                <lightning-textarea
+                    data-name="cartDescription"
+                    label={_cartDescriptionLabelText}
+                    value={cartDescription}
+                    onchange={handleDescriptionChange}
+                    onblur={handleDescriptionBlur}
+                    data-validate="true"></lightning-textarea>
+            </div>
+
+            <!-- Spinner shown while a create/edit is in progress. -->
+            <div
+                lwc:if={isCreateCartInProgress}
+                class="modal-contents slds-p-vertical_x-large">
+                <div class="spinner-loading-group">
+                    <div class="spinner-container">
+                        <lightning-spinner
+                            aria-hidden="true"
+                            alternative-text={_spinnerHelpText}></lightning-spinner>
+                    </div>
+                    <h2
+                        class="loading-text slds-text-align_center slds-text-heading_small"
+                        aria-hidden="true">
+                        {_spinnerHelpText}
+                    </h2>
                 </div>
-                <div class="slds-text-align_center slds-text-heading_small">{_spinnerHelpText}</div>
+            </div>
+        </div>
+
+        <!--
+            2) Optional inline import section (create mode only, and only when the New Cart
+            button's "Show Import Section" property is not turned off). The outer div is a
+            permanent direct child of modal-body. The container is gated only by
+            _shouldRenderImportSection, which is fixed at open and never flips, so it mounts
+            once and stays mounted across the create-to-startImport window. While the create
+            spinner shows it is hidden with class={_importWrapperClass} (slds-hide); do not
+            replace that with lwc:if or re-key it.
+
+            cart-id is intentionally not bound: no cart exists until submit; the new cartId
+            is assigned imperatively in createCartAndClose just before startImport.
+        -->
+        <div>
+            <div
+                lwc:if={_shouldRenderImportSection}
+                class={_importWrapperClass}>
+                <site-cart-import-container
+                    lwc:ref="importController"
+                    variant="createCart"
+                    import-section={_newCartImportSection}
+                    form-labels={_formLabels}
+                    onreadinesschange={handleImportReadinessChange}
+                    onmappingsvisiblechange={handleImportMappingsVisibleChange}
+                    onuploadingchange={handleImportUploadingChange}></site-cart-import-container>
             </div>
         </div>
     </lightning-modal-body>
@@ -37,21 +93,30 @@
     <lightning-modal-footer lwc:if={_isNotLoading}>
         <div class="footer-content-container">
             <site-common-button-ui
-                variant="secondary"
+                lwc:if={_importMappingsVisible}
+                variant="tertiary"
                 width="stretch"
                 assistive-text={_labels.createCartCancelButtonLabel}
-                name="closeModalButton"
+                name="cancelImportButton"
                 onclick={handleClose}>
                 {_labels.createCartCancelButtonLabel}
             </site-common-button-ui>
             <site-common-button-ui
+                variant="secondary"
+                width="stretch"
+                assistive-text={_secondaryButtonLabel}
+                name="closeModalButton"
+                onclick={handleSecondaryButton}>
+                {_secondaryButtonLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
                 variant="primary"
                 width="stretch"
-                disabled={_isSaveButtonDisabled}
-                assistive-text={_saveButtonLabel}
+                disabled={_isPrimaryDisabled}
+                assistive-text={_primaryButtonLabel}
                 name="saveCartButton"
                 onclick={handleSave}>
-                {_saveButtonLabel}
+                {_primaryButtonLabel}
             </site-common-button-ui>
         </div>
     </lightning-modal-footer>

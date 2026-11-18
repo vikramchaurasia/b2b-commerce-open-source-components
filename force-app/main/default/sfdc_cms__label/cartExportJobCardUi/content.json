@@ -1,0 +1,47 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartExportJobCardUi",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "statusJobComplete",
+      "value" : "Exported"
+    }, {
+      "name" : "statusFailed",
+      "value" : "Export Failed"
+    }, {
+      "name" : "statusInProgress",
+      "value" : "Export in Progress"
+    }, {
+      "name" : "statusNew",
+      "value" : "Export Queued"
+    }, {
+      "name" : "statusAborted",
+      "value" : "Canceled"
+    }, {
+      "name" : "onDateLabel",
+      "value" : "Exported On:"
+    }, {
+      "name" : "cartDeletedInfo",
+      "value" : "This cart was deleted from the store, but the cart export is still available."
+    }, {
+      "name" : "downloadButton",
+      "value" : "Download"
+    }, {
+      "name" : "downloadAssistiveText",
+      "value" : "Download export file"
+    }, {
+      "name" : "downloadStarted",
+      "value" : "Downloading {0}."
+    }, {
+      "name" : "optionsButton",
+      "value" : "Options"
+    }, {
+      "name" : "deleteExportOption",
+      "value" : "Delete Export"
+    }, {
+      "name" : "cancelButton",
+      "value" : "Cancel"
+    } ]
+  },
+  "urlName" : "cartexportjobcardui"
+}

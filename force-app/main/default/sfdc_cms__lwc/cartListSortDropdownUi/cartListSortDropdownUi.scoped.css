@@ -1,0 +1,65 @@
+.cart-list-sort-dropdown {
+    display: flex;
+    align-items: baseline;
+    gap: var(--lwc-spacingXSmall, 0.5rem);
+    margin-top: var(--lwc-spacingSmall, 0.25rem);
+    margin-bottom: var(--lwc-spacingMedium, 1rem);
+}
+
+.sort-label {
+    /* Match combobox default text size (SLDS default is 1rem / 16px) */
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--lwc-colorText, #181818);
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+/* Button menu styling */
+.sort-button-menu {
+    /* Transparent styling to match borderless look */
+    --slds-c-button-color-background: transparent;
+    --slds-c-button-color-border: transparent;
+    --slds-c-button-shadow: none;
+
+    /* Remove bold and underline from button text - all variations */
+    --dxp-s-button-font-weight: 400;
+    --dxp-s-button-text-decoration: none;
+    --dxp-s-button-text-decoration-active: none;
+    --dxp-s-button-text-decoration-hover: none;
+    --dxp-s-button-text-decoration-focus: none;
+    --dxp-c-link-text-decoration: none;
+    --slds-c-button-text-decoration: none;
+    --slds-c-button-text-decoration-hover: none;
+
+    text-decoration: none;
+    min-width: 250px;
+}
+
+/* Separator styling */
+.sort-separator {
+    height: 1px;
+    background: var(--lwc-colorBorder, #c9c9c9);
+    margin: 0.25rem 0.75rem;
+}
+
+/* Responsive: keep horizontal on mobile with tighter spacing */
+@media (max-width: 768px) {
+    .cart-list-sort-dropdown {
+        /* Keep horizontal layout (flex-direction: row is default) */
+        flex-wrap: nowrap;
+        gap: var(--lwc-spacingXXSmall, 0.25rem);
+    }
+
+    .sort-label {
+        /* Prevent label from shrinking */
+        flex-shrink: 0;
+    }
+
+    .sort-button-menu {
+        /* Allow button menu to shrink below desktop min-width */
+        min-width: 0;
+        flex: 1 1 auto;
+        max-width: calc(100% - 4rem);
+    }
+}

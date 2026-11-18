@@ -1,0 +1,26 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartListSortDropdownUi",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "sortByLabel",
+      "value" : "Sort By"
+    }, {
+      "name" : "defaultSort",
+      "value" : "Default"
+    }, {
+      "name" : "dateAddedNewest",
+      "value" : "Created Date (Newest First)"
+    }, {
+      "name" : "dateAddedOldest",
+      "value" : "Created Date (Oldest First)"
+    }, {
+      "name" : "lastModifiedNewest",
+      "value" : "Modified Date (Newest First)"
+    }, {
+      "name" : "lastModifiedOldest",
+      "value" : "Modified Date (Oldest First)"
+    } ]
+  },
+  "urlName" : "cartlistsortdropdownui"
+}

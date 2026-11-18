@@ -7,22 +7,22 @@
       "value" : "View Options"
     }, {
       "name" : "editCart",
-      "value" : "Edit Cart Details"
+      "value" : "Edit"
     }, {
       "name" : "clearCart",
       "value" : "Clear Cart"
     }, {
       "name" : "deleteCart",
-      "value" : "Delete Cart"
+      "value" : "Delete"
     }, {
       "name" : "setAsDefault",
-      "value" : "Set As Default"
+      "value" : "Set as Default"
     }, {
       "name" : "clearCartConfirmMessage",
-      "value" : "Are you sure, you want to clear this cart."
+      "value" : "Clearing your cart removes all items. This can't be undone."
     }, {
       "name" : "clearCartConfirmButton",
-      "value" : "Yes, clear"
+      "value" : "Clear Cart"
     }, {
       "name" : "clearCartSuccessMessage",
       "value" : "{cartName} was cleared."
@@ -31,7 +31,7 @@
       "value" : "Unable to clear cart, please try again."
     }, {
       "name" : "clearCartSpinnerHelpText",
-      "value" : "Clearing cart"
+      "value" : "Clearing..."
     }, {
       "name" : "deleteCartConfirmTitle",
       "value" : "Delete cart?"
@@ -52,13 +52,13 @@
       "value" : "We couldn't delete the cart. Try again later."
     }, {
       "name" : "setAsDefaultTitle",
-      "value" : "Set As Default?"
+      "value" : "Set as default?"
     }, {
       "name" : "setAsDefaultConfirmMessage",
       "value" : "Setting this cart as default replaces your current default cart."
     }, {
       "name" : "setAsDefaultConfirmButton",
-      "value" : "Set As Default"
+      "value" : "Set as Default"
     }, {
       "name" : "setAsDefaultSuccessMessage",
       "value" : "\"{cartName}\" was set as the default cart."
@@ -71,6 +71,45 @@
     }, {
       "name" : "setAsDefaultSpinnerHelpText",
       "value" : "Saving..."
+    }, {
+      "name" : "saveAsTemplate",
+      "value" : "Add to Template"
+    }, {
+      "name" : "shareCart",
+      "value" : "Share and Manage"
+    }, {
+      "name" : "importCart",
+      "value" : "Import"
+    }, {
+      "name" : "importStartedMessage",
+      "value" : "Import started successfully"
+    }, {
+      "name" : "exportCart",
+      "value" : "Export"
+    }, {
+      "name" : "removeAsDefault",
+      "value" : "Remove Default Status"
+    }, {
+      "name" : "removeAsDefaultTitle",
+      "value" : "Remove default status?"
+    }, {
+      "name" : "removeAsDefaultConfirmMessage",
+      "value" : "This cart will no longer be your default cart, but it will still be available as a saved cart."
+    }, {
+      "name" : "removeAsDefaultConfirmButton",
+      "value" : "Remove Default Status"
+    }, {
+      "name" : "removeAsDefaultSuccessMessage",
+      "value" : "\"{cartName}\" is no longer your default cart."
+    }, {
+      "name" : "removeAsDefaultErrorMessage",
+      "value" : "We couldn't remove the cart's default status. Try again later."
+    }, {
+      "name" : "removeAsDefaultSpinnerHelpText",
+      "value" : "Saving..."
+    }, {
+      "name" : "clearCartHeaderText",
+      "value" : "Clear cart?"
     } ]
   },
   "urlName" : "cartoptions"

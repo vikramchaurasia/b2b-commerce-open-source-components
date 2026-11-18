@@ -1,0 +1,103 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartDetailsCardV2",
+                "type": "component",
+                "attributes": {
+                    "cartSummaryData": "{!CartSummary}"
+                },
+                "children": [
+                    {
+                        "name": "cartLock",
+                        "title": "Cart Lock",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "site:cartLockBanner",
+                                "type": "component",
+                                "attributes": {
+                                    "cartSummary": "{!CartSummary}",
+                                    "alignItems": "center"
+                                },
+                                "children": [
+                                    {
+                                        "name": "message",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "dxp_base:textBlock",
+                                                "type": "component",
+                                                "attributes": {
+                                                    "text": "Checkout in progress.",
+                                                    "textAlign": "left",
+                                                    "textDisplayInfo": "{\"textStyle\": \"body-regular\", \"headingTag\": \"p\"}"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "requestQuote",
+                        "title": "Request Quote",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "commerce_builder:requestQuoteButton",
+                                "type": "component",
+                                "attributes": {
+                                    "cartSummaryData": "{!CartSummary}"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cartOptions",
+                        "title": "Cart Options",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "commerce_builder:cartOptions",
+                                "type": "component",
+                                "attributes": {
+                                    "cartData": "{!CartSummary}"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "defaultPill",
+                        "title": "Default Cart Tag",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "site:commonPillBuilder",
+                                "type": "component",
+                                "attributes": {
+                                    "labelText": "Default"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cartAsyncStateView",
+                        "title": "Cart Async State View",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "site:cartAsyncStateView",
+                                "type": "component",
+                                "attributes": {
+                                    "cartData": "{!CartSummary}"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

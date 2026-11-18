@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Cart Export Job Card</masterLabel>
+  <description>Displays a single cart export job with its status badge, creation date, and download, options, and cancel actions.</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartExportJobData" label="Cart Export Job Data" type="String" default="{!CartExportJob}"></property>
+      <property name="exportDateLabel" label="Export Date Label" type="String" default="On" translatable="true"></property>
+      <property name="downloadButtonLabel" label="Download Button Label" type="String" default="Download" translatable="true"></property>
+      <property name="cancelExportLabel" label="Cancel Export Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="exportPillTextSize" label="Export Pill Text Size" type="String" default="body-small" datasource="java://siteforce.customComponent.datasource.DxpTextSizeDataSource"></property>
+      <property name="exportPillTextColor" label="Export Pill Text Color" type="Color"></property>
+      <property name="exportPillBackgroundColor" label="Export Pill Background Color" type="Color"></property>
+      <property name="exportPillBorderColor" label="Export Pill Border Color" type="Color"></property>
+      <property name="exportPillBorderRadius" label="Export Pill Border Radius (0px-50px)" description="Set the corner roundness of the export status pill, from 0 (square corners) to 50 pixels (fully rounded)." type="Integer" min="0" max="50" default="8"></property>
+      <property name="exportedPillLabel" label="Exported Pill Label" type="String" default="Exported" translatable="true"></property>
+      <property name="exportInProgressPillLabel" label="Export in Progress Pill Label" type="String" default="Export in Progress" translatable="true"></property>
+      <property name="exportFailedPillLabel" label="Export Failed Pill Label" type="String" default="Export Failed" translatable="true"></property>
+      <property name="deleteButtonLabel" label="Delete Button Label" type="String" default="Delete Export" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="cartExportJobData" cbVisibleIf="cartExportJobData=false"></designLayoutProperty>
+            <designLayoutProperty name="exportDateLabel"></designLayoutProperty>
+            <designLayoutProperty name="downloadButtonLabel"></designLayoutProperty>
+            <designLayoutProperty name="cancelExportLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Export Status Pill">
+          <designLayoutItems>
+            <designLayoutProperty name="exportPillTextSize"></designLayoutProperty>
+            <designLayoutProperty name="exportPillTextColor"></designLayoutProperty>
+            <designLayoutProperty name="exportPillBackgroundColor"></designLayoutProperty>
+            <designLayoutProperty name="exportPillBorderColor"></designLayoutProperty>
+            <designLayoutProperty name="exportPillBorderRadius"></designLayoutProperty>
+            <designLayoutProperty name="exportedPillLabel"></designLayoutProperty>
+            <designLayoutProperty name="exportInProgressPillLabel"></designLayoutProperty>
+            <designLayoutProperty name="exportFailedPillLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Export Options">
+          <designLayoutItems>
+            <designLayoutProperty name="deleteButtonLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

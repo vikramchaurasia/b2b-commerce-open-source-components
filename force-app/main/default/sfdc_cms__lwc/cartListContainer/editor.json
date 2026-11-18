@@ -1,0 +1,575 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartListContainer",
+                "type": "component",
+                "children": [
+                    {
+                        "name": "heading",
+                        "title": "Heading",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_base:textBlock",
+                                "type": "component",
+                                "attributes": {
+                                    "text": "Carts",
+                                    "textDisplayInfo": "{\"textStyle\": \"heading-large\", \"headingTag\": \"h2\"}",
+                                    "paddingHorizontal": "none",
+                                    "paddingVertical": "xx-small"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "newCartButton",
+                        "title": "New Cart Button",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "commerce_builder:createCartButton",
+                                "type": "component"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cartList",
+                        "title": "Cart List",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "site:cartListView",
+                                "type": "component",
+                                "children": [
+                                    {
+                                        "name": "sortDropdown",
+                                        "title": "Sort Dropdown",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "site:cartListSortDropdown",
+                                                "type": "component",
+                                                "attributes": {
+                                                    "defaultSortOrder": "Default"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "emptyListView",
+                                        "title": "emptyListView",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "dxp_base:textBlock",
+                                                "type": "component",
+                                                "attributes": {
+                                                    "text": "When you create carts, you'll see them here.",
+                                                    "textDisplayInfo": "{\"headingTag\": \"h3\", \"textStyle\": \"heading-medium\"}",
+                                                    "textDecoration": "{\"bold\": true}",
+                                                    "textAlign": "center"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "cartsRepeater",
+                                        "title": "cartsRepeater",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "dxp_content_layout:list",
+                                                "type": "component",
+                                                "children": [
+                                                    {
+                                                        "name": "sfdcRepeaterItem",
+                                                        "title": "Repeater",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "site:cartDetailsCardV2",
+                                                                "type": "component",
+                                                                "attributes": {
+                                                                    "cartSummaryData": "{!CartSummary}"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "name": "cartLock",
+                                                                        "title": "Cart Lock",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "site:cartLockBanner",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartSummary": "{!CartSummary}",
+                                                                                    "alignItems": "center"
+                                                                                },
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "message",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "dxp_base:textBlock",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "text": "Checkout in progress.",
+                                                                                                    "textAlign": "left",
+                                                                                                    "textDisplayInfo": "{\"textStyle\": \"body-regular\", \"headingTag\": \"p\"}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "requestQuote",
+                                                                        "title": "Request Quote",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "commerce_builder:requestQuoteButton",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartSummaryData": "{!CartSummary}"
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "cartOptions",
+                                                                        "title": "Cart Options",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "commerce_builder:cartOptions",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartData": "{!CartSummary}"
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "defaultPill",
+                                                                        "title": "Default Cart Tag",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "site:commonPillBuilder",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "labelText": "Default"
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "name": "cartAsyncStateView",
+                                                                        "title": "Cart Async State View",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "site:cartAsyncStateView",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartData": "{!CartSummary}"
+                                                                                }
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ],
+                                                "attributes": {
+                                                    "itemSpacing": "large",
+                                                    "listType": "unformatted",
+                                                    "showPagination": true,
+                                                    "autoScrollToMostRecent": true
+                                                },
+                                                "dataProviders": [
+                                                    {
+                                                        "definition": "sfdc_cms__commerceCartListDataProvider",
+                                                        "sfdcExpressionKey": "CartSummary",
+                                                        "attributes": {
+                                                            "collaborationFilter": "MyCarts",
+                                                            "pageSize": 10
+                                                        },
+                                                        "type": "dataProvider"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "cartListTabs",
+                        "title": "Cart List Tabs",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_layout:tabs",
+                                "type": "component",
+                                "children": [
+                                    {
+                                        "name": "myCarts",
+                                        "title": "My Carts",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "site:cartListView",
+                                                "type": "component",
+                                                "children": [
+                                                    {
+                                                        "name": "sortDropdown",
+                                                        "title": "Sort Dropdown",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "site:cartListSortDropdown",
+                                                                "type": "component",
+                                                                "attributes": {
+                                                                    "defaultSortOrder": "Default"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "emptyListView",
+                                                        "title": "emptyListView",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "dxp_base:textBlock",
+                                                                "type": "component",
+                                                                "attributes": {
+                                                                    "text": "When you create carts, you'll see them here.",
+                                                                    "textDisplayInfo": "{\"headingTag\": \"h3\", \"textStyle\": \"heading-medium\"}",
+                                                                    "textDecoration": "{\"bold\": true}",
+                                                                    "textAlign": "center"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "cartsRepeater",
+                                                        "title": "cartsRepeater",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "dxp_content_layout:list",
+                                                                "type": "component",
+                                                                "children": [
+                                                                    {
+                                                                        "name": "sfdcRepeaterItem",
+                                                                        "title": "Repeater",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "site:cartDetailsCardV2",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartSummaryData": "{!CartSummary}"
+                                                                                },
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "cartLock",
+                                                                                        "title": "Cart Lock",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "site:cartLockBanner",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartSummary": "{!CartSummary}",
+                                                                                                    "alignItems": "center"
+                                                                                                },
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "name": "message",
+                                                                                                        "type": "region",
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "definition": "dxp_base:textBlock",
+                                                                                                                "type": "component",
+                                                                                                                "attributes": {
+                                                                                                                    "text": "Checkout in progress.",
+                                                                                                                    "textAlign": "left",
+                                                                                                                    "textDisplayInfo": "{\"textStyle\": \"body-regular\", \"headingTag\": \"p\"}"
+                                                                                                                }
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "requestQuote",
+                                                                                        "title": "Request Quote",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "commerce_builder:requestQuoteButton",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartSummaryData": "{!CartSummary}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "cartOptions",
+                                                                                        "title": "Cart Options",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "commerce_builder:cartOptions",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartData": "{!CartSummary}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "defaultPill",
+                                                                                        "title": "Default Cart Tag",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "site:commonPillBuilder",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "labelText": "Default"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "cartAsyncStateView",
+                                                                                        "title": "Cart Async State View",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "site:cartAsyncStateView",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartData": "{!CartSummary}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "attributes": {
+                                                                    "itemSpacing": "large",
+                                                                    "listType": "unformatted",
+                                                                    "showPagination": true,
+                                                                    "autoScrollToMostRecent": true
+                                                                },
+                                                                "dataProviders": [
+                                                                    {
+                                                                        "definition": "sfdc_cms__commerceCartListDataProvider",
+                                                                        "sfdcExpressionKey": "CartSummary",
+                                                                        "attributes": {
+                                                                            "collaborationFilter": "MyCarts",
+                                                                            "pageSize": 10
+                                                                        },
+                                                                        "type": "dataProvider"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "sharedWithMe",
+                                        "title": "Shared with me",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "site:cartListView",
+                                                "type": "component",
+                                                "children": [
+                                                    {
+                                                        "name": "sortDropdown",
+                                                        "title": "Sort Dropdown",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "site:cartListSortDropdown",
+                                                                "type": "component",
+                                                                "attributes": {
+                                                                    "defaultSortOrder": "LastModifiedDateDesc"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "emptyListView",
+                                                        "title": "emptyListView",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "dxp_base:textBlock",
+                                                                "type": "component",
+                                                                "attributes": {
+                                                                    "text": "No carts have been shared with you.",
+                                                                    "textDisplayInfo": "{\"headingTag\": \"h3\", \"textStyle\": \"heading-medium\"}",
+                                                                    "textDecoration": "{\"bold\": true}",
+                                                                    "textAlign": "center"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    {
+                                                        "name": "cartsRepeater",
+                                                        "title": "cartsRepeater",
+                                                        "type": "region",
+                                                        "children": [
+                                                            {
+                                                                "definition": "dxp_content_layout:list",
+                                                                "type": "component",
+                                                                "children": [
+                                                                    {
+                                                                        "name": "sfdcRepeaterItem",
+                                                                        "title": "Repeater",
+                                                                        "type": "region",
+                                                                        "children": [
+                                                                            {
+                                                                                "definition": "site:cartDetailsCardV2",
+                                                                                "type": "component",
+                                                                                "attributes": {
+                                                                                    "cartSummaryData": "{!CartSummary}"
+                                                                                },
+                                                                                "children": [
+                                                                                    {
+                                                                                        "name": "cartLock",
+                                                                                        "title": "Cart Lock",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "site:cartLockBanner",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartSummary": "{!CartSummary}",
+                                                                                                    "alignItems": "center"
+                                                                                                },
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "name": "message",
+                                                                                                        "type": "region",
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "definition": "dxp_base:textBlock",
+                                                                                                                "type": "component",
+                                                                                                                "attributes": {
+                                                                                                                    "text": "{!CartSummary.collaborationLockDetail.lockedByName} ({!CartSummary.collaborationLockDetail.lockedByEmail}) is checking out this cart.",
+                                                                                                                    "textAlign": "left",
+                                                                                                                    "textDisplayInfo": "{\"textStyle\": \"body-regular\", \"headingTag\": \"p\"}"
+                                                                                                                }
+                                                                                                            }
+                                                                                                        ]
+                                                                                                    }
+                                                                                                ]
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "cartOptions",
+                                                                                        "title": "Cart Options",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "commerce_builder:cartOptions",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartData": "{!CartSummary}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    {
+                                                                                        "name": "cartAsyncStateView",
+                                                                                        "title": "Cart Async State View",
+                                                                                        "type": "region",
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "definition": "site:cartAsyncStateView",
+                                                                                                "type": "component",
+                                                                                                "attributes": {
+                                                                                                    "cartData": "{!CartSummary}"
+                                                                                                }
+                                                                                            }
+                                                                                        ]
+                                                                                    }
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ],
+                                                                "attributes": {
+                                                                    "itemSpacing": "large",
+                                                                    "listType": "unformatted",
+                                                                    "showPagination": true,
+                                                                    "autoScrollToMostRecent": true
+                                                                },
+                                                                "dataProviders": [
+                                                                    {
+                                                                        "definition": "sfdc_cms__commerceCartListDataProvider",
+                                                                        "sfdcExpressionKey": "CartSummary",
+                                                                        "attributes": {
+                                                                            "collaborationFilter": "SharedWithMe",
+                                                                            "pageSize": 10
+                                                                        },
+                                                                        "type": "dataProvider"
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "attributes": {
+                                    "tabTextStyle": "{\"textStyle\":\"heading-small\",\"headingTag\":\"p\"}",
+                                    "activeTabTextStyle": "{\"textStyle\":\"heading-small\",\"headingTag\":\"p\"}",
+                                    "tabsetConfig": {
+                                        "tabs": [
+                                            {
+                                                "tabKey": "myCarts",
+                                                "tabName": "My Carts"
+                                            },
+                                            {
+                                                "tabKey": "sharedWithMe",
+                                                "tabName": "Shared with me"
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

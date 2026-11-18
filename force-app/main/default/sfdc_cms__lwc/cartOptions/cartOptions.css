@@ -1,12 +1,146 @@
 .options-menu-container {
-    --slds-c-button-text-color: var(--dxp-g-root-contrast, #181818);
-    --sds-c-button-text-color: var(--dxp-g-root-contrast, #181818);
-    --slds-c-button-text-color-hover: var(--dxp-g-root-contrast, #181818);
-    --sds-c-button-text-color-hover: var(--dxp-g-root-contrast, #181818);
+    /* Trigger text follows the storefront button-text token, falling back to root-contrast. */
+    --slds-c-button-text-color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
+    --sds-c-button-text-color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
+    --slds-c-button-text-color-hover: var(
+        --dxp-s-button-color-hover,
+        var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818))
+    );
+    --sds-c-button-text-color-hover: var(
+        --dxp-s-button-color-hover,
+        var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818))
+    );
     --slds-c-button-text-decoration: none;
     --sds-c-button-text-decoration: none;
-    --dxp-s-link-text-color: var(--dxp-g-root-contrast, #181818);
+    --dxp-s-link-text-color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
     --dxp-s-link-text-decoration: none;
+}
+
+/* Align the trigger via a hook (::part is unreliable in synthetic shadow); leading-aligned by default. */
+.options-button-menu {
+    display: flex;
+    width: 100%;
+    justify-content: var(--com-c-cart-options-trigger-justify-content, flex-start);
+
+    /* Merchant text color forwarded as --com-c-button-color. `color` is inherited so it crosses the
+       synthetic shadow boundary into the label; the SLDS text-color hooks cover the slds-button path.
+       Falls back to the storefront button token. */
+    --slds-c-button-text-color: var(
+        --com-c-button-color,
+        var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818))
+    );
+    --sds-c-button-text-color: var(
+        --com-c-button-color,
+        var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818))
+    );
+    --slds-c-button-text-color-hover: var(
+        --com-c-button-color-hover,
+        var(--dxp-s-button-color-hover, var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818)))
+    );
+    --sds-c-button-text-color-hover: var(
+        --com-c-button-color-hover,
+        var(--dxp-s-button-color-hover, var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818)))
+    );
+    color: var(--com-c-button-color, var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818)));
+
+    /* Merchant background + border. The neutral (`border`) variant's rule overrides the generic
+       --slds-c-button-color-* hooks, so set both the neutral-specific hooks (read first there) and
+       the generic ones. Left unset (invalid) when the merchant sets no color, so the SLDS default applies. */
+    --slds-c-button-neutral-color-background: var(--com-c-button-color-background);
+    --slds-c-button-color-background: var(--com-c-button-color-background);
+    --slds-c-button-neutral-color-background-hover: var(--com-c-button-color-background-hover);
+    --slds-c-button-color-background-hover: var(--com-c-button-color-background-hover);
+    --slds-c-button-neutral-color-border: var(--com-c-button-color-border);
+    --slds-c-button-color-border: var(--com-c-button-color-border);
+}
+
+/* Button variants (`container`, `border`, `border-filled`) render as an actual button. The base
+   `.slds-button` has no inline padding of its own (only the neutral variant adds it), so restore
+   1rem so the content isn't flush against the edge. The `bare` variant keeps its text-link look. */
+.options-button-menu:not([data-variant='bare']) {
+    /* Different SLDS button builds read inline padding from the hyphenated (-inline-start/-end) or
+       non-hyphenated (-inlinestart/-inlineend) hooks; set both spellings and both prefixes so padding
+       resolves either way. --slds-g-spacing-4 (1rem) matches the neutral variant's default. */
+    --slds-c-button-spacing-inline-start: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inline-end: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inline-start: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inline-end: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inlinestart: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inlineend: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inlinestart: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inlineend: var(--slds-g-spacing-4, 1rem);
+
+    /* Kill the text-link underline. Two engines can paint it depending on shadow mode - the DXP
+       branding layer (--dxp-s-button-text-decoration) and the base button (--sds-c-button-font-decoration).
+       Override both host tokens so the underline is neutralized either way, including on :hover. */
+    --dxp-s-button-text-decoration: none;
+    --sds-c-button-font-decoration: none;
+}
+
+/* `border-filled` surface. Only `variant='border'` gets the `slds-button_neutral` class that aliases
+   --slds-c-* into the --sds-c-* hooks the base button paints from; `border-filled` is a plain
+   `.slds-button` that reads --sds-c-* directly and defaults to a transparent border. Set the --sds-c-*
+   hooks (the only cross-boundary channel in synthetic shadow) with visible defaults so it renders like
+   `border`; merchant colors override. Scoped to border-filled so `bare` is untouched. */
+.options-button-menu[data-variant='border-filled'] {
+    --sds-c-button-color-border: var(--com-c-button-color-border, var(--slds-g-color-border-2, #c9c9c9));
+    --sds-c-button-color-border-hover: var(--com-c-button-color-border, var(--slds-g-color-border-2, #c9c9c9));
+    --sds-c-button-color-background: var(--com-c-button-color-background, var(--slds-g-color-surface-1, #fff));
+    --sds-c-button-color-background-hover: var(
+        --com-c-button-color-background-hover,
+        var(--com-c-button-color-background, var(--slds-g-color-surface-1, #fff))
+    );
+
+    /* Match the neutral `border` height. Inline padding comes from the shared rule above; here only
+       block spacing and line-height need setting (a plain `.slds-button` gets neither from the neutral
+       rule). Do NOT re-point inline padding at the neutral -inline chain - it has no literal fallback
+       and collapses to invalid in this scope, dropping padding to 0. */
+    --sds-c-button-spacing-block: var(--slds-c-button-neutral-spacing-block);
+    --sds-c-button-font-lineheight: var(
+        --slds-c-button-neutral-font-lineheight,
+        var(--slds-s-button-font-lineheight, 1.875rem)
+    );
+}
+
+.options-button-menu:hover {
+    color: var(
+        --com-c-button-color-hover,
+        var(--dxp-s-button-color-hover, var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818)))
+    );
+}
+
+/* Dropdown option items follow the theme like the trigger - each menu-item renders its own link, so
+   apply the storefront button-text token (fallback root-contrast) here too. Destructive item overrides below. */
+.edit-menu-item,
+.share-menu-item,
+.mark-default-menu-item,
+.remove-default-menu-item,
+.import-menu-item,
+.export-menu-item,
+.save-as-template-menu-item,
+.clear-menu-item {
+    --slds-c-button-text-color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
+    --sds-c-button-text-color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
+    color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
+}
+
+.edit-menu-item a,
+.edit-menu-item span,
+.share-menu-item a,
+.share-menu-item span,
+.mark-default-menu-item a,
+.mark-default-menu-item span,
+.remove-default-menu-item a,
+.remove-default-menu-item span,
+.import-menu-item a,
+.import-menu-item span,
+.export-menu-item a,
+.export-menu-item span,
+.save-as-template-menu-item a,
+.save-as-template-menu-item span,
+.clear-menu-item a,
+.clear-menu-item span {
+    color: var(--dxp-s-button-color, var(--dxp-g-root-contrast, #181818));
 }
 
 .destructive-menu-item {
@@ -18,4 +152,169 @@
 .destructive-menu-item a,
 .destructive-menu-item span {
     color: var(--dxp-g-destructive, #ba0517);
+}
+
+.disabled-menu-item,
+.disabled-menu-item a,
+.disabled-menu-item span {
+    pointer-events: none !important;
+    opacity: 0.6;
+    cursor: default !important;
+    color: inherit !important;
+    background-color: transparent !important;
+    --slds-c-menu-item-color-background-hover: transparent;
+    --sds-c-menu-item-color-background-hover: transparent;
+    --slds-c-menu-item-text-color-hover: inherit;
+    --sds-c-menu-item-text-color-hover: inherit;
+}
+
+/* Separator styling */
+.options-separator {
+    height: 1px;
+    background: var(--lwc-colorBorder, #c9c9c9);
+    margin: 0.25rem 0.75rem;
+}
+
+/* Menu item icon styling - base */
+.edit-menu-item,
+.share-menu-item,
+.mark-default-menu-item,
+.remove-default-menu-item,
+.import-menu-item,
+.export-menu-item,
+.save-as-template-menu-item,
+.clear-menu-item,
+.delete-menu-item {
+    --slds-c-menu-item-prefix-icon-size: 14px;
+    --slds-c-menu-item-spacing-block-start: 0.75rem;
+    --slds-c-menu-item-spacing-block-end: 0.75rem;
+}
+
+.edit-menu-item a,
+.share-menu-item a,
+.mark-default-menu-item a,
+.remove-default-menu-item a,
+.import-menu-item a,
+.export-menu-item a,
+.save-as-template-menu-item a,
+.clear-menu-item a,
+.delete-menu-item a {
+    justify-content: flex-start;
+}
+
+/* Edit icon - pencil-simple.svg */
+.edit-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.431 4.01247L9.98758 1.56849C9.90633 1.48721 9.80986 1.42274 9.70369 1.37876C9.59751 1.33477 9.48372 1.31213 9.36879 1.31213C9.25387 1.31213 9.14007 1.33477 9.0339 1.37876C8.92773 1.42274 8.83126 1.48721 8.75 1.56849L2.00649 8.31255C1.92488 8.39351 1.86019 8.48988 1.81615 8.59606C1.77212 8.70224 1.74964 8.81611 1.75 8.93106V11.375C1.75 11.6071 1.84219 11.8297 2.00629 11.9938C2.17038 12.1579 2.39294 12.25 2.625 12.25H5.06899C5.18394 12.2504 5.29781 12.2279 5.404 12.1839C5.51018 12.1399 5.60655 12.0752 5.6875 11.9936L12.431 5.25005C12.5123 5.16879 12.5768 5.07233 12.6207 4.96615C12.6647 4.85998 12.6874 4.74618 12.6874 4.63126C12.6874 4.51634 12.6647 4.40254 12.6207 4.29637C12.5768 4.19019 12.5123 4.09372 12.431 4.01247ZM5.06899 11.375H2.625V8.93106L7.4375 4.11856L9.88149 6.56255L5.06899 11.375ZM10.5 5.94349L8.05602 3.50005L9.36852 2.18755L11.8125 4.63099L10.5 5.94349Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Share icon - share-fat.svg */
+.share-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.997 5.81606L8.622 1.44106C8.56084 1.37984 8.48291 1.33812 8.39805 1.3212C8.31319 1.30427 8.22521 1.31289 8.14525 1.34596C8.06529 1.37904 7.99693 1.43508 7.94882 1.50701C7.90071 1.57893 7.87501 1.66351 7.87497 1.75004V3.95668C6.45637 4.07809 4.88958 4.77262 3.60059 5.86582C2.04856 7.1827 1.08223 8.87965 0.879342 10.6439C0.863487 10.781 0.891297 10.9197 0.958816 11.0401C1.02633 11.1606 1.13012 11.2566 1.2554 11.3147C1.38069 11.3727 1.52109 11.3898 1.65662 11.3634C1.79215 11.337 1.91591 11.2686 2.01028 11.1678C2.61184 10.5274 4.75231 8.50231 7.87497 8.32403V10.5C7.87501 10.5866 7.90071 10.6712 7.94882 10.7431C7.99693 10.815 8.06529 10.871 8.14525 10.9041C8.22521 10.9372 8.31319 10.9458 8.39805 10.9289C8.48291 10.912 8.56084 10.8702 8.622 10.809L12.997 6.43403C13.0788 6.35201 13.1248 6.24089 13.1248 6.12504C13.1248 6.00919 13.0788 5.89807 12.997 5.81606ZM8.74997 9.44403V7.87504C8.74997 7.75901 8.70387 7.64773 8.62183 7.56568C8.53978 7.48363 8.4285 7.43754 8.31247 7.43754C6.77684 7.43754 5.28114 7.8384 3.86692 8.62973C3.14666 9.03454 2.47557 9.5212 1.867 10.08C2.18419 8.77629 2.98372 7.53653 4.16661 6.53301C5.43645 5.45621 6.98629 4.81254 8.31247 4.81254C8.4285 4.81254 8.53978 4.76645 8.62183 4.6844C8.70387 4.60235 8.74997 4.49107 8.74997 4.37504V2.8066L12.069 6.12504L8.74997 9.44403Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Mark as default icon - mark-as-default.svg */
+.mark-default-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_4825_246599)'%3E%3Cpath d='M10.525 1.25H4.675C4.41641 1.25 4.16842 1.35333 3.98557 1.53726C3.80272 1.72119 3.7 1.97065 3.7 2.23077V3.21154H2.725C2.46641 3.21154 2.21842 3.31487 2.03557 3.4988C1.85272 3.68273 1.75 3.93219 1.75 4.19231V13.5096C1.75 13.5997 1.77467 13.6881 1.82132 13.765C1.86797 13.8419 1.93478 13.9044 2.01443 13.9457C2.09407 13.9869 2.18347 14.0052 2.27281 13.9987C2.36215 13.9922 2.44797 13.961 2.52086 13.9087L5.65 11.6602L8.77975 13.9087C8.85264 13.9609 8.9384 13.9919 9.02764 13.9983C9.11688 14.0047 9.20617 13.9864 9.28571 13.9451C9.36525 13.9039 9.43199 13.8415 9.47861 13.7647C9.52522 13.6879 9.54992 13.5996 9.55 13.5096V10.35L10.7291 11.1971C10.802 11.2495 10.8879 11.2807 10.9772 11.2872C11.0665 11.2937 11.1559 11.2753 11.2356 11.2341C11.3152 11.1929 11.382 11.1304 11.4287 11.0535C11.4753 10.9765 11.5 10.8882 11.5 10.7981V2.23077C11.5 1.97065 11.3973 1.72119 11.2144 1.53726C11.0316 1.35333 10.7836 1.25 10.525 1.25ZM8.575 12.557L5.93275 10.6568C5.85007 10.5974 5.751 10.5654 5.64939 10.5654C5.54778 10.5654 5.44871 10.5974 5.36603 10.6568L2.725 12.5564V4.19231H8.575V12.557ZM10.525 9.8455L9.55 9.14302V4.19231C9.55 3.93219 9.44728 3.68273 9.26443 3.4988C9.08158 3.31487 8.83358 3.21154 8.575 3.21154H4.675V2.23077H10.525V9.8455Z' fill='currentColor'/%3E%3Cpath d='M12.25 10.375C12.7141 10.375 13.1591 10.5595 13.4873 10.8877C13.8155 11.2159 14 11.6609 14 12.125C14 12.5891 13.8155 13.0341 13.4873 13.3623C13.1591 13.6905 12.7141 13.875 12.25 13.875H7.75C7.28587 13.875 6.84089 13.6905 6.5127 13.3623C6.22551 13.0751 6.04855 12.6985 6.00879 12.2979L6 12.125L6.00879 11.9521C6.04855 11.5515 6.22551 11.1749 6.5127 10.8877C6.84089 10.5595 7.28587 10.375 7.75 10.375H12.25Z' fill='currentColor' stroke='white' stroke-width='2'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_4825_246599'%3E%3Crect width='14' height='14' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Remove from default icon - remove-from-default.svg */
+.remove-default-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.5 1.3125H5.25C5.01794 1.3125 4.79538 1.40469 4.63128 1.56878C4.46719 1.73288 4.375 1.95544 4.375 2.1875V3.0625H3.5C3.26794 3.0625 3.04538 3.15469 2.88128 3.31878C2.71719 3.48288 2.625 3.70544 2.625 3.9375V12.25C2.625 12.3304 2.64714 12.4092 2.68901 12.4778C2.73087 12.5465 2.79083 12.6022 2.86231 12.639C2.93378 12.6758 3.01401 12.6922 3.09419 12.6864C3.17436 12.6805 3.25138 12.6527 3.3168 12.606L6.125 10.6001L8.93375 12.606C8.99916 12.6526 9.07613 12.6803 9.15622 12.686C9.23631 12.6917 9.31643 12.6753 9.38782 12.6386C9.4592 12.6018 9.51909 12.5461 9.56093 12.4776C9.60276 12.409 9.62493 12.3303 9.625 12.25V10.1002L10.6832 10.856C10.7486 10.9027 10.8256 10.9305 10.9058 10.9364C10.986 10.9422 11.0662 10.9258 11.1377 10.889C11.2092 10.8522 11.2691 10.7965 11.311 10.7278C11.3529 10.6592 11.375 10.5804 11.375 10.5V2.1875C11.375 1.95544 11.2828 1.73288 11.1187 1.56878C10.9546 1.40469 10.7321 1.3125 10.5 1.3125ZM8.75 11.4002L6.37875 9.70484C6.30455 9.65184 6.21564 9.62335 6.12445 9.62335C6.03327 9.62335 5.94436 9.65184 5.87016 9.70484L3.5 11.3996V3.9375H8.75V11.4002ZM10.5 9.65016L9.625 9.02344V3.9375C9.625 3.70544 9.53281 3.48288 9.36872 3.31878C9.20462 3.15469 8.98206 3.0625 8.75 3.0625H5.25V2.1875H10.5V9.65016Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Import icon - download-simple.svg */
+.import-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.25 7.875V11.375C12.25 11.491 12.2039 11.6023 12.1219 11.6844C12.0398 11.7664 11.9285 11.8125 11.8125 11.8125H2.1875C2.07147 11.8125 1.96019 11.7664 1.87814 11.6844C1.79609 11.6023 1.75 11.491 1.75 11.375V7.875C1.75 7.75897 1.79609 7.64769 1.87814 7.56564C1.96019 7.48359 2.07147 7.4375 2.1875 7.4375C2.30353 7.4375 2.41481 7.48359 2.49686 7.56564C2.57891 7.64769 2.625 7.75897 2.625 7.875V10.9375H11.375V7.875C11.375 7.75897 11.4211 7.64769 11.5031 7.56564C11.5852 7.48359 11.6965 7.4375 11.8125 7.4375C11.9285 7.4375 12.0398 7.48359 12.1219 7.56564C12.2039 7.64769 12.25 7.75897 12.25 7.875ZM6.69047 8.18453C6.7311 8.22521 6.77935 8.25748 6.83246 8.2795C6.88558 8.30151 6.94251 8.31284 7 8.31284C7.05749 8.31284 7.11442 8.30151 7.16754 8.2795C7.22065 8.25748 7.2689 8.22521 7.30953 8.18453L9.49703 5.99703C9.53768 5.95638 9.56992 5.90813 9.59192 5.85502C9.61392 5.80191 9.62524 5.74499 9.62524 5.6875C9.62524 5.63001 9.61392 5.57309 9.59192 5.51998C9.56992 5.46687 9.53768 5.41862 9.49703 5.37797C9.45638 5.33732 9.40813 5.30508 9.35502 5.28308C9.30191 5.26108 9.24499 5.24976 9.1875 5.24976C9.13001 5.24976 9.07309 5.26108 9.01998 5.28308C8.96687 5.30508 8.91862 5.33732 8.87797 5.37797L7.4375 6.81898V1.75C7.4375 1.63397 7.39141 1.52269 7.30936 1.44064C7.22731 1.35859 7.11603 1.3125 7 1.3125C6.88397 1.3125 6.77269 1.35859 6.69064 1.44064C6.60859 1.52269 6.5625 1.63397 6.5625 1.75V6.81898L5.12203 5.37797C5.03994 5.29588 4.9286 5.24976 4.8125 5.24976C4.6964 5.24976 4.58506 5.29588 4.50297 5.37797C4.42088 5.46006 4.37476 5.5714 4.37476 5.6875C4.37476 5.8036 4.42088 5.91494 4.50297 5.99703L6.69047 8.18453Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Export icon - export.svg */
+.export-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8125 6.12498V11.375C11.8125 11.607 11.7203 11.8296 11.5562 11.9937C11.3921 12.1578 11.1696 12.25 10.9375 12.25H3.0625C2.83044 12.25 2.60788 12.1578 2.44378 11.9937C2.27969 11.8296 2.1875 11.607 2.1875 11.375V6.12498C2.1875 5.89291 2.27969 5.67035 2.44378 5.50626C2.60788 5.34216 2.83044 5.24998 3.0625 5.24998H4.375C4.49103 5.24998 4.60231 5.29607 4.68436 5.37812C4.76641 5.46017 4.8125 5.57145 4.8125 5.68748C4.8125 5.80351 4.76641 5.91479 4.68436 5.99684C4.60231 6.07888 4.49103 6.12498 4.375 6.12498H3.0625V11.375H10.9375V6.12498H9.625C9.50897 6.12498 9.39769 6.07888 9.31564 5.99684C9.23359 5.91479 9.1875 5.80351 9.1875 5.68748C9.1875 5.57145 9.23359 5.46017 9.31564 5.37812C9.39769 5.29607 9.50897 5.24998 9.625 5.24998H10.9375C11.1696 5.24998 11.3921 5.34216 11.5562 5.50626C11.7203 5.67035 11.8125 5.89291 11.8125 6.12498ZM5.12203 3.80951L6.5625 2.36849V7.43748C6.5625 7.55351 6.60859 7.66479 6.69064 7.74684C6.77269 7.82888 6.88397 7.87498 7 7.87498C7.11603 7.87498 7.22731 7.82888 7.30936 7.74684C7.39141 7.66479 7.4375 7.55351 7.4375 7.43748V2.36849L8.87797 3.80951C8.96006 3.8916 9.0714 3.93772 9.1875 3.93772C9.3036 3.93772 9.41494 3.8916 9.49703 3.80951C9.57912 3.72742 9.62524 3.61607 9.62524 3.49998C9.62524 3.38388 9.57912 3.27254 9.49703 3.19045L7.30953 1.00295C7.2689 0.96227 7.22065 0.93 7.16754 0.907983C7.11442 0.885966 7.05749 0.874634 7 0.874634C6.94251 0.874634 6.88558 0.885966 6.83246 0.907983C6.77935 0.93 6.7311 0.96227 6.69047 1.00295L4.50297 3.19045C4.42088 3.27254 4.37476 3.38388 4.37476 3.49998C4.37476 3.61607 4.42088 3.72742 4.50297 3.80951C4.58506 3.8916 4.6964 3.93772 4.8125 3.93772C4.9286 3.93772 5.03994 3.8916 5.12203 3.80951Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Save as Template icon - FolderSimplePlus.svg */
+.save-as-template-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11.8125 5.4375H7.146L5.629 4.3C5.47725 4.1875 5.29325 4.125 5.104 4.125H2.1875C1.95544 4.125 1.73288 4.21719 1.56878 4.38128C1.40469 4.54538 1.3125 4.76794 1.3125 5V12.4375C1.3125 12.6696 1.40469 12.8921 1.56878 13.0562C1.73288 13.2203 1.95544 13.3125 2.1875 13.3125H11.8612C12.0802 13.3125 12.2903 13.2253 12.4452 13.0705C12.6001 12.9155 12.6872 12.7054 12.6875 12.4864V6.3125C12.6875 6.08044 12.5953 5.85788 12.4312 5.69378C12.2671 5.52969 12.0446 5.4375 11.8125 5.4375ZM11.8125 12.4375H2.1875V5H5.104L6.7375 6.225C6.81325 6.28175 6.90525 6.3125 7 6.3125H11.8125V12.4375ZM8.75 9.375C8.75 9.49103 8.70391 9.60231 8.62186 9.68436C8.53981 9.76641 8.42853 9.8125 8.3125 9.8125H7.4375V10.6875C7.4375 10.8035 7.39141 10.9148 7.30936 10.9969C7.22731 11.0789 7.11603 11.125 7 11.125C6.88397 11.125 6.77269 11.0789 6.69064 10.9969C6.60859 10.9148 6.5625 10.8035 6.5625 10.6875V9.8125H5.6875C5.57147 9.8125 5.46019 9.76641 5.37814 9.68436C5.29609 9.60231 5.25 9.49103 5.25 9.375C5.25 9.25897 5.29609 9.14769 5.37814 9.06564C5.46019 8.98359 5.57147 8.9375 5.6875 8.9375H6.5625V8.0625C6.5625 7.94647 6.60859 7.83519 6.69064 7.75314C6.77269 7.67109 6.88397 7.625 7 7.625C7.11603 7.625 7.22731 7.67109 7.30936 7.75314C7.39141 7.83519 7.4375 7.94647 7.4375 8.0625V8.9375H8.3125C8.42853 8.9375 8.53981 8.98359 8.62186 9.06564C8.70391 9.14769 8.75 9.25897 8.75 9.375Z' fill='currentColor'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Clear icon - broom.svg */
+.clear-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_4822_246555)'%3E%3Cpath d='M12.8789 11.8568C11.6452 11.2552 10.9375 9.96569 10.9375 8.31303V7.36803C10.938 7.19272 10.8856 7.02133 10.7871 6.87626C10.6887 6.73119 10.5488 6.61917 10.3857 6.55483L9.02345 6.01561C8.91627 5.97274 8.83038 5.88925 8.78449 5.78333C8.7386 5.67742 8.73643 5.55765 8.77845 5.45014L9.94439 2.5517C10.0235 2.36147 10.0634 2.15722 10.0618 1.95119C10.0601 1.74516 10.0169 1.54159 9.93465 1.35266C9.85244 1.16374 9.73295 0.993345 9.58333 0.851691C9.43372 0.710036 9.25705 0.600032 9.06392 0.528267C8.68774 0.390435 8.27265 0.404736 7.90685 0.56813C7.54105 0.731523 7.25339 1.03113 7.10501 1.40327C7.1048 1.40545 7.1048 1.40765 7.10501 1.40983L5.95548 4.3203C5.91273 4.42797 5.82901 4.5143 5.72269 4.56033C5.61638 4.60636 5.49615 4.60834 5.38837 4.56585L3.99821 3.99983C3.83793 3.93488 3.66192 3.91924 3.4927 3.95489C3.32347 3.99055 3.16874 4.07589 3.04829 4.19999C1.89657 5.38397 1.31251 6.76756 1.31251 8.31249C1.30948 9.89346 1.92089 11.4137 3.01767 12.5524C3.05876 12.5954 3.10818 12.6295 3.1629 12.6527C3.21762 12.6759 3.2765 12.6878 3.33595 12.6875H12.6875C12.7864 12.6874 12.8823 12.6538 12.9597 12.5922C13.037 12.5306 13.0912 12.4446 13.1134 12.3482C13.1356 12.2519 13.1245 12.1508 13.0819 12.0616C13.0394 11.9723 12.9678 11.9001 12.8789 11.8568ZM3.67173 4.81249L5.06134 5.37577C5.22174 5.43994 5.39324 5.47181 5.56599 5.46956C5.73874 5.4673 5.90934 5.43096 6.06802 5.36263C6.22669 5.29429 6.37031 5.1953 6.49064 5.07133C6.61097 4.94736 6.70565 4.80086 6.76923 4.64022L7.91767 1.74178C8.05767 1.40764 8.43556 1.23483 8.7615 1.35897C8.84459 1.3898 8.92058 1.43715 8.98488 1.49815C9.04918 1.55915 9.10046 1.63254 9.13562 1.7139C9.17078 1.79526 9.18909 1.8829 9.18946 1.97153C9.18983 2.06016 9.17223 2.14795 9.13774 2.2296L7.96743 5.12749C7.8393 5.45073 7.84468 5.81161 7.98238 6.1309C8.12008 6.45019 8.37885 6.70178 8.70189 6.83045L10.0625 7.36803V8.31249C10.0625 8.33053 10.0625 8.34858 10.0625 8.36717L3.04993 5.56225C3.23637 5.29576 3.44433 5.045 3.67173 4.81249ZM6.29673 11.8125C5.64536 11.1877 5.18391 10.3914 4.96564 9.51561C4.93522 9.40484 4.86245 9.31047 4.76305 9.2529C4.66365 9.19532 4.54559 9.17914 4.43437 9.20786C4.32314 9.23658 4.22768 9.3079 4.16858 9.40641C4.10949 9.50491 4.09151 9.62271 4.11853 9.73436C4.30935 10.4878 4.65091 11.1947 5.12259 11.8125H3.52407C2.66121 10.8512 2.18505 9.60426 2.18751 8.31249C2.18216 7.62805 2.32644 6.95072 2.61025 6.32788L10.1462 9.34225C10.3102 10.3266 10.7237 11.1732 11.3433 11.8119L6.29673 11.8125Z' fill='currentColor'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_4822_246555'%3E%3Crect width='14' height='14' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Delete icon - trash.svg */
+.delete-menu-item a::before {
+    content: '';
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 14 14' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cg clip-path='url(%23clip0_4822_246559)'%3E%3Cpath d='M11.8125 2.625H9.625V2.1875C9.625 1.8394 9.48672 1.50556 9.24058 1.25942C8.99444 1.01328 8.6606 0.875 8.3125 0.875H5.6875C5.3394 0.875 5.00556 1.01328 4.75942 1.25942C4.51328 1.50556 4.375 1.8394 4.375 2.1875V2.625H2.1875C2.07147 2.625 1.96019 2.67109 1.87814 2.75314C1.79609 2.83519 1.75 2.94647 1.75 3.0625C1.75 3.17853 1.79609 3.28981 1.87814 3.37186C1.96019 3.45391 2.07147 3.5 2.1875 3.5H2.625V11.375C2.625 11.6071 2.71719 11.8296 2.88128 11.9937C3.04538 12.1578 3.26794 12.25 3.5 12.25H10.5C10.7321 12.25 10.9546 12.1578 11.1187 11.9937C11.2828 11.8296 11.375 11.6071 11.375 11.375V3.5H11.8125C11.9285 3.5 12.0398 3.45391 12.1219 3.37186C12.2039 3.28981 12.25 3.17853 12.25 3.0625C12.25 2.94647 12.2039 2.83519 12.1219 2.75314C12.0398 2.67109 11.9285 2.625 11.8125 2.625ZM5.25 2.1875C5.25 2.07147 5.29609 1.96019 5.37814 1.87814C5.46019 1.79609 5.57147 1.75 5.6875 1.75H8.3125C8.42853 1.75 8.53981 1.79609 8.62186 1.87814C8.70391 1.96019 8.75 2.07147 8.75 2.1875V2.625H5.25V2.1875ZM10.5 11.375H3.5V3.5H10.5V11.375ZM6.125 5.6875V9.1875C6.125 9.30353 6.07891 9.41481 5.99686 9.49686C5.91481 9.57891 5.80353 9.625 5.6875 9.625C5.57147 9.625 5.46019 9.57891 5.37814 9.49686C5.29609 9.41481 5.25 9.30353 5.25 9.1875V5.6875C5.25 5.57147 5.29609 5.46019 5.37814 5.37814C5.46019 5.29609 5.57147 5.25 5.6875 5.25C5.80353 5.25 5.91481 5.29609 5.99686 5.37814C6.07891 5.46019 6.125 5.57147 6.125 5.6875ZM8.75 5.6875V9.1875C8.75 9.30353 8.70391 9.41481 8.62186 9.49686C8.53981 9.57891 8.42853 9.625 8.3125 9.625C8.19647 9.625 8.08519 9.57891 8.00314 9.49686C7.92109 9.41481 7.875 9.30353 7.875 9.1875V5.6875C7.875 5.57147 7.92109 5.46019 8.00314 5.37814C8.08519 5.29609 8.19647 5.25 8.3125 5.25C8.42853 5.25 8.53981 5.29609 8.62186 5.37814C8.70391 5.46019 8.75 5.57147 8.75 5.6875Z' fill='%23DA0000'/%3E%3C/g%3E%3Cdefs%3E%3CclipPath id='clip0_4822_246559'%3E%3Crect width='14' height='14' fill='white'/%3E%3C/clipPath%3E%3C/defs%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-size: contain;
 }

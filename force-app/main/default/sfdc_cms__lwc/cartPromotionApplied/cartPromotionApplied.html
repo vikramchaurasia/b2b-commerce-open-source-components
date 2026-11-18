@@ -4,12 +4,15 @@
         style={appliedPromotionCssStyles}>
         <site-cart-promotion-applied-ui
             name={name}
+            tier-label={tierLabel}
             coupon-code={couponCode}
             show-terms-and-conditions={showTermsAndConditions}
             terms-and-conditions={termsAndConditions}
             show-discount-amount={showDiscountAmount}
             coupon-id={couponId}
-            terms-and-conditions-title-text={termsAndConditionsTitleText}>
+            terms-and-conditions-title-text={termsAndConditionsTitleText}
+            locked-for-viewer={isLockedForViewer}
+            disable-remove-button={hasActiveAsyncOperation}>
             <section
                 slot="termsAndConditions"
                 data-automation="termsAndConditions">

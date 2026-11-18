@@ -8,6 +8,9 @@
     }, {
       "name" : "couponCodeInputPlaceHolderText",
       "value" : "Coupon code..."
+    }, {
+      "name" : "quoteItemsPromotionsDisabledText",
+      "value" : "You can't apply promotions to a cart that contains items from a quote."
     } ]
   },
   "urlName" : "cartapplycouponui"

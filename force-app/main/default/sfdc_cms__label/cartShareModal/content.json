@@ -1,0 +1,119 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartShareModal",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "shareCartHeader",
+      "value" : "Share \"{0}\""
+    }, {
+      "name" : "shareWithLabel",
+      "value" : "Share {cartName} with"
+    }, {
+      "name" : "shareWithPlaceholder",
+      "value" : "Enter emails or names..."
+    }, {
+      "name" : "ownerLabel",
+      "value" : "Owner"
+    }, {
+      "name" : "removeLabel",
+      "value" : "Remove"
+    }, {
+      "name" : "removingLabel",
+      "value" : "Removing..."
+    }, {
+      "name" : "shareCartButton",
+      "value" : "Share Cart"
+    }, {
+      "name" : "cancelButton",
+      "value" : "Cancel"
+    }, {
+      "name" : "shareCartSuccessMessage",
+      "value" : "Cart \"{cartName}\" has been shared."
+    }, {
+      "name" : "shareCartSuccessWithCount",
+      "value" : "{0} was shared with {1} others"
+    }, {
+      "name" : "shareCartErrorMessage",
+      "value" : "We couldn't share the cart. Try again."
+    }, {
+      "name" : "collaboratorLimitError",
+      "value" : "You've reached the limit of {0} collaborators. Remove a collaborator to add another."
+    }, {
+      "name" : "removeCollaboratorErrorMessage",
+      "value" : "We couldn't remove {collaboratorName}. Try again."
+    }, {
+      "name" : "spinnerHelpText",
+      "value" : "Sharing..."
+    }, {
+      "name" : "emailValidationError",
+      "value" : "Enter a valid email."
+    }, {
+      "name" : "noRecipientsError",
+      "value" : "Add at least one recipient."
+    }, {
+      "name" : "youLabel",
+      "value" : "You"
+    }, {
+      "name" : "noSuggestionsAvailable",
+      "value" : "No results found for \"{expression}\"."
+    }, {
+      "name" : "searchingLabel",
+      "value" : "Searching..."
+    }, {
+      "name" : "currentUserNameLabel",
+      "value" : "{0} (You)"
+    }, {
+      "name" : "currentUserAnonymousLabel",
+      "value" : "(You)"
+    }, {
+      "name" : "canView",
+      "value" : "Can View"
+    }, {
+      "name" : "canEdit",
+      "value" : "Can Edit"
+    }, {
+      "name" : "canCheckout",
+      "value" : "Can Checkout"
+    }, {
+      "name" : "viewAccessDescription",
+      "value" : "Can view items but can't add, update, or remove them"
+    }, {
+      "name" : "editAccessDescription",
+      "value" : "Can add, update, and remove items"
+    }, {
+      "name" : "checkoutAccessDescription",
+      "value" : "Can add, update, and remove items, and check out cart."
+    }, {
+      "name" : "shareCartConfirmHeader",
+      "value" : "Share \"{0}\"?"
+    }, {
+      "name" : "doneButton",
+      "value" : "Save Changes"
+    }, {
+      "name" : "goBackLabel",
+      "value" : "Go back"
+    }, {
+      "name" : "shareCartSuccessWithName",
+      "value" : "{cartName} is shared with {collaboratorName}"
+    }, {
+      "name" : "permissionUpdatedForUser",
+      "value" : "Share permissions were updated."
+    }, {
+      "name" : "updatePermissionErrorMessage",
+      "value" : "We couldn't update share permissions. Try again."
+    }, {
+      "name" : "fetchingCollaboratorsLabel",
+      "value" : "Loading..."
+    }, {
+      "name" : "fetchCollaboratorsErrorMessage",
+      "value" : "We couldn't load collaborators. Refresh the page and try again."
+    }, {
+      "name" : "closeButton",
+      "value" : "Close"
+    }, {
+      "name" : "dismissErrorLabel",
+      "value" : "Dismiss error message"
+    } ]
+  },
+  "urlName" : "cartsharemodal"
+}

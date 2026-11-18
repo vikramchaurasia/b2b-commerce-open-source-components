@@ -1,11 +1,31 @@
 <template lwc:render-mode="light">
-    <p>Open code</p>
     <div class="slds-p-top_small">
-        <div
-            class={revealButtonClass}
-            onclick={handleRevealButtonClick}>
-            <slot name="revealButton"></slot>
+        <!-- Case 1: Show reveal button with tooltip when showRevealButton is true and has quoted items -->
+        <div class="slds-grid slds-grid_vertical-align-center">
+            <div
+                class={revealButtonClass}
+                lwc:ref="revealButton"
+                onclick={handleRevealButtonClick}>
+                <slot name="revealButton"></slot>
+            </div>
+            <template lwc:if={showRevealButtonWithQuoteItems}>
+                <div
+                    class="tooltip-container slds-m-left_xx-small"
+                    tabindex="0">
+                    <lightning-icon
+                        icon-name="utility:info"
+                        size="xx-small"
+                        alternative-text={quoteItemsPromotionsDisabledText}></lightning-icon>
+                    <div
+                        class="slds-popover slds-popover_tooltip slds-nubbin_bottom tooltip-content slds-m-bottom_x-small"
+                        role="tooltip">
+                        <div class="slds-popover__body">{quoteItemsPromotionsDisabledText}</div>
+                    </div>
+                </div>
+            </template>
         </div>
+
+        <!-- Case 2: Show disabled input form with info text when showRevealButton is false and has quoted items -->
         <template lwc:if={showInputForm}>
             <div class="coupon-input-form">
                 <div class={couponInputContainerClasses}>
@@ -22,19 +42,30 @@
                         onkeyup={handleKeyup}
                         value={couponInputText}
                         variant={inputVariant}
-                        placeholder={placeHolderText}></lightning-input>
+                        placeholder={placeHolderText}
+                        disabled={isCouponInputDisabled}></lightning-input>
                 </div>
                 <site-cart-apply-coupon-button-ui
                     alignment="center"
                     variant={buttonVariant}
                     size="standard"
                     width="stretch"
-                    disabled={disableApplyCouponButton}
+                    disabled={isApplyCouponButtonDisabled}
                     text={applyCouponButtonText}
                     assistive-button-text={_labels.applyCouponInputAriaLabel}
                     onclick={handleCouponButtonClick}></site-cart-apply-coupon-button-ui>
             </div>
+            <div
+                lwc:if={isCouponDisabledForQuotedCartItems}
+                class="slds-grid slds-grid_vertical-align-center slds-m-top_small quoted-items-info">
+                <lightning-icon
+                    icon-name="utility:info"
+                    size="xx-small"
+                    alternative-text={quoteItemsPromotionsDisabledText}></lightning-icon>
+                <span class="slds-m-left_xx-small slds-text-body_small">{quoteItemsPromotionsDisabledText}</span>
+            </div>
         </template>
+
         <p
             lwc:if={hasError}
             class="slds-p-top_x-small slds-text-align_left slds-m-right_small slds-text-color_error error"

@@ -1,0 +1,62 @@
+.cart-list-view {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cart-list-view-item {
+    min-width: 0;
+}
+
+.empty-description {
+    width: 95%;
+}
+
+.image-svg {
+    display: flex;
+    justify-content: center;
+    width: 25%;
+    height: 25%;
+    margin-bottom: var(--dxp-g-spacing-large, 1.5rem);
+}
+
+.error-icon-svg {
+    height: 8%;
+    width: 8%;
+}
+
+.cart-list-loading {
+    display: flex;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+/* Anchor for the overlay spinner so it covers the cards instead of displacing them. */
+.cart-list-repeater-region {
+    position: relative;
+}
+
+/*
+ * Re-sort / reload spinner: overlays the cards already on screen instead of taking flow space,
+ * so selecting a sort option doesn't push the list down and snap it back. Only applied when carts
+ * are present (see `_loadingSpinnerClasses`); the initial-load spinner stays in the flow and centered.
+ */
+.cart-list-loading_overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    align-items: flex-start;
+}
+
+/*
+ * Sort-dropdown slot wrapper (design-mode only).
+ *
+ * In the Experience Builder canvas the empty slot renders as a drop region that otherwise
+ * collapses flush against the first cart card, overlapping that card's `defaultPill` drop region and
+ * swallowing drops meant for the pill. The gap separates the two drop regions so both stay independently
+ * droppable. Applied ONLY in design mode (see `_sortDropdownSlotClasses`), so the shopper-facing runtime
+ * layout has no extra space between the sort dropdown and the first card.
+ */
+.cart-list-sort-dropdown-slot.is-design-mode {
+    margin-bottom: var(--dxp-g-spacing-medium, 1rem);
+}

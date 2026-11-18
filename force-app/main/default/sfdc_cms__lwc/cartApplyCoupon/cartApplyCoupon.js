@@ -1,13 +1,60 @@
-import { api, LightningElement } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 import { getErrorInfo } from 'site/cartFailedActionEvaluator';
 import labels from './labels';
 import { createCouponApplyAction, dispatchAction } from 'commerce/actionApi';
 import { generateStyleProperties } from 'experience/styling';
+import { CartContentsAdapter, CartStatusAdapter } from 'commerce/checkoutCartApi';
+import { CartConfigurationContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
+import { asNonEmptyString, isCartLocked, isLockHolder, getCurrentUserAccessLevel } from 'site/cartDetailsCardUtils';
+
 /**
  * @slot revealButton
  */
 export default class CartApplyCoupon extends LightningElement {
   static renderMode = 'light';
+  _currentPageReference;
+  get effectiveCartId() {
+    const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
+    return cartIdFromRecordId ?? 'current';
+  }
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
+  cartContentsEntry;
+  @wire(CartStatusAdapter)
+  cartStatus;
+  @wire(CartConfigurationContextAdapter)
+  _cartConfiguration;
+  @wire(SessionContextAdapter)
+  sessionContext;
+  get _isShareCartEnabled() {
+    return Boolean(this._cartConfiguration?.data?.shareCart?.isEnabled);
+  }
+  get isLockedForViewer() {
+    const cartSummary = this.cartContentsEntry?.data?.cartSummary;
+    return isCartLocked(cartSummary) && !isLockHolder(cartSummary, this.sessionContext?.data?.userId);
+  }
+  get showApplyCoupon() {
+    const cartSummary = this.cartContentsEntry?.data?.cartSummary;
+    if (!this._isShareCartEnabled || !cartSummary?.collaborators?.length) {
+      return true;
+    }
+    if (this.sessionContext?.data?.isLoggedIn === false) {
+      return true;
+    }
+    if (this.sessionContext?.data?.userId == null) {
+      return false;
+    }
+    const level = getCurrentUserAccessLevel(cartSummary, this.sessionContext?.data?.userId);
+    return level === 'Owner' || level === 'Checkout';
+  }
   _isValid = false;
   _errorMessage;
   _applyingChanges = false;
@@ -40,8 +87,11 @@ export default class CartApplyCoupon extends LightningElement {
   @api
   couponInputTextColor;
   applyCoupon;
+  get _hasActiveAsyncOperation() {
+    return Boolean(this.cartStatus?.data?.isAsyncOperationInProgress);
+  }
   get disableApplyCouponButton() {
-    return this._applyingChanges || this._disableApplyButton || this.inputFormIsEmpty || !this._isValid;
+    return this._applyingChanges || this._disableApplyButton || this.inputFormIsEmpty || !this._isValid || this._hasActiveAsyncOperation || this.isLockedForViewer;
   }
   get inputFormIsEmpty() {
     return this._couponInputValue ? !this._couponInputValue.trim() : !this._couponInputValue;
