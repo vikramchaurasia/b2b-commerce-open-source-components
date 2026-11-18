@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Sort Options</masterLabel>
+  <description>Shows a dropdown list for sorting carts.</description>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="defaultSortOrder" label="Default Sort Order" type="String" default="Default" datasource="java://siteforce.customComponent.datasource.CartListSortOrderDataSource"></property>
+      <property name="label" label="Sort By Option Title" type="String" default="Sort By" translatable="true"></property>
+      <property name="defaultSortLabel" label="Default Label" type="String" default="Default" translatable="true"></property>
+      <property name="dateCreatedNewestLabel" label="Created Date (Newest First) Label" type="String" default="Created Date (Newest First)" translatable="true"></property>
+      <property name="dateCreatedOldestLabel" label="Created Date (Oldest First) Label" type="String" default="Created Date (Oldest First)" translatable="true"></property>
+      <property name="dateModifiedNewestLabel" label="Modified Date (Newest First) Label" type="String" default="Modified Date (Newest First)" translatable="true"></property>
+      <property name="dateModifiedOldestLabel" label="Modified Date (Oldest First) Label" type="String" default="Modified Date (Oldest First)" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="label"></designLayoutProperty>
+            <designLayoutProperty name="defaultSortOrder"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Default">
+          <designLayoutItems>
+            <designLayoutProperty name="defaultSortLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Created Date">
+          <designLayoutItems>
+            <designLayoutProperty name="dateCreatedNewestLabel"></designLayoutProperty>
+            <designLayoutProperty name="dateCreatedOldestLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Modified Date">
+          <designLayoutItems>
+            <designLayoutProperty name="dateModifiedNewestLabel"></designLayoutProperty>
+            <designLayoutProperty name="dateModifiedOldestLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

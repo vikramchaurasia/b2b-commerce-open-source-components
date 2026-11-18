@@ -1,0 +1,112 @@
+<template lwc:render-mode="light">
+    <div class="cart-details-card slds-card slds-p-left_small slds-p-right_small">
+        <!--
+          Block-link layer: a real <a> covers the card and provides native
+          navigation, focus, and link-rotor semantics. Sits behind interactive
+          descendants via z-index so request-quote and options-menu receive
+          their own clicks/keys without the card intercepting.
+        -->
+        <a
+            class="card-link"
+            href={_cartDetailUrlOrFallback}
+            aria-label={_cartLinkAriaLabel}
+            data-card-link
+            onclick={handleCardLinkClick}></a>
+        <div class={_cartMainClasses}>
+            <!--
+                Product image grid: up to four thumbnails from the cart preview, shown to the left of
+                the card body. It is a direct child of .cart-main (not .cart-information) so the fixed-
+                height grid centers vertically against the FULL card body — the cart info AND the
+                actions row — matching the design. The grid component is self-defending: it renders a
+                placeholder when the preview is absent/empty, so the tile keeps a consistent shape.
+                Gated by the "Show Image Grid" builder toggle.
+            -->
+            <site-cart-image-preview-grid
+                lwc:if={_showImageGrid}
+                class="cart-preview-grid"
+                data-automation="cartImagePreviewGrid"
+                cart-preview={_cartPreview}></site-cart-image-preview-grid>
+            <div class="cart-information">
+                <div class="column column1 slds-p-top_small">
+                    <div class="cart-name-row slds-p-bottom_x-small">
+                        <div class="bold slds-text-heading_small cart-name">
+                            <span>{_cartName}</span>
+                        </div>
+                    </div>
+                    <ul
+                        class="dxp-text-body items-and-total slds-p-bottom_x-small"
+                        role="list">
+                        <li
+                            class="items-count"
+                            lwc:if={_showItemCount}>
+                            {_itemsLabel}
+                        </li>
+                        <li
+                            class="collaboration-status"
+                            lwc:if={_showCollaborationStatus}
+                            data-automation="collaborationStatus">
+                            <span
+                                lwc:if={_collaborationStatus.isOwnerOrPersonalView}
+                                class="sharing-status">
+                                {_collaborationStatus.sharingStatusText}
+                            </span>
+                            <div
+                                lwc:else
+                                class="shared-by-line">
+                                <span class="shared-by-text">{_collaborationStatus.sharedByText}</span>
+                            </div>
+                        </li>
+                    </ul>
+                    <div
+                        class="dxp-text-body cart-description"
+                        lwc:if={_showDescription}>
+                        <p>{_cartDescription}</p>
+                    </div>
+                </div>
+                <div class="column column3">
+                    <div class="column3-header">
+                        <!--
+                            Default pill: a single slot outlet so it stays single-click-selectable in
+                            Experience Builder. It sits just before the price on desktop; on mobile CSS
+                            moves this same node beside the cart name.
+                        -->
+                        <template lwc:if={_showDefaultPill}>
+                            <div
+                                class="cart-type-pill cart-type-pill-header"
+                                data-automation="defaultPill">
+                                <slot name="defaultPill"></slot>
+                            </div>
+                        </template>
+                        <site-common-formatted-price
+                            lwc:if={_showPrice}
+                            class="total-price"
+                            currency-code={_currencyCode}
+                            format-style="currency"
+                            maximum-fraction-digits="2"
+                            display-currency-as="symbol"
+                            value={_priceValue}></site-common-formatted-price>
+                    </div>
+                    <div
+                        class="cart-lock-slot"
+                        lwc:if={_showCartLock}>
+                        <slot name="cartLock"></slot>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-actions">
+                <div class="cart-action-slot cart-action-slot_request-quote">
+                    <slot name="requestQuote"></slot>
+                </div>
+                <div class="cart-action-slot cart-action-slot_cart-options">
+                    <slot name="cartOptions"></slot>
+                </div>
+            </div>
+        </div>
+        <div
+            class="cart-operation-footer"
+            data-automation="cartAsyncStateView"
+            onclick={handleAsyncViewClick}>
+            <slot name="cartAsyncStateView"></slot>
+        </div>
+    </div>
+</template>

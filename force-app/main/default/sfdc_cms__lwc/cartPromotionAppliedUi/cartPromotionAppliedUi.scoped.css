@@ -4,6 +4,8 @@
 }
 .discount-amount {
     margin-left: auto;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 .terms-and-conditions {
     width: max-content;

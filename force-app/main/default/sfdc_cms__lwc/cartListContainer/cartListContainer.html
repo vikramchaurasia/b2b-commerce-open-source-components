@@ -1,0 +1,42 @@
+<template lwc:render-mode="light">
+    <div class="cart-list-container">
+        <div class="cart-list-header-row">
+            <div class="cart-list-header-left">
+                <slot name="heading"></slot>
+            </div>
+            <div class="cart-list-header-right">
+                <slot name="newCartButton"></slot>
+            </div>
+        </div>
+        <template lwc:if={_showCartListBody}>
+            <template lwc:if={_showCartListTabs}>
+                <div data-automation="cart-list-tabs-region">
+                    <slot name="cartListTabs"></slot>
+                </div>
+            </template>
+            <template lwc:if={_showCartList}>
+                <div data-automation="cart-list-region">
+                    <slot name="cartList"></slot>
+                </div>
+            </template>
+        </template>
+        <template lwc:else>
+            <div
+                class="slds-is-relative slds-p-vertical_xx-large"
+                data-automation="app-context-loading">
+                <lightning-spinner
+                    alternative-text={_appContextLoadingLabel}
+                    size="large"
+                    variant="brand"></lightning-spinner>
+            </div>
+        </template>
+        <template lwc:if={_isCancelInProgress}>
+            <div class="cart-list-container-spinner slds-spinner_container">
+                <lightning-spinner
+                    alternative-text={_cancelOperationSpinnerLabel}
+                    size="large"
+                    variant="brand"></lightning-spinner>
+            </div>
+        </template>
+    </div>
+</template>

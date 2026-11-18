@@ -1,10 +1,12 @@
 import { api, LightningElement, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 import { CartStatusAdapter, CartContentsAdapter } from 'commerce/checkoutCartApi';
 import { AppContextAdapter } from 'commerce/contextApi';
 import currency from '@salesforce/i18n/currency';
 import canDisplayOriginalPrice from 'site/cartEvaluatePriceOriginal';
 import { displayDiscountPrice } from 'site/promotionEvaluatePriceDiscount';
 import { generateStyleProperties } from 'experience/styling';
+import { asNonEmptyString } from './utils';
 /**
  * @slot headerText
  * @slot originalPriceLabel
@@ -194,9 +196,23 @@ export default class CartSummary extends LightningElement {
   get isCartProcessing() {
     return !!this.cartStatusHandler?.data?.isProcessing || !!this.cartStatusHandler?.loading || !!this._isCartSummaryLoading;
   }
-  @wire(CartContentsAdapter)
+  _currentPageReference;
+  get effectiveCartId() {
+    const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
+    return cartIdFromRecordId ?? 'current';
+  }
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
   cartSummary({
-    data
+    data,
+    loaded
   }) {
     if (data?.cartSummary) {
       this._isCartSummaryLoading = false;
@@ -209,12 +225,17 @@ export default class CartSummary extends LightningElement {
           discountAmount: summaryData.totalCartLevelAdjustmentAmount,
           originalPrice: this._hasSubscriptionProducts && summaryData.firstPymtTotalListPrice ? summaryData.firstPymtTotalListPrice : summaryData.totalProductListAmount,
           shippingPrice: summaryData.totalChargeAmountWithItemAdjustment,
-          subtotal: this._hasSubscriptionProducts && summaryData.firstPymtTotalAmount ? summaryData.firstPymtTotalAmount : summaryData.totalAmountWithItemAdjustment,
+          subtotal: this._hasSubscriptionProducts && summaryData.firstPymtTotalProductAmountWithItemAdjustments ? summaryData.firstPymtTotalProductAmountWithItemAdjustments : summaryData.totalAmountWithItemAdjustment,
           tax: this._hasSubscriptionProducts && summaryData.firstPymtTotalTaxAmount ? summaryData.firstPymtTotalTaxAmount : summaryData.totalTaxAmount,
           total: this._hasSubscriptionProducts && summaryData.firstPymtGrandTotalAmount ? summaryData.firstPymtGrandTotalAmount : summaryData.grandTotalAmount
         }
       };
       this._hasCartItems = summaryData.uniqueProductCount !== undefined && summaryData.uniqueProductCount > 0;
+    } else if (loaded && !data?.cartSummary) {
+      this._isCartSummaryLoading = false;
+      this._hasSubscriptionProducts = false;
+      this.cartSummaryInfo = {};
+      this._hasCartItems = false;
     }
   }
   dxpTextSize(fontSizeValue) {

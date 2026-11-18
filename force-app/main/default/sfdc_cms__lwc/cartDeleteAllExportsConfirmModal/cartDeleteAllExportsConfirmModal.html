@@ -1,0 +1,34 @@
+<template>
+    <lightning-modal-header label={_headerLabel}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <div class="slds-p-around_medium delete-all-exports-confirm-content">
+            <!-- Decorative warning icon; the body text conveys the meaning so the icon stays aria-hidden. -->
+            <svg
+                class="delete-all-exports-confirm-icon"
+                aria-hidden="true"
+                focusable="false">
+                <use href={_warningIconUrl}></use>
+            </svg>
+            <p class="delete-all-exports-confirm-body">{_bodyLabel}</p>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant="secondary"
+                assistive-text={_cancelLabel}
+                onclick={handleCancel}>
+                {_cancelLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
+                variant="primary"
+                assistive-text={_confirmLabel}
+                disabled={disableConfirm}
+                onclick={handleConfirm}>
+                {_confirmLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+</template>

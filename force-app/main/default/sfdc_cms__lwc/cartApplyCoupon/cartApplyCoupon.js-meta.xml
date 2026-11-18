@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
   <masterLabel>Coupons</masterLabel>
-  <description>This component is used to apply a coupon code to the cart.</description>
+  <description>Show a text field for coupon codes.</description>
   <apiVersion>64</apiVersion>
   <isExposed>true</isExposed>
   <capabilities>

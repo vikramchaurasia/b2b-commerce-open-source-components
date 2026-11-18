@@ -4,4 +4,7 @@
   <isExposed>true</isExposed>
   <masterLabel>Cart Import Error Report Launcher</masterLabel>
   <description>Helper module that opens the cart import error report modal for a failed cart-item import job.</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
 </LightningComponentBundle>

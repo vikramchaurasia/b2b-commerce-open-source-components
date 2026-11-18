@@ -1,0 +1,20 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartExportJobCard",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "cancelSuccess",
+      "value" : "Export was cancelled."
+    }, {
+      "name" : "cancelError",
+      "value" : "We couldn't cancel the export. Try again."
+    }, {
+      "name" : "deleteSuccess",
+      "value" : "{0} export was deleted."
+    }, {
+      "name" : "deleteError",
+      "value" : "We couldn't delete the export. Try again."
+    } ]
+  },
+  "urlName" : "cartexportjobcard"
+}

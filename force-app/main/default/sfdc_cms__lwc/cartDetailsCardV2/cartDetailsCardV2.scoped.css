@@ -1,0 +1,591 @@
+@charset "UTF-8";
+:host {
+    --com-c-pill-background-color: var(--com-c-cart-details-card-pill-background-color, var(--dxp-g-root-1));
+    --com-c-pill-border-color: var(--com-c-cart-details-card-pill-border-color, var(--dxp-g-root-1));
+    --com-c-pill-border-radius: var(
+        --com-c-cart-details-card-pill-border-radius,
+        var(--dxp-s-form-element-radius-border)
+    );
+    --com-c-pill-text-color: var(--com-c-cart-details-card-pill-font-color, var(--dxp-g-root-contrast));
+    --com-c-pill-font-size: var(--com-c-cart-details-card-pill-font-size, var(--dxp-g-font-size-4));
+}
+
+.cart-header-pill {
+    --com-c-pill-background-color: #d9dfe7;
+    --com-c-pill-border-color: #d9dfe7;
+    --com-c-pill-border-radius: var(--com-c-cart-details-card-pill-border-radius, 8px);
+    --com-c-pill-text-color: var(--dxp-g-root-contrast);
+    --com-c-pill-font-size: var(--dxp-g-font-size-4);
+}
+
+.cart-details-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    box-shadow: none;
+    border: 1px solid var(--slds-g-color-border-base-1, #d9dfe7);
+    /*
+   * Root positioning context for the block-link overlay `.card-link`.
+   * Deliberately z-index AUTO (i.e. NO stacking context) so the cartOptions
+   * `slds-dropdown` can escape upward to the page's stacking context and
+   * overlap the next card. Any integer z-index here would trap the dropdown
+   * inside this card's clipping bounds.
+   */
+    position: relative;
+    /*
+   * Block-link overlay: an absolutely-positioned anchor covering the card so
+   * the entire surface is a real link (right-click menu, cmd/ctrl-click new
+   * tab, screen-reader Links rotor, native focus).
+   *
+   * Stacking strategy (no integer z-indexes, no extra stacking contexts):
+   *   1. .cart-details-card has `position: relative` (z-index auto) so the
+   *      link can absolutely-position against it WITHOUT creating a new
+   *      stacking context — this is critical so the cartOptions dropdown
+   *      can escape and paint above the next card.
+   *   2. .card-link is positioned → paints above non-positioned .cart-main
+   *      content. Clicks on the card body (name, items, description) hit
+   *      the link and navigate.
+   *   3. .cart-action-slot_* and .cart-operation-footer are `position:
+   *      relative` (z-index auto). They are positioned AND later in DOM than
+   *      .card-link, so they paint on top of the link in tree order — clicks
+   *      on Request Quote, the options-menu trigger, or interactive content
+   *      slotted into cartAsyncStateView (e.g. Cancel during a pending cart
+   *      operation) reach those children, not the link.
+   *   4. No integer z-indexes anywhere → no stacking contexts trap the
+   *      slds-dropdown. Its native high z-index participates in the page's
+   *      stacking context and paints above sibling cards correctly.
+   */
+    /* Interactive slots and the async-state footer are positioned (z-index
+     auto) so they paint after the link in DOM order — clicks land on the
+     slotted button/menu or a Cancel button inside cartAsyncStateView, never
+     on the link. No stacking context is created, so the cartOptions
+     dropdown is free to escape upward to the page's stacking context and
+     overlap the next card. */
+    /*
+   * DEFAULT (image grid hidden): the card body is exactly the pre-image-grid layout — a plain flex
+   * column stacking cart-information over cart-actions. This guarantees that hiding the grid
+   * leaves the card pixel-identical to before (no leftover preview column/gap on the left).
+   */
+    /*
+   * WITH image grid (`has-preview`): switch the body to a CSS grid so the grid, cart info, and
+   * actions can re-flow differently per breakpoint via grid-template-areas — a flex row can't move
+   * the actions to full-width on mobile.
+   *
+   * Desktop:  the image grid (leading column) spans BOTH rows and is vertically centered against
+   *           the full body height; cart info top-right, actions bottom-right.
+   *               'preview info'
+   *               'preview actions'
+   * Mobile:   the actions row drops to full-width BELOW everything (see the @media block).
+   *
+   * Grid column is `auto` (the grid self-sizes to 100/101px); content column is minmax(0, 1fr).
+   */
+    /*
+   * Image grid: fixed intrinsic size, TOP-aligned with a 12px top padding so its top edge lines up
+   * with the cart name (12px card inset + 12px = 24px from the card edge, same as column1's
+   * `slds-p-top_small`).
+   *
+   * NO bottom padding by design: the gap beneath the grid is owned by `.cart-main`'s terminal
+   * inset, the same inset that spaces every other card-body element. The grid never compensates
+   * for card-bottom spacing itself, so it cannot diverge based on sibling state.
+   */
+    /*
+   * Actions row sits on its own line beneath the cart-information row so
+   * that the Request Quote button and the Options menu always appear under
+   * the description / items block, regardless of how tall column1 grows.
+   * Both children are intrinsic-width on every screen size — desktop pins
+   * them to the trailing edge, mobile/tablet pushes them to the row's
+   * leading and trailing edges (see the @media block below). When Request
+   * Quote is hidden, the lone Options menu stays right-aligned on every
+   * breakpoint.
+   */
+    /*
+   * Each slot lives inside a max-content wrapper so the Experience Builder
+   * dashed slot drop-zones size to the rendered button's intrinsic width
+   * instead of stretching across the full row.
+   */
+}
+.cart-details-card .card-link {
+    position: absolute;
+    inset: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: inherit;
+}
+.cart-details-card .card-link:focus-visible {
+    outline: 2px solid var(--dxp-s-link-text-color, var(--dxp-g-brand, #0176d3));
+    outline-offset: -2px;
+    border-radius: inherit;
+}
+.cart-details-card .cart-action-slot_request-quote,
+.cart-details-card .cart-action-slot_cart-options,
+.cart-details-card > .cart-operation-footer {
+    position: relative;
+}
+.cart-details-card .cart-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+.cart-details-card .cart-main.has-preview {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: 'preview info' 'preview actions';
+    align-items: start;
+    /* 24px gap between the image grid and the card body on desktop (mobile overrides to 16px). */
+    column-gap: var(--dxp-g-spacing-large, 1.5rem);
+    row-gap: 0;
+}
+.cart-details-card .cart-preview-grid {
+    grid-area: preview;
+    align-self: start;
+    padding-top: var(--dxp-g-spacing-small, 0.75rem);
+}
+.cart-details-card .cart-actions {
+    grid-area: actions;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 1px;
+}
+.cart-details-card .cart-action-slot {
+    display: flex;
+    align-items: center;
+    width: max-content;
+}
+.cart-details-card .cart-information {
+    grid-area: info;
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.75rem;
+    direction: ltr;
+    /*
+   * Default pill: one DOM node in the price header, just before the price, so the
+   * pill-to-price gap stays fixed even when the cart-lock banner widens column3.
+   */
+    /*
+   * Pill / price vertical centring (desktop).
+   *
+   */
+    --cart-pill-band-height: calc(var(--dxp-g-font-size-4, 1rem) * 1.25 + 0.75rem);
+}
+.cart-details-card .cart-information > .column:last-child {
+    align-items: flex-end;
+}
+.cart-details-card .cart-information .cart-type-pill-header {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    align-self: flex-start;
+    box-sizing: content-box;
+    height: var(--cart-pill-band-height);
+}
+.cart-details-card .cart-information .column3 {
+    /* Match column1's top padding so the price band aligns with the cart name and pill. */
+    padding-top: var(--dxp-g-spacing-small, 0.75rem);
+}
+.cart-details-card .cart-information .column1 {
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: flex-start;
+    text-align: left;
+    direction: ltr;
+    min-width: 0;
+    /* Keep all column1 content left-aligned */
+}
+.cart-details-card .cart-information .column1 > * {
+    text-align: left;
+    align-self: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+}
+.cart-details-card .cart-information .column1 .cart-name-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+.cart-details-card .cart-information .column1 .cart-name.bold {
+    font-weight: var(--dxp-c-strong-text-weight);
+    font-size: var(--dxp-g-font-size-5, 1rem);
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.cart-details-card .cart-information .column1 .items-and-total {
+    font-size: var(--dxp-g-font-size-4, 0.875rem);
+    color: var(--com-c-cart-details-card-detail-font-color, var(--dxp-s-body-text-color, var(--dxp-g-root-contrast)));
+    /*
+   * "N Items" and the collaboration slot share ONE row. Center the two flex items
+   * on the row's center-line instead of baseline — the dashed design-mode drop-zone
+   * around the pill adds vertical padding that would otherwise misalign the
+   * baselines.
+   */
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: var(--dxp-g-spacing-xxsmall, 0.25rem);
+    list-style: none;
+    margin: 0;
+    padding-left: 0;
+    /*
+   * The slot's parent-owned wrapper span, sized to its content so the
+   * design-mode drop-zone matches the pill's intrinsic width instead of
+   * spanning the row. `flex: 0 1 auto` + `min-width: 0` lets the wrapper
+   * shrink below `max-content` when column1 is narrow so the inner text
+   * ("Shared with N others" / "Shared by {name}") wraps to a second line
+   * inside the pill rather than overflowing the card. `overflow-wrap:
+   * anywhere` guarantees an unbreakable token (email, long owner name)
+   * still breaks and never pushes the row wider than the card.
+   */
+    /*
+   * Decorative "•" between data points on the same row (e.g. "24 Items • Private").
+   * Drawn as generated content so screen readers don't announce it, and only before
+   * an item that follows another, so a lone item never has a leading bullet. The
+   * recipient "Shared by" line wraps to its own row, so it gets no separator.
+   */
+    /*
+   * Recipient view ("Shared by {owner}") breaks to its own line beneath
+   * "N items", while the status wrapper stays sized to the pill's
+   * intrinsic width. Uses an ordered
+   * full-width zero-height `::after` pseudo-element as an inline
+   * flex-line-break, so the wrapper itself keeps `flex: 0 0 auto`.
+   * Personal / owner-view ("Private" / "Shared with N others") stays
+   * inline as before because this branch only activates when the inner
+   * `<div class="shared-by-line">` is present.
+   */
+}
+.cart-details-card .cart-information .column1 .items-and-total .items-count {
+    flex: 0 0 auto;
+}
+.cart-details-card .cart-information .column1 .items-and-total [data-automation='collaborationStatus'] {
+    flex: 0 1 auto;
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+.cart-details-card .cart-information .column1 .items-and-total > li + li:not(:has(.shared-by-line))::before {
+    content: '•';
+    margin: 0 0.5rem 0 0.25rem;
+}
+.cart-details-card
+    .cart-information
+    .column1
+    .items-and-total:has([data-automation='collaborationStatus'] .shared-by-line)::after {
+    content: '';
+    flex-basis: 100%;
+    height: 0;
+    order: 1;
+}
+.cart-details-card
+    .cart-information
+    .column1
+    .items-and-total:has([data-automation='collaborationStatus'] .shared-by-line)
+    .items-count {
+    order: 0;
+}
+.cart-details-card
+    .cart-information
+    .column1
+    .items-and-total:has([data-automation='collaborationStatus'] .shared-by-line)
+    [data-automation='collaborationStatus'] {
+    order: 2;
+}
+.cart-details-card .cart-information .column1 .cart-description {
+    font-size: var(--dxp-g-font-size-3, 0.875rem);
+    color: var(--com-c-cart-details-card-description-color, var(--dxp-s-body-text-color-muted, #706e6b));
+    margin: 0;
+}
+.cart-details-card .cart-information .column1 .cart-description p {
+    margin: 0;
+}
+.cart-details-card .cart-information .column3 {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+    align-self: flex-start;
+    font-size: var(--dxp-g-font-size-5, 1rem);
+    white-space: nowrap;
+    /*
+   * Cart-lock banner row. Tucks under the Default pill / price at the
+   * trailing edge of column3. The wrapper is unconditionally
+   * display: flex so Experience Builder always has a layout anchor
+   * for its dashed empty-slot drop-zone indicator when the slotted
+   * site-cart-lock-banner host has been deleted at design time
+   * (mirrors the .cart-action-slot pattern above). The wrapper only
+   * collapses in the runtime "unlocked cart" state — slotted host
+   * present, banner subtree absent — via
+   * :has(site-cart-lock-banner):not(:has(.cart-lock-banner)),
+   * preserving the pre-fix "no empty gap" behavior on non-locked
+   * carts. When the banner IS rendered, the promotion branch adds
+   * the 0.5rem top/bottom margin and Figma typography.
+   */
+}
+.cart-details-card .cart-information .column3 .column3-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    /* Fixed height mirrors .cart-type-pill-header so the price centre lines
+     up with the pill centre for any pill/price intrinsic height. */
+    height: var(--cart-pill-band-height);
+}
+.cart-details-card .cart-information .column3 .total-price {
+    font-weight: var(--dxp-c-strong-text-weight);
+}
+.cart-details-card .cart-information .column3 .cart-lock-slot {
+    display: flex;
+    max-width: 100%;
+}
+.cart-details-card .cart-information .column3 .cart-lock-slot:has(site-cart-lock-banner):not(:has(.cart-lock-banner)) {
+    display: none;
+}
+.cart-details-card .cart-information .column3 .cart-lock-slot:has(.cart-lock-banner) {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    /*
+   * Cart List host owns the Figma typography for the slotted
+   * cart-lock banner. The banner component itself declares
+   * only structural styles (margin: 0; color: inherit;) on
+   * .cart-lock-banner__label, so setting font properties on
+   * this wrapper cascades into the label via normal inherit-
+   * ance once the banner is slotted in. The banner's own
+   * .cart-lock-banner rule sets `color` explicitly (bound to
+   * --com-c-cart-lock-text-color), so this wrapper's color
+   * does NOT reach the label — the author-configurable Text
+   * Color knob stays intact.
+   *
+   * Cart Details page renders site:cartLockBanner in a
+   * separate page region (not into this slot), so this rule
+   * is scoped to the Cart List host only and Cart Details
+   * keeps inheriting the 16px cascade from its own context.
+   */
+    font-family: Poppins, var(--dxp-s-body-font-family, sans-serif);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    letter-spacing: -0.12px;
+    color: var(--Text-text-primary, #1c1c1c);
+}
+
+:host(:hover) .cart-details-card {
+    border-color: var(--dxp-s-body-text-color, #1c1c1c);
+    cursor: pointer;
+}
+
+/*
+ * Default: 24px content inset on all four sides of the card. Mobile overrides to
+ * 16px in the `max-width: 64em` block below.
+ *
+ * Compound `.cart-details-card.slds-card` (specificity 0,2,0) overrides the base
+ * `slds-p-*_small` padding utilities (0,1,0) without `!important`.
+ *
+ * Left/right/bottom use `--dxp-g-spacing-large` (24px), not `--dxp-g-spacing-medium`
+ * which the storefront themes re-theme to 16px.
+ *
+ * Top stays 12px on the card: column1's own `slds-p-top_small` adds the other 12px
+ * for a 24px content inset, while preserving the pill/name/price top alignment.
+ */
+.cart-details-card.slds-card {
+    padding-top: var(--dxp-g-spacing-small, 0.75rem);
+    padding-left: var(--dxp-g-spacing-large, 1.5rem);
+    padding-right: var(--dxp-g-spacing-large, 1.5rem);
+}
+
+/* Put the normal terminal inset before the optional async region so an empty
+   Builder drop region does not create a second spacing band below the actions. */
+.cart-details-card.slds-card > .cart-main {
+    padding-bottom: var(--dxp-g-spacing-large, 1.5rem);
+}
+
+.cart-details-card.slds-card:has(> .cart-operation-footer [data-cart-async-banner]) > .cart-main {
+    padding-bottom: 0;
+}
+
+/*
+ * Keep the async-state footer flush with the widened (24px) card edges.
+ * Scope this to the card-owned direct child. The slotted async banner uses the
+ * same class in light DOM and must keep its own margins.
+ */
+.cart-details-card.slds-card > .cart-operation-footer {
+    --com-c-cart-async-state-view-padding-inline: var(--dxp-g-spacing-large, 1.5rem);
+    --com-c-cart-async-state-view-border-radius: 0 0 1rem 1rem;
+    margin-left: calc(-1 * var(--dxp-g-spacing-large, 1.5rem));
+    margin-right: calc(-1 * var(--dxp-g-spacing-large, 1.5rem));
+}
+
+@media (max-width: 64em) {
+    /*
+   * Mobile: 16px content inset on all four sides of the card.
+   *
+   * Left/right/bottom use `--dxp-g-spacing-medium` (16px). Top adds
+   * `--dxp-g-spacing-xxsmall` (4px) on the card; column1's own `slds-p-top_small`
+   * contributes the remaining 12px for a 16px content inset, while preserving the
+   * pill/name/price top alignment.
+   */
+    .cart-details-card.slds-card {
+        padding-top: var(--dxp-g-spacing-xxsmall, 0.25rem);
+        padding-left: var(--dxp-g-spacing-medium, 1rem);
+        padding-right: var(--dxp-g-spacing-medium, 1rem);
+    }
+    /* Mobile normal inset; the rendered-banner rule above still removes it when needed. */
+    .cart-details-card.slds-card > .cart-main {
+        padding-bottom: var(--dxp-g-spacing-medium, 1rem);
+    }
+    /* Keep the async-state footer flush with the 16px card edges. */
+    .cart-details-card.slds-card > .cart-operation-footer {
+        --com-c-cart-async-state-view-padding-inline: var(--dxp-g-spacing-medium, 1rem);
+        margin-left: calc(-1 * var(--dxp-g-spacing-medium, 1rem));
+        margin-right: calc(-1 * var(--dxp-g-spacing-medium, 1rem));
+    }
+    .cart-details-card {
+        gap: 0;
+        /*
+     * Mobile (image grid shown): the actions row drops to FULL WIDTH beneath the grid + info
+     * (matching the mobile mock), so it spans both columns while the image grid spans only the
+     * info row (top-left). 16px gap between the grid and the info column (desktop is 24px).
+     * Gated on `has-preview` so the grid-hidden card keeps its plain flex-column layout.
+     */
+        /*
+     * Mobile: the grid sits in row 1 only, with the full-width `actions` row directly BELOW it.
+     * It keeps the 12px top padding (lines the grid top up with the cart name, matching column1's
+     * `slds-p-top_small`) but carries NO bottom padding — the gap beneath it is owned by the
+     * card's own bottom inset, matching the desktop behavior.
+     */
+        /*
+     * Mobile layout: column3 is `display: contents`, so the pill, price and cart-lock slot are
+     * placed directly on this grid (no slot duplication). Empty rows collapse (row-gap: 0).
+     */
+        /*
+     * Actions row on mobile/tablet. Top border separates the row from the
+     * cart info block. When BOTH Request Quote and Options are present they
+     * are equally distributed — each takes half the row. When only Options is present the row
+     * right-aligns it (see the :not(:has(...)) rule below).
+     */
+        /*
+     * Both buttons present: split the row 50/50. Each slot wrapper takes an
+     * equal half (flex: 1 1 0) and centers its content. Request Quote's
+     * inner button is stretched to fill its half (button is light DOM, so
+     * this scoped rule reaches it); the Options trigger is centered in its
+     * half — its lightning-button-menu button is shadow DOM and cannot be
+     * width-stretched from here, so we center rather than fill (same
+     * approach as the export list card).
+     */
+        /*
+     * When the Request Quote slot is empty (e.g. cart is empty, or the
+     * RFQ-on-Cart-List-Page gate is OFF, or the cart already has quote
+     * line items), the slotted commerce_builder-request-quote-button
+     * host is still in the DOM but its inner button is missing. In that
+     * state the only visible child is the Options menu — keep it
+     * right-aligned.
+     *
+     * The selector targets the inner `button` (rendered only when Request
+     * Quote is visible) rather than a `data-test-id` so the layout rule
+     * stays decoupled from the child's test-only attributes.
+     */
+    }
+    .cart-details-card .cart-main.has-preview {
+        grid-template-areas: 'preview info' 'actions actions';
+        align-items: start;
+        column-gap: var(--dxp-g-spacing-medium, 1rem);
+    }
+    .cart-details-card .cart-preview-grid {
+        align-self: start;
+        padding-top: var(--dxp-g-spacing-small, 0.75rem);
+        padding-bottom: 0;
+    }
+    .cart-details-card .cart-information {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas: 'info  pill' 'price price' 'lock  lock';
+        align-items: start;
+        column-gap: var(--dxp-g-spacing-xsmall, 0.5rem);
+        row-gap: 0;
+        /* Card's 16px padding is the only bottom inset on mobile. */
+        padding-bottom: 0;
+        /* Default pill: top-right, level with the cart name. */
+        /* `min-width: 0` stops the price and banner from widening the pill column. */
+        /* Keeps its own box so Experience Builder can still show its empty-slot drop-zone. */
+        /* 1rem gap between the price and the banner. */
+    }
+    .cart-details-card .cart-information .column1 {
+        grid-area: info;
+        min-width: 0;
+        padding-bottom: 0;
+    }
+    .cart-details-card .cart-information .cart-type-pill-header {
+        grid-area: pill;
+        justify-self: end;
+        align-self: start;
+        padding-top: var(--dxp-g-spacing-small, 0.75rem);
+    }
+    .cart-details-card .cart-information .column3 {
+        display: contents;
+        white-space: normal;
+    }
+    .cart-details-card .cart-information .column3 .column3-header {
+        display: contents;
+    }
+    .cart-details-card .cart-information .total-price {
+        grid-area: price;
+        justify-self: start;
+        min-width: 0;
+    }
+    .cart-details-card .cart-information .cart-lock-slot {
+        grid-area: lock;
+        justify-self: start;
+        min-width: 0;
+    }
+    .cart-details-card .cart-information:has(.total-price) .cart-lock-slot:has(.cart-lock-banner) {
+        margin-top: 1rem;
+    }
+    .cart-details-card .cart-actions {
+        /*
+     * Space between the info/preview row and the divider so the price
+     * doesn't sit flush against the actions separator on mobile. Kept
+     * separate from the card's terminal padding-bottom, which spaces
+     * BELOW the actions row.
+     */
+        margin-top: var(--dxp-g-spacing-small, 0.75rem);
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--slds-g-color-border-base-1, #d9dfe7);
+    }
+    .cart-details-card .cart-actions:has(.cart-action-slot_request-quote button) {
+        /* Request Quote fills its half. */
+    }
+    .cart-details-card .cart-actions:has(.cart-action-slot_request-quote button) .cart-action-slot {
+        flex: 1 1 0;
+        width: auto;
+        justify-content: center;
+    }
+    .cart-details-card .cart-actions:has(.cart-action-slot_request-quote button) .cart-action-slot_request-quote > *,
+    .cart-details-card
+        .cart-actions:has(.cart-action-slot_request-quote button)
+        .cart-action-slot_request-quote
+        button {
+        width: 100%;
+    }
+    .cart-details-card .cart-actions:not(:has(.cart-action-slot_request-quote button)) {
+        justify-content: flex-end;
+    }
+}
+.cart-details-card > .cart-operation-footer {
+    position: relative;
+    border: none;
+    border-radius: 0 0 1rem 1rem;
+    margin-top: 0;
+}

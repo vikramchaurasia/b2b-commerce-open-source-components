@@ -1,0 +1,124 @@
+/* Merchant text color forwarded as --com-c-button-color. `color` is inherited so it crosses the
+   synthetic shadow boundary into the label; the SLDS text-color hooks cover the slds-button path.
+   Falls back to the existing link token. */
+.collaborators-button-menu {
+    --slds-c-button-text-color: var(--com-c-button-color, var(--dxp-s-link-text-color-1, #080707));
+    --sds-c-button-text-color: var(--com-c-button-color, var(--dxp-s-link-text-color-1, #080707));
+    --slds-c-button-text-color-hover: var(--com-c-button-color-hover, var(--dxp-s-link-text-color-hover, #1589ee));
+    --sds-c-button-text-color-hover: var(--com-c-button-color-hover, var(--dxp-s-link-text-color-hover, #1589ee));
+    color: var(--com-c-button-color, var(--dxp-s-link-text-color-1, #080707));
+
+    /* Merchant background + border. The neutral (`border`) variant's rule overrides the generic
+       --slds-c-button-color-* hooks, so set both the neutral-specific hooks (read first there) and
+       the generic ones. Left unset (invalid) when the merchant sets no color, so the SLDS default applies. */
+    --slds-c-button-neutral-color-background: var(--com-c-button-color-background);
+    --slds-c-button-color-background: var(--com-c-button-color-background);
+    --slds-c-button-neutral-color-background-hover: var(--com-c-button-color-background-hover);
+    --slds-c-button-color-background-hover: var(--com-c-button-color-background-hover);
+    --slds-c-button-neutral-color-border: var(--com-c-button-color-border);
+    --slds-c-button-color-border: var(--com-c-button-color-border);
+}
+
+.collaborators-button-menu:hover {
+    color: var(--com-c-button-color-hover, var(--dxp-s-link-text-color-hover, #1589ee));
+}
+
+/* Button variants (`border`, `border-filled`, `container`) render as an actual button. The base
+   `.slds-button` has no inline padding of its own (only the neutral variant adds it), so restore
+   1rem so the label isn't flush against the edge. The surface is left paintable so merchant colors show. */
+.collaborators-button-menu:not([data-variant='bare']) {
+    /* Different SLDS button builds read inline padding from the hyphenated (-inline-start/-end) or
+       non-hyphenated (-inlinestart/-inlineend) hooks; set both spellings and both prefixes so padding
+       resolves either way. --slds-g-spacing-4 (1rem) matches the neutral variant's default. */
+    --slds-c-button-spacing-inline-start: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inline-end: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inline-start: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inline-end: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inlinestart: var(--slds-g-spacing-4, 1rem);
+    --slds-c-button-spacing-inlineend: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inlinestart: var(--slds-g-spacing-4, 1rem);
+    --sds-c-button-spacing-inlineend: var(--slds-g-spacing-4, 1rem);
+
+    /* Kill the text-link underline. Two engines can paint it depending on shadow mode — the DXP
+       branding layer (--dxp-s-button-text-decoration) and the base button (--sds-c-button-font-decoration).
+       Override both host tokens so the underline is neutralized either way, including on :hover. */
+    --dxp-s-button-text-decoration: none;
+    --sds-c-button-font-decoration: none;
+}
+
+/* `border-filled` surface. Only `variant='border'` gets the `slds-button_neutral` class that aliases
+   --slds-c-* into the --sds-c-* hooks the base button paints from; `border-filled` is a plain
+   `.slds-button` that reads --sds-c-* directly and defaults to a transparent border. Set the --sds-c-*
+   hooks (the only cross-boundary channel in synthetic shadow) with visible defaults so it renders like
+   `border`; merchant colors override. Scoped to border-filled so `bare` is untouched. */
+.collaborators-button-menu[data-variant='border-filled'] {
+    --sds-c-button-color-border: var(--com-c-button-color-border, var(--slds-g-color-border-2, #c9c9c9));
+    --sds-c-button-color-border-hover: var(--com-c-button-color-border, var(--slds-g-color-border-2, #c9c9c9));
+    --sds-c-button-color-background: var(--com-c-button-color-background, var(--slds-g-color-surface-1, #fff));
+    --sds-c-button-color-background-hover: var(
+        --com-c-button-color-background-hover,
+        var(--com-c-button-color-background, var(--slds-g-color-surface-1, #fff))
+    );
+
+    /* Match the neutral `border` height. Inline padding comes from the shared rule above; here only
+       block spacing and line-height need setting (a plain `.slds-button` gets neither from the neutral
+       rule). Do NOT re-point inline padding at the neutral -inline chain — it has no literal fallback
+       and collapses to invalid in this scope, dropping padding to 0. */
+    --sds-c-button-spacing-block: var(--slds-c-button-neutral-spacing-block);
+    --sds-c-button-font-lineheight: var(
+        --slds-c-button-neutral-font-lineheight,
+        var(--slds-s-button-font-lineheight, 1.875rem)
+    );
+}
+
+.collaborators-link:focus-visible {
+    outline: 2px solid var(--dxp-g-brand-1, #0176d3);
+    outline-offset: 2px;
+}
+
+.collaborators-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: var(--slds-g-color-surface-1, white);
+    border: 1px solid var(--slds-g-color-border-base-1, #c9c9c9);
+    border-radius: var(--slds-g-radius-border-2, 0.25rem);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 240px;
+    z-index: 1000;
+    /* Reset default <ul> list styling so the role="list" markup renders unchanged. */
+    list-style: none;
+    margin: var(--dxp-g-spacing-xsmall, 0.5rem) 0 0;
+    padding: var(--dxp-g-spacing-xxsmall, 0.25rem) 0;
+}
+
+.collaborator-item {
+    display: flex;
+    flex-direction: column;
+    padding: var(--dxp-g-spacing-xsmall, 0.5rem) var(--dxp-g-spacing-small, 0.75rem);
+}
+
+.collaborator-item + .collaborator-item {
+    border-top: 1px solid var(--slds-g-color-border-base-1, #c9c9c9);
+}
+
+.collaborator-name {
+    font-size: var(--dxp-g-font-size-3, 0.875rem);
+    font-weight: var(--dxp-s-body-font-weight, 400);
+    /* on-surface-3 is the darkest on-surface token (row title). */
+    color: var(--slds-g-color-on-surface-3, #1c1c1c);
+}
+
+.collaborator-email {
+    font-size: var(--dxp-g-font-size-2, 0.75rem);
+    /* on-surface-1 is the lightest on-surface token (muted label text). */
+    color: var(--slds-g-color-on-surface-1, #707275);
+    margin-top: 0.125rem;
+}
+
+.collaborator-access-level {
+    font-size: var(--dxp-g-font-size-2, 0.75rem);
+    /* on-surface-1 is the lightest on-surface token (muted label text). */
+    color: var(--slds-g-color-on-surface-1, #707275);
+    margin-top: 0.125rem;
+}

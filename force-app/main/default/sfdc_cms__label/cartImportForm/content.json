@@ -1,0 +1,32 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartImportForm",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "fileUploadLabel",
+      "value" : "Import using CSV"
+    }, {
+      "name" : "uploadFileText",
+      "value" : "Upload File"
+    }, {
+      "name" : "dropFileText",
+      "value" : "or drop file"
+    }, {
+      "name" : "removeFileText",
+      "value" : "Remove File"
+    }, {
+      "name" : "reuploadText",
+      "value" : "Retry Upload"
+    }, {
+      "name" : "cancelButtonLabel",
+      "value" : "Cancel"
+    }, {
+      "name" : "cartItemIdentifiersLabel",
+      "value" : "Cart Item Identifiers"
+    }, {
+      "name" : "searchAndSelectPlaceholder",
+      "value" : "Search and select"
+    } ]
+  },
+  "urlName" : "cartimportform"
+}

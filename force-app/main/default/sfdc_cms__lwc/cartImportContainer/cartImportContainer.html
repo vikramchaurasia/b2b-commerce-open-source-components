@@ -1,0 +1,22 @@
+<template lwc:render-mode="light">
+    <site-cart-import-form
+        lwc:ref="form"
+        variant={variant}
+        labels={formLabels}
+        field-defs={_fieldDefs}
+        selections={_selections}
+        header-options={_headerOptions}
+        selected-file-name={_selectedFileNameForView}
+        file-error={_fileError}
+        is-file-uploading={_isFileUploading}
+        show-mappings={_showMappings}
+        file-card-status-text={_fileCardStatusText}
+        upload-progress-label={_uploadProgressLabel}
+        upload-progress-percent={_uploadProgressPercent}
+        upload-progress-value={_uploadProgress}
+        onfileselect={_handleFileSelect}
+        onremovefile={_handleRemoveFile}
+        oncancelupload={_handleCancelUpload}
+        onreupload={_handleReupload}
+        onmappingchange={_handleMappingChange}></site-cart-import-form>
+</template>

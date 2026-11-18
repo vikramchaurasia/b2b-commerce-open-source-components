@@ -1,0 +1,17 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartExportJobListView",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "loadingJobs",
+      "value" : "Loading exports"
+    }, {
+      "name" : "loadErrorMessage",
+      "value" : "We couldn't load your exports."
+    }, {
+      "name" : "processingJobs",
+      "value" : "Processing..."
+    } ]
+  },
+  "urlName" : "cartexportjoblistview"
+}

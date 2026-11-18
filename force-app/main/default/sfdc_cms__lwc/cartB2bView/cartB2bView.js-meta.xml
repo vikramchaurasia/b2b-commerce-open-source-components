@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Cart Detail</masterLabel>
+  <description>Shows the cart details.</description>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="items" label="Cart Items" type="string" default="{!Cart.Items}"></property>
+      <property name="messages" label="Cart Messages" type="string" default="{!Cart.Messages}"></property>
+      <property name="cartDetails" label="Cart Details" type="string" default="{!Cart.Details}"></property>
+      <property name="showSortOptions" label="Show sort options" type="boolean" default="true"></property>
+      <property name="sharedByLabel" label="Shared by Label" type="String" default="Shared by: You" translatable="true"></property>
+      <property name="sharedByWithAccessLabel" label="Shared by With Access Label" type="String" default="Shared by: {0} with {1} access" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="items" cbVisibleIf="items=false"></designLayoutProperty>
+            <designLayoutProperty name="messages" cbVisibleIf="items=false"></designLayoutProperty>
+            <designLayoutProperty name="cartDetails" cbVisibleIf="items=false"></designLayoutProperty>
+            <designLayoutProperty name="showSortOptions"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Collaboration Status">
+          <designLayoutItems>
+            <designLayoutProperty name="sharedByLabel"></designLayoutProperty>
+            <designLayoutProperty name="sharedByWithAccessLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

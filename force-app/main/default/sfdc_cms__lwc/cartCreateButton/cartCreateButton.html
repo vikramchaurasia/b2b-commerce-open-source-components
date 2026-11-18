@@ -1,7 +1,9 @@
 <template lwc:render-mode="light">
     <site-common-button-ui
-        variant="secondary"
-        width="stretch"
+        variant={_variant}
+        size={size}
+        width={_width}
+        style={buttonStyle}
         assistive-text={_newCartButtonLabelText}
         name="newCartButton"
         onclick={handleOpenCreateCart}>

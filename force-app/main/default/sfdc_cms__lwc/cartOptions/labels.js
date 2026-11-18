@@ -21,6 +21,19 @@ import setAsDefaultSuccessMessage from '@salesforce/label/site.cartOptions.setAs
 import setAsDefaultErrorMessage from '@salesforce/label/site.cartOptions.setAsDefaultErrorMessage';
 import deleteCartSpinnerHelpText from '@salesforce/label/site.cartOptions.deleteCartSpinnerHelpText';
 import setAsDefaultSpinnerHelpText from '@salesforce/label/site.cartOptions.setAsDefaultSpinnerHelpText';
+import saveAsTemplate from '@salesforce/label/site.cartOptions.saveAsTemplate';
+import shareCart from '@salesforce/label/site.cartOptions.shareCart';
+import importCart from '@salesforce/label/site.cartOptions.importCart';
+import importStartedMessage from '@salesforce/label/site.cartOptions.importStartedMessage';
+import exportCart from '@salesforce/label/site.cartOptions.exportCart';
+import removeAsDefault from '@salesforce/label/site.cartOptions.removeAsDefault';
+import removeAsDefaultTitle from '@salesforce/label/site.cartOptions.removeAsDefaultTitle';
+import removeAsDefaultConfirmMessage from '@salesforce/label/site.cartOptions.removeAsDefaultConfirmMessage';
+import removeAsDefaultConfirmButton from '@salesforce/label/site.cartOptions.removeAsDefaultConfirmButton';
+import removeAsDefaultSuccessMessage from '@salesforce/label/site.cartOptions.removeAsDefaultSuccessMessage';
+import removeAsDefaultErrorMessage from '@salesforce/label/site.cartOptions.removeAsDefaultErrorMessage';
+import removeAsDefaultSpinnerHelpText from '@salesforce/label/site.cartOptions.removeAsDefaultSpinnerHelpText';
+import clearCartHeaderText from '@salesforce/label/site.cartOptions.clearCartHeaderText';
 export default {
   optionsLabel,
   editCart,
@@ -44,5 +57,18 @@ export default {
   setAsDefaultSuccessMessage,
   setAsDefaultErrorMessage,
   deleteCartSpinnerHelpText,
-  setAsDefaultSpinnerHelpText
+  setAsDefaultSpinnerHelpText,
+  saveAsTemplate,
+  shareCart,
+  importCart,
+  importStartedMessage,
+  exportCart,
+  removeAsDefault,
+  removeAsDefaultTitle,
+  removeAsDefaultConfirmMessage,
+  removeAsDefaultConfirmButton,
+  removeAsDefaultSuccessMessage,
+  removeAsDefaultErrorMessage,
+  removeAsDefaultSpinnerHelpText,
+  clearCartHeaderText
 };

@@ -1,0 +1,29 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartApplyCoupon",
+                "type": "component",
+                "children": [
+                    {
+                        "name": "revealButton",
+                        "title": "revealButton",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_base:button",
+                                "type": "component",
+                                "attributes": {
+                                    "text": "Enter a Coupon Code",
+                                    "type": "tertiary",
+                                    "alignment": "left",
+                                    "url": ""
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

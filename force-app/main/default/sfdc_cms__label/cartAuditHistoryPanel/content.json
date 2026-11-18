@@ -1,0 +1,104 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartAuditHistoryPanel",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "panelHeader",
+      "value" : "Shared Cart Activity"
+    }, {
+      "name" : "closeButtonLabel",
+      "value" : "Close shared cart activity"
+    }, {
+      "name" : "emptyStateHeader",
+      "value" : "No cart activity yet"
+    }, {
+      "name" : "emptyStateMessage",
+      "value" : "When you or your team add items, adjust quantities, or apply coupons, you'll see the changes here."
+    }, {
+      "name" : "loadErrorMessage",
+      "value" : "We couldn't retrieve the cart history. Try again later."
+    }, {
+      "name" : "retryButton",
+      "value" : "Something went wrong. Try again later."
+    }, {
+      "name" : "spinnerAltText",
+      "value" : "Loading..."
+    }, {
+      "name" : "loadingText",
+      "value" : "Loading..."
+    }, {
+      "name" : "performedByPrefix",
+      "value" : "By:"
+    }, {
+      "name" : "performedOnPrefix",
+      "value" : "Date:"
+    }, {
+      "name" : "quantityFromLabel",
+      "value" : "From:"
+    }, {
+      "name" : "quantityToLabel",
+      "value" : "To:"
+    }, {
+      "name" : "couponCodeLabel",
+      "value" : "Coupon code:"
+    }, {
+      "name" : "unknownActorName",
+      "value" : "A collaborator"
+    }, {
+      "name" : "titleAddItem",
+      "value" : "Added {0}"
+    }, {
+      "name" : "titleRemoveItem",
+      "value" : "Removed {0}"
+    }, {
+      "name" : "titleIncreaseQuantity",
+      "value" : "Increased quantity of {0}"
+    }, {
+      "name" : "titleDecreaseQuantity",
+      "value" : "Decreased quantity of {0}"
+    }, {
+      "name" : "titleApplyCoupon",
+      "value" : "Applied Coupon"
+    }, {
+      "name" : "titleRemoveCoupon",
+      "value" : "Removed Coupon"
+    }, {
+      "name" : "titleShare",
+      "value" : "Shared with {0} others"
+    }, {
+      "name" : "titleShareOne",
+      "value" : "Shared with 1 other"
+    }, {
+      "name" : "titleRevoke",
+      "value" : "Removed share access for {0} collaborators"
+    }, {
+      "name" : "titleRevokeOne",
+      "value" : "Removed share access"
+    }, {
+      "name" : "titleCheckout",
+      "value" : "Initiated Checkout"
+    }, {
+      "name" : "titleConfigurableProductUpdated",
+      "value" : "Updated configurable product: {0}"
+    }, {
+      "name" : "titleGeneric",
+      "value" : "Updated cart"
+    }, {
+      "name" : "titleExportFull",
+      "value" : "Exported {0} items"
+    }, {
+      "name" : "titleExportFailed",
+      "value" : "Export failed"
+    }, {
+      "name" : "titleImportFull",
+      "value" : "Imported {0} items"
+    }, {
+      "name" : "titleImportPartial",
+      "value" : "Imported {0} of {1} items"
+    }, {
+      "name" : "titleImportFailed",
+      "value" : "Import failed"
+    } ]
+  },
+  "urlName" : "cartaudithistorypanel"
+}

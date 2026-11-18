@@ -1,0 +1,26 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartView",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "alternativeSpinnerText",
+      "value" : "Loading"
+    }, {
+      "name" : "labelText",
+      "value" : "Sort By"
+    }, {
+      "name" : "noCartHeaderLabel",
+      "value" : "Untitled Cart"
+    }, {
+      "name" : "viewAccessLabel",
+      "value" : "View"
+    }, {
+      "name" : "editAccessLabel",
+      "value" : "Edit"
+    }, {
+      "name" : "checkoutAccessLabel",
+      "value" : "Checkout"
+    } ]
+  },
+  "urlName" : "cartview"
+}

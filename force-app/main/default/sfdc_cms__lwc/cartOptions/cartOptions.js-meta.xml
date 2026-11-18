@@ -1,7 +1,174 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-  <masterLabel>Cart Options</masterLabel>
-  <description>Provides action menu for cart operations including edit, delete, and make primary actions</description>
   <apiVersion>67</apiVersion>
   <isExposed>true</isExposed>
+  <masterLabel>Cart Options</masterLabel>
+  <description>Adds a dropdown with cart actions: edit, set as default, and delete.</description>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartData" label="Cart Data Binding" type="String" default="{!Cart.Details}"></property>
+      <property name="variant" label="Button Variant" type="String" default="bare" datasource="container,border,bare,border-filled"></property>
+      <property name="buttonTextColor" label="Button Text Color" type="Color"></property>
+      <property name="buttonTextHoverColor" label="Button Text Hover Color" type="Color"></property>
+      <property name="buttonBackgroundColor" label="Button Background Color" type="Color"></property>
+      <property name="buttonBackgroundHoverColor" label="Button Background Hover Color" type="Color"></property>
+      <property name="buttonBorderColor" label="Button Border Color" type="Color"></property>
+      <property name="optionsDropdownLabel" label="View Options Dropdown Label" type="String" default="View Options" translatable="true"></property>
+      <property name="showEditCartOption" label="Show Edit Option" type="Boolean" default="true" description="Show the Edit option in the View Options dropdown list. Buyers can update the cart name and description."></property>
+      <property name="editCartLabel" label="Edit Cart Option Label" type="String" default="Edit Cart Details" translatable="true"></property>
+      <property name="showClearCartOption" label="Show Clear Option" type="Boolean" default="true" description="Show the Clear option in the View Options dropdown list. Buyers can remove all items from the cart without deleting the cart."></property>
+      <property name="clearCartLabel" label="Clear Cart Option Label" type="String" default="Clear Cart" translatable="true"></property>
+      <property name="showMarkAsDefaultOption" label="Show Set as Default Option" type="Boolean" default="true" description="Show the Set as Default option in the View Options dropdown list. Buyers can designate the saved cart as their default cart."></property>
+      <property name="markAsDefaultLabel" label="Set as Default Option Label" type="String" default="Set As Default" translatable="true"></property>
+      <property name="showDeleteCartOption" label="Show Delete Option" type="Boolean" default="true" description="Show the Delete option in the View Options dropdown list. Buyers can permanently remove the cart and its contents."></property>
+      <property name="showRemoveAsDefaultOption" label="Show Remove Default Status Option" type="Boolean" default="true" description="Show the Remove Default Status option in the View Options dropdown list. Buyers can remove the saved cart as their default cart."></property>
+      <property name="removeAsDefaultLabel" label="Remove Default Option Label" type="String" default="Remove Default Status" translatable="true"></property>
+      <property name="deleteCartLabel" label="Delete Cart Field Label" type="String" default="Delete Cart" translatable="true"></property>
+      <property name="cartNameLabel" label="Cart Name Field Label" type="String" default="Cart Name" translatable="true"></property>
+      <property name="cartDescriptionLabel" label="Cart Description Field Label" type="String" default="Description" translatable="true"></property>
+      <property name="showImportOption" label="Show Import Option" type="Boolean" default="true" description="Show the Import option in the View Options dropdown list. Buyers can upload a file to import cart items."></property>
+      <property name="importOptionLabel" label="Import Option Label" type="String" default="Import" translatable="true"></property>
+      <property name="importModalTitleLabel" label="Import Modal Title" type="String" default="Import Cart" translatable="true"></property>
+      <property name="importModalSubtitleLabel" label="Import Modal Subtitle" type="String" default="Import using CSV" translatable="true"></property>
+      <property name="importUploadFileLabel" label="Upload File Button Label" type="String" default="Upload File" translatable="true"></property>
+      <property name="importDropFileLabel" label="Drag &amp;amp; Drop File Label" type="String" default="or drop file" translatable="true"></property>
+      <property name="importStartImportLabel" label="Start Import Button Label" type="String" default="Start Import" translatable="true"></property>
+      <property name="importCancelLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="importMappingTitleLabel" label="Mapping Title" type="String" default="Cart Item Identifiers" translatable="true"></property>
+      <property name="showExportOption" label="Show Export Option" type="Boolean" default="true" description="Show the Export option in the View Options dropdown. Buyers can export cart items to a CSV file."></property>
+      <property name="exportOptionLabel" label="Export Option Label" type="String" default="Export" translatable="true"></property>
+      <property name="exportModalTitleLabel" label="Export Modal Title" type="String" default="Export Cart" translatable="true"></property>
+      <property name="exportNameLabel" label="Export Name Label" type="String" default="Export Name" translatable="true"></property>
+      <property name="exportAsLabel" label="Export as Label" type="String" default="Export As" translatable="true"></property>
+      <property name="mandatoryFieldsLabel" label="Mandatory Fields Label" type="String" default="Mandatory Export Fields" translatable="true"></property>
+      <property name="optionalFieldsLabel" label="Optional Fields Label" type="String" default="Optional Export Fields (Select up to 10)" translatable="true"></property>
+      <property name="exportButtonLabel" label="Export Button Label" type="String" default="Confirm and Export" translatable="true"></property>
+      <property name="exportCancelLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="showShareOptionLabel" label="Show Share Option" type="Boolean" default="true" description="Show the Share option in the View Options dropdown list. Buyers can share the cart with other buyers."></property>
+      <property name="shareCartLabel" label="Share Option Label" type="String" default="Share" translatable="true"></property>
+      <property name="shareModalTitleLabel" label="Share Modal Title" type="String" default="Share cart" translatable="true"></property>
+      <property name="shareWithLabel" label="Share With Label" type="String" default="Share {cartName} with" translatable="true"></property>
+      <property name="viewAccessLabel" label="View Access Label" type="String" default="Can View" translatable="true"></property>
+      <property name="editAccessLabel" label="Edit Access Label" type="String" default="Can Edit" translatable="true"></property>
+      <property name="checkoutAccessLabel" label="Checkout Access Label" type="String" default="Can Checkout" translatable="true"></property>
+      <property name="removeAccessLabel" label="Remove Access Label" type="String" default="Remove" translatable="true"></property>
+      <property name="saveChangesLabel" label="Save Changes Button Label" type="String" default="Save Changes" translatable="true"></property>
+      <property name="shareCartButtonLabel" label="Share Cart Button Label" type="String" default="Share Cart" translatable="true"></property>
+      <property name="buyerSearchCriteria" label="Search Using" type="String" datasource="java://siteforce.customComponent.datasource.BuyerSearchCriteriaDataSource" default="All"></property>
+      <property name="shareModalSearchFieldLabel" label="Search Field Label" type="String" default="Enter emails or names..." translatable="true"></property>
+      <property name="shareModalRemoveLabel" label="Remove Label" type="String" default="Remove" translatable="true"></property>
+      <property name="shareModalOwnerLabel" label="Owner Label" type="String" default="Owner" translatable="true"></property>
+      <property name="shareModalConfirmButtonLabel" label="Confirm Button Label" type="String" default="Share Cart" translatable="true"></property>
+      <property name="shareModalCancelButtonLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <property name="showSaveAsTemplateOption" label="Show Add to Templates Option" type="Boolean" default="true" description="Show the Add to Templates option in the View Options dropdown list. Buyers can save all cart items to an order template."></property>
+      <property name="showGoBackButton" label="Show Go Back Button" type="Boolean" default="true" description="Show the Go Back button in the Add to Template modal so buyers can navigate back to the template list."></property>
+      <property name="templateNameLabel" label="Template Name Label" type="String" default="Template Name" translatable="true"></property>
+      <property name="templateDescriptionLabel" label="Description Label" type="String" default="Description (Optional)" translatable="true"></property>
+      <property name="newTemplateButtonLabel" label="New Template Button Label" type="String" default="Confirm &amp;amp; Save" translatable="true"></property>
+      <property name="saveAsTemplateCancelLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="cartData"></designLayoutProperty>
+            <designLayoutProperty name="variant"></designLayoutProperty>
+            <designLayoutProperty name="optionsDropdownLabel"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBorderColor"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Edit Cart">
+          <designLayoutItems>
+            <designLayoutProperty name="showEditCartOption"></designLayoutProperty>
+            <designLayoutProperty name="editCartLabel" cbVisibleIf="showEditCartOption=true"></designLayoutProperty>
+            <designLayoutProperty name="cartNameLabel" cbVisibleIf="showEditCartOption=true"></designLayoutProperty>
+            <designLayoutProperty name="cartDescriptionLabel" cbVisibleIf="showEditCartOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Import">
+          <designLayoutItems>
+            <designLayoutProperty name="showImportOption"></designLayoutProperty>
+            <designLayoutProperty name="importOptionLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importModalTitleLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importModalSubtitleLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importUploadFileLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importDropFileLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importStartImportLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importCancelLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="importMappingTitleLabel" cbVisibleIf="showImportOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Export">
+          <designLayoutItems>
+            <designLayoutProperty name="showExportOption"></designLayoutProperty>
+            <designLayoutProperty name="exportOptionLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="exportModalTitleLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="exportNameLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="exportAsLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="mandatoryFieldsLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="optionalFieldsLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="exportButtonLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+            <designLayoutProperty name="exportCancelLabel" cbVisibleIf="showExportOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Share">
+          <designLayoutItems>
+            <designLayoutProperty name="showShareOptionLabel"></designLayoutProperty>
+            <designLayoutProperty name="shareCartLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalTitleLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareWithLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="buyerSearchCriteria" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalSearchFieldLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalRemoveLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="viewAccessLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="editAccessLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="checkoutAccessLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="removeAccessLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalOwnerLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalConfirmButtonLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="saveChangesLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareCartButtonLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+            <designLayoutProperty name="shareModalCancelButtonLabel" cbVisibleIf="showShareOptionLabel=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Save as Template">
+          <designLayoutItems>
+            <designLayoutProperty name="showSaveAsTemplateOption"></designLayoutProperty>
+            <designLayoutProperty name="showGoBackButton" cbVisibleIf="showSaveAsTemplateOption=true"></designLayoutProperty>
+            <designLayoutProperty name="templateNameLabel" cbVisibleIf="showSaveAsTemplateOption=true"></designLayoutProperty>
+            <designLayoutProperty name="templateDescriptionLabel" cbVisibleIf="showSaveAsTemplateOption=true"></designLayoutProperty>
+            <designLayoutProperty name="newTemplateButtonLabel" cbVisibleIf="showSaveAsTemplateOption=true"></designLayoutProperty>
+            <designLayoutProperty name="saveAsTemplateCancelLabel" cbVisibleIf="showSaveAsTemplateOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Set as Default">
+          <designLayoutItems>
+            <designLayoutProperty name="showMarkAsDefaultOption"></designLayoutProperty>
+            <designLayoutProperty name="markAsDefaultLabel" cbVisibleIf="showMarkAsDefaultOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Remove Default Status">
+          <designLayoutItems>
+            <designLayoutProperty name="showRemoveAsDefaultOption"></designLayoutProperty>
+            <designLayoutProperty name="removeAsDefaultLabel" cbVisibleIf="showRemoveAsDefaultOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Delete Cart">
+          <designLayoutItems>
+            <designLayoutProperty name="showDeleteCartOption"></designLayoutProperty>
+            <designLayoutProperty name="deleteCartLabel" cbVisibleIf="showDeleteCartOption=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
 </LightningComponentBundle>

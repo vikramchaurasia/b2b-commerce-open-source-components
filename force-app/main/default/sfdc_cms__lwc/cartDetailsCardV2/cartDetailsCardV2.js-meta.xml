@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Cart Card</masterLabel>
+  <description>Shows the cart summary and cart options.</description>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartSummaryData" label="Cart Data Binding" type="String" default="{!CartSummary}"></property>
+      <property name="showImageGrid" label="Show Image Grid" type="Boolean" default="true" description="Show a grid of product thumbnails from each cart."></property>
+      <property name="showSecondaryCartItemCount" label="Show Item Count" type="Boolean" default="true" description="Show the number of items in each cart."></property>
+      <property name="secondaryCartCountType" label="Shows the total quantity or the number of unique products in the cart." type="String" translatable="false" datasource="java://siteforce.customComponent.datasource.B2BCartCountDataSource" default="TotalProductCount"></property>
+      <property name="itemsLabel" label="Items Text" type="String" default="Items" translatable="true"></property>
+      <property name="personalLabel" label="Personal Cart Tag" type="String" default="Private" translatable="true"></property>
+      <property name="sharedWithOthersLabel" label="Shared With Others Label" type="String" default="Shared with {0} others" translatable="true"></property>
+      <property name="sharedWithOneOtherLabel" label="Shared With One Other Label" type="String" default="Shared with 1 other" translatable="true"></property>
+      <property name="sharedByLabel" label="Shared by Label" type="String" default="Shared by {0}" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="showImageGrid"></designLayoutProperty>
+            <designLayoutProperty name="cartSummaryData"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Cart Summary">
+          <designLayoutItems>
+            <designLayoutProperty name="showSecondaryCartItemCount"></designLayoutProperty>
+            <designLayoutProperty name="secondaryCartCountType" cbVisibleIf="showSecondaryCartItemCount=true"></designLayoutProperty>
+            <designLayoutProperty name="itemsLabel" cbVisibleIf="showSecondaryCartItemCount=true"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+        <designSection name="Collaboration Status">
+          <designLayoutItems>
+            <designLayoutProperty name="personalLabel"></designLayoutProperty>
+            <designLayoutProperty name="sharedWithOthersLabel"></designLayoutProperty>
+            <designLayoutProperty name="sharedWithOneOtherLabel"></designLayoutProperty>
+            <designLayoutProperty name="sharedByLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

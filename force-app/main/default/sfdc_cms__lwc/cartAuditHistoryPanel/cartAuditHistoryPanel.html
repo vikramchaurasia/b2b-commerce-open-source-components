@@ -1,0 +1,149 @@
+<template lwc:render-mode="light">
+    <dialog
+        class="cart-audit-history-panel"
+        aria-label={panelHeaderLabel}
+        data-automation="cart-audit-history-panel"
+        lwc:ref="dialog"
+        onclick={handleDialogClick}
+        oncancel={handleCancel}
+        onclose={handleNativeClose}>
+        <header class="cart-audit-history-panel__header">
+            <h2
+                class="cart-audit-history-panel__heading"
+                lwc:ref="panelHeading"
+                tabindex="-1">
+                {panelHeaderLabel}
+            </h2>
+            <button
+                type="button"
+                class="slds-button slds-button_icon cart-audit-history-panel__close"
+                aria-label={closeButtonLabel}
+                data-automation="cart-audit-history-panel-close"
+                onclick={handleCloseClick}>
+                <lightning-icon
+                    icon-name="utility:close"
+                    alternative-text=""
+                    size="small"></lightning-icon>
+            </button>
+        </header>
+
+        <div class="cart-audit-history-panel__body">
+            <div lwc:if={showEmptyState}>
+                <div
+                    class="slds-align_absolute-center slds-p-top_xx-large slds-p-bottom_x-small image-svg"
+                    data-automation="cart-audit-history-panel-empty">
+                    <img
+                        src={emptySvg}
+                        alt />
+                </div>
+                <div class="slds-align_absolute-center slds-m-bottom_x-small">
+                    <h3 class="slds-text-heading_medium">{emptyStateHeader}</h3>
+                </div>
+                <div
+                    class="slds-align_absolute-center slds-text-align_center slds-text-heading_small empty-description">
+                    <p>
+                        <lightning-formatted-rich-text value={emptyStateMessage}></lightning-formatted-rich-text>
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="slds-p-top_xx-large"
+                role="alert"
+                lwc:if={hasError}>
+                <div
+                    class="slds-align_absolute-center error-icon-svg"
+                    data-automation="cart-audit-history-panel-error">
+                    <img
+                        src={errorSvg}
+                        alt />
+                </div>
+                <div
+                    class="slds-p-top_x-small slds-align_absolute-center slds-text-align_center slds-text-heading_small error-description">
+                    <p>
+                        <lightning-formatted-rich-text value={loadErrorMessage}></lightning-formatted-rich-text>
+                    </p>
+                </div>
+                <div class="slds-p-top_large slds-align_absolute-center">
+                    <site-common-button-ui
+                        data-automation="cart-audit-history-panel-retry"
+                        variant="primary"
+                        assistive-text={retryButtonLabel}
+                        onclick={handleRetryClick}>
+                        {retryButtonLabel}
+                    </site-common-button-ui>
+                </div>
+            </div>
+
+            <ol
+                lwc:if={showEntries}
+                class="cart-audit-history-panel__list slds-m-top_x-large"
+                data-automation="cart-audit-history-panel-list">
+                <template
+                    for:each={rows}
+                    for:item="row">
+                    <li
+                        key={row.key}
+                        class="cart-audit-history-panel__row">
+                        <span
+                            class={row.iconVariantClass}
+                            aria-hidden="true">
+                            <span class={row.glyphClass}></span>
+                        </span>
+                        <div class="cart-audit-history-panel__row-body">
+                            <p class="cart-audit-history-panel__row-title">{row.description}</p>
+                            <template lwc:if={row.isQuantityChange}>
+                                <p class="cart-audit-history-panel__row-detail">
+                                    <span>{quantityFromLabel}</span>
+                                    <span class="cart-audit-history-panel__row-value">{row.previousQuantity}</span>
+                                    <span
+                                        aria-hidden="true"
+                                        class="cart-audit-history-panel__row-dot">
+                                        •
+                                    </span>
+                                    <span>{quantityToLabel}</span>
+                                    <span class="cart-audit-history-panel__row-value">{row.newQuantity}</span>
+                                </p>
+                            </template>
+                            <template lwc:if={row.hasCouponCode}>
+                                <p class="cart-audit-history-panel__row-detail">
+                                    <span>{couponCodeLabel}</span>
+                                    <span class="cart-audit-history-panel__row-value">{row.couponCode}</span>
+                                </p>
+                            </template>
+                            <p class="cart-audit-history-panel__row-detail">
+                                <span>{performedByPrefix}</span>
+                                <span class="cart-audit-history-panel__row-value">{row.performedByName}</span>
+                                <template lwc:if={row.hasEmail}>
+                                    <span class="cart-audit-history-panel__row-email">({row.displayEmail})</span>
+                                </template>
+                            </p>
+                            <p class="cart-audit-history-panel__row-detail">
+                                <span>{performedOnPrefix}</span>
+                                <span class="cart-audit-history-panel__row-value">
+                                    <lightning-formatted-date-time
+                                        value={row.actionDate}
+                                        year="numeric"
+                                        month="short"
+                                        day="2-digit"></lightning-formatted-date-time>
+                                </span>
+                            </p>
+                        </div>
+                    </li>
+                </template>
+            </ol>
+
+            <!-- Loading state: base lightning-spinner centered in a fixed-height box, with a caption below. -->
+            <div
+                class="cart-audit-history-panel__loading"
+                role="status"
+                lwc:if={isLoading}
+                data-automation="cart-audit-history-panel-loading">
+                <div class="cart-audit-history-panel__spinner">
+                    <lightning-spinner alternative-text={spinnerAltText}></lightning-spinner>
+                </div>
+                <p class="cart-audit-history-panel__loading-text">{loadingText}</p>
+            </div>
+        </div>
+    </dialog>
+</template>

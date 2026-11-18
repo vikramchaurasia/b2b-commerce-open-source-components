@@ -1,0 +1,7 @@
+:host {
+    display: block;
+}
+.cart-audit-history-button__chevron {
+    margin-left: var(--slds-g-spacing-1, 0.25rem);
+    --sds-c-icon-color-foreground-default: currentColor;
+}

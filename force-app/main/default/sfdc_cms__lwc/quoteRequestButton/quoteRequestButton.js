@@ -1,24 +1,28 @@
 import { api, LightningElement, wire } from 'lwc';
+import { generateStyleProperties } from 'experience/styling';
 import Toast from 'site/commonToast';
-import { SessionContextAdapter } from 'commerce/contextApi';
+import { CartConfigurationContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
 import { CurrentPageReference, navigate, NavigationContext } from 'lightning/navigation';
 import QuoteRequestModal from 'site/quoteRequestModal';
 import { createQuoteFromCart } from 'commerce/quoteApi';
 import { CartContentsAdapter, CartStatusAdapter, toCommerceErrors } from 'commerce/checkoutCartApi';
 import { isDesignMode } from 'experience/clientApi';
-import { bundleRequestError, quoteRequestError, subscriptionRequestError, secondaryCartQuoteError } from './labels';
-import { asNonEmptyString } from './utils';
+import { bundleRequestError, quoteRequestError, subscriptionRequestError } from './labels';
+import { hasActiveAsyncOperationFromWires } from 'site/commonUtils';
+import { asNonEmptyString, isCartLocked, isLockHolder, shouldRestrictOwnerActions } from './utils';
 export default class QuoteRequestButton extends LightningElement {
   static renderMode = 'light';
   @wire(NavigationContext)
   navContext;
   @wire(SessionContextAdapter)
   sessionContext;
+  @wire(CartConfigurationContextAdapter)
+  _cartConfiguration;
+  get _isShareCartEnabled() {
+    return Boolean(this._cartConfiguration?.data?.shareCart?.isEnabled);
+  }
   _currentPageReference;
   get effectiveCartId() {
-    if (this._currentPageReference?.attributes?.name === 'Current_Cart') {
-      return 'current';
-    }
     const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
     return cartIdFromRecordId ?? 'current';
   }
@@ -42,6 +46,34 @@ export default class QuoteRequestButton extends LightningElement {
   size;
   @api
   width;
+  @api
+  buttonTextColor;
+  @api
+  buttonTextHoverColor;
+  @api
+  buttonBackgroundColor;
+  @api
+  buttonBackgroundHoverColor;
+  @api
+  buttonBorderColor;
+  get buttonStyle() {
+    return generateStyleProperties([{
+      name: '--com-c-button-color',
+      value: this.buttonTextColor
+    }, {
+      name: '--com-c-button-color-hover',
+      value: this.buttonTextHoverColor
+    }, {
+      name: '--com-c-button-color-background',
+      value: this.buttonBackgroundColor
+    }, {
+      name: '--com-c-button-color-background-hover',
+      value: this.buttonBackgroundHoverColor
+    }, {
+      name: '--com-c-button-color-border',
+      value: this.buttonBorderColor
+    }]);
+  }
   @api
   showTitle = false;
   @api
@@ -95,6 +127,9 @@ export default class QuoteRequestButton extends LightningElement {
   get isUserLoggedIn() {
     return this.sessionContext?.data?.isLoggedIn ?? false;
   }
+  get isGuest() {
+    return this.sessionContext?.data?.isLoggedIn === false;
+  }
   get activeCartId() {
     return this.cartId;
   }
@@ -118,10 +153,7 @@ export default class QuoteRequestButton extends LightningElement {
     if (isDesignMode) {
       return true;
     }
-    return this.hasProducts && !this.hasQuoteLineItemsInCart;
-  }
-  get isSecondaryCart() {
-    return this.cartSummary?.isSecondary === true;
+    return this.hasProducts && !this.hasQuoteLineItemsInCart && !this.isRestrictedCollaborator;
   }
   get isCartProcessing() {
     let val = !!this.cartStatusHandler?.data?.isProcessing || !!this.cartContentsEntry?.loading;
@@ -133,8 +165,20 @@ export default class QuoteRequestButton extends LightningElement {
   get cartHasError() {
     return !!this.cartStatusHandler?.error || !!this.cartContentsEntry?.error;
   }
+  get hasActiveAsyncOperation() {
+    return hasActiveAsyncOperationFromWires(this.cartStatusHandler?.data, this.cartSummary);
+  }
+  get isRestrictedCollaborator() {
+    if (!this._isShareCartEnabled || this.isGuest) {
+      return false;
+    }
+    return shouldRestrictOwnerActions(this.cartSummary, this.sessionContext?.data?.userId);
+  }
+  get isLockedForViewer() {
+    return isCartLocked(this.cartSummary) && !isLockHolder(this.cartSummary, this.sessionContext?.data?.userId);
+  }
   get isDisabled() {
-    return !this.hasProducts || this.isCartProcessing || this.cartHasError || this.cartStatusHandler?.data?.isReadyForCheckout === false;
+    return !this.hasProducts || this.isCartProcessing || this.cartHasError || this.cartStatusHandler?.data?.isReadyForCheckout === false || this.hasActiveAsyncOperation || this.isLockedForViewer;
   }
   cartToQuotePayload = {};
   modalConfiguration = {};
@@ -159,21 +203,11 @@ export default class QuoteRequestButton extends LightningElement {
     };
   }
   handleRequestQuote() {
-    if (this.isSecondaryCart) {
-      this.showSecondaryCartError();
-      return;
-    }
     if (!this.isUserLoggedIn) {
       this.redirectToLogin();
       return;
     }
     this.processQuoteRequest();
-  }
-  showSecondaryCartError() {
-    Toast.show({
-      label: secondaryCartQuoteError,
-      variant: 'error'
-    }, this);
   }
   redirectToLogin() {
     if (this.navContext) {
@@ -225,6 +259,11 @@ export default class QuoteRequestButton extends LightningElement {
             const parsed = JSON.parse(storeActionError.error);
             if (parsed && typeof parsed === 'object' && Array.isArray(parsed.errors)) {
               commerceErrors = parsed.errors;
+            } else if (Array.isArray(parsed)) {
+              commerceErrors = parsed.map(entry => ({
+                code: entry?.errorCode ?? entry?.code,
+                message: entry?.message
+              }));
             }
           }
         } catch (parseError) {
@@ -254,7 +293,8 @@ export default class QuoteRequestButton extends LightningElement {
     }
     const bundlesNotSupportedError = errors.find(error => error.code === 'BUNDLES_NOT_SUPPORTED');
     const subscriptionNotSupportedError = errors.find(error => error.code === 'SUBSCRIPTION_PRODUCTS_NOT_SUPPORTED');
-    const label = subscriptionNotSupportedError ? subscriptionRequestError : bundlesNotSupportedError ? bundleRequestError : quoteRequestError;
+    const insufficientAccessError = errors.find(error => error.code === 'INSUFFICIENT_ACCESS');
+    const label = subscriptionNotSupportedError ? subscriptionRequestError : bundlesNotSupportedError ? bundleRequestError : insufficientAccessError?.message ? insufficientAccessError.message : quoteRequestError;
     Toast.show({
       label,
       variant: 'error'

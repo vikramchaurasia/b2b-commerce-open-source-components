@@ -1,0 +1,32 @@
+<template lwc:render-mode="light">
+    <template lwc:if={showSortingDropdown}>
+        <div class="cart-list-sort-dropdown">
+            <span class="sort-label">{label}:</span>
+            <lightning-button-menu
+                icon-name="utility:chevrondown"
+                label={selectedLabel}
+                menu-alignment="left"
+                variant="bare"
+                class="sort-button-menu"
+                alternative-text={label}
+                onselect={handleSortChange}>
+                <template
+                    for:each={sortingOptions}
+                    for:item="option">
+                    <lightning-menu-item
+                        if:false={option.isSeparator}
+                        key={option.value}
+                        value={option.value}
+                        label={option.label}
+                        checked={option.checked}
+                        class="sort-menu-item"></lightning-menu-item>
+                    <div
+                        if:true={option.isSeparator}
+                        key={option.value}
+                        role="separator"
+                        class="sort-separator"></div>
+                </template>
+            </lightning-button-menu>
+        </div>
+    </template>
+</template>

@@ -1,0 +1,17 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartListView",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "loadErrorMessage",
+      "value" : "We couldn't load the carts."
+    }, {
+      "name" : "retryButtonLabel",
+      "value" : "Try Again"
+    }, {
+      "name" : "loadingCarts",
+      "value" : "Loading"
+    } ]
+  },
+  "urlName" : "cartlistview"
+}

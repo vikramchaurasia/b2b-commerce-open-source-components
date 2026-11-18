@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <masterLabel>Delete All Exports Button</masterLabel>
+  <description>Shows a button to delete all cart export jobs when export jobs exist. The button label is configurable in Experience Builder.</description>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartExportJobListData" label="Data Source" type="String" default="{!CartExportJobList.List}"></property>
+      <property name="buttonLabel" label="Button Label" type="String" default="Delete All Exports" translatable="true"></property>
+      <property name="modalTitle" label="Confirmation Title" type="String" default="Delete All Exports?" translatable="true"></property>
+      <property name="modalDescription" label="Confirmation Message" type="String" default="All your completed and failed exports will be permanently removed. Exports still in progress won&apos;t be deleted. This can&apos;t be undone." translatable="true"></property>
+      <property name="confirmButtonLabel" label="Confirm Button Label" type="String" default="Delete All" translatable="true"></property>
+      <property name="cancelButtonLabel" label="Cancel Button Label" type="String" default="Cancel" translatable="true"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="cartExportJobListData" cbVisibleIf="cartExportJobListData=false"></designLayoutProperty>
+            <designLayoutProperty name="buttonLabel"></designLayoutProperty>
+            <designLayoutProperty name="modalTitle"></designLayoutProperty>
+            <designLayoutProperty name="modalDescription"></designLayoutProperty>
+            <designLayoutProperty name="confirmButtonLabel"></designLayoutProperty>
+            <designLayoutProperty name="cancelButtonLabel"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

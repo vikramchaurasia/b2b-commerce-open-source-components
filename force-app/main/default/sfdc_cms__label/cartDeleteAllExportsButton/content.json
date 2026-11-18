@@ -1,0 +1,23 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartDeleteAllExportsButton",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "deleteAllButton",
+      "value" : "Delete All Exports"
+    }, {
+      "name" : "deleteAllConfirmTitle",
+      "value" : "Delete all exports?"
+    }, {
+      "name" : "deleteAllSuccess",
+      "value" : "All exports were deleted."
+    }, {
+      "name" : "deleteAllError",
+      "value" : "We couldn't delete your exports. Try again."
+    }, {
+      "name" : "deleteAllRateLimitError",
+      "value" : "Too many requests. Try again in a few minutes."
+    } ]
+  },
+  "urlName" : "cartdeleteallexportsbutton"
+}

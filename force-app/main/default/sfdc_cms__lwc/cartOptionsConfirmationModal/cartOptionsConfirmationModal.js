@@ -1,5 +1,6 @@
 import { api } from 'lwc';
 import LightningModal from 'lightning/modal';
+import BasePath from '@salesforce/community/basePath';
 export default class CartOptionsConfirmationModal extends LightningModal {
   @api
   headerText;
@@ -19,14 +20,14 @@ export default class CartOptionsConfirmationModal extends LightningModal {
     return this.iconType === 'confirmDelete' || this.iconType === 'confirmSave';
   }
   get _iconClass() {
-    return `icon-circle icon-${this.iconType}`;
+    return `confirmation-icon icon-${this.iconType}`;
   }
-  get _iconText() {
+  get _iconUrl() {
     if (this.iconType === 'confirmDelete') {
-      return 'i';
+      return `${BasePath}/assets/icons/warning-filled.svg#warning-filled`;
     }
     if (this.iconType === 'confirmSave') {
-      return '!';
+      return `${BasePath}/assets/icons/info-filled.svg#info-filled`;
     }
     return '';
   }

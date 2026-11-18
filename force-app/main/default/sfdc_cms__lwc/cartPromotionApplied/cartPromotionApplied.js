@@ -1,4 +1,8 @@
-import { api, LightningElement } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
+import { CartContentsAdapter, CartStatusAdapter } from 'commerce/checkoutCartApi';
+import { SessionContextAdapter } from 'commerce/contextApi';
+import { asNonEmptyString, isCartLocked, isLockHolder } from 'site/cartDetailsCardUtils';
 import { generateStyleProperties } from 'experience/styling';
 /**
  * @slot termsAndConditions
@@ -7,10 +11,38 @@ import { generateStyleProperties } from 'experience/styling';
 
 export default class CartPromotionApplied extends LightningElement {
   static renderMode = 'light';
+  _currentPageReference;
+  get effectiveCartId() {
+    const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
+    return cartIdFromRecordId ?? 'current';
+  }
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  @wire(CartStatusAdapter)
+  cartStatus;
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
+  cartContentsEntry;
+  @wire(SessionContextAdapter)
+  sessionContext;
+  get hasActiveAsyncOperation() {
+    return Boolean(this.cartStatus?.data?.isAsyncOperationInProgress);
+  }
+  get isLockedForViewer() {
+    const cartSummary = this.cartContentsEntry?.data?.cartSummary;
+    return isCartLocked(cartSummary) && !isLockHolder(cartSummary, this.sessionContext?.data?.userId);
+  }
   @api
   couponCode;
   @api
   name;
+  @api
+  tierLabel;
   @api
   showDiscountAmount = false;
   @api

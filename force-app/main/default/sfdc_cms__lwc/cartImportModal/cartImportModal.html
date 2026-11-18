@@ -1,0 +1,57 @@
+<template>
+    <lightning-modal-header label={_labels.importCartHeader}></lightning-modal-header>
+
+    <lightning-modal-body>
+        <!--
+            The controller stays mounted throughout: during the import-in-progress
+            phase it's hidden (slds-hide) rather than unmounted so the in-flight
+            POST keeps its state, and a handled failure can retry against the same
+            instance. Otherwise it carries the modal-body padding.
+        -->
+        <div class={_controllerWrapperClass}>
+            <site-cart-import-container
+                lwc:ref="controller"
+                variant="importCart"
+                cart-id={cartId}
+                form-labels={_formLabels}
+                onreadinesschange={handleReadinessChange}
+                onmappingsvisiblechange={handleMappingsVisibleChange}></site-cart-import-container>
+        </div>
+
+        <div
+            lwc:if={isImportInProgress}
+            role="status"
+            class="modal-contents slds-p-vertical_x-large">
+            <div class="spinner-loading-group">
+                <div class="spinner-container">
+                    <lightning-spinner
+                        aria-hidden="true"
+                        alternative-text={_labels.importingSpinnerText}></lightning-spinner>
+                </div>
+                <h2 class="slds-text-align_center slds-text-heading_small">{_labels.importingSpinnerText}</h2>
+            </div>
+        </div>
+    </lightning-modal-body>
+
+    <lightning-modal-footer lwc:if={_isNotLoading}>
+        <div class="footer-content-container">
+            <site-common-button-ui
+                variant={_cancelButtonVariant}
+                width="stretch"
+                assistive-text={_labels.cancelButtonLabel}
+                name="closeModalButton"
+                onclick={handleClose}>
+                {_labels.cancelButtonLabel}
+            </site-common-button-ui>
+            <site-common-button-ui
+                variant="primary"
+                width="stretch"
+                disabled={_isStartImportDisabled}
+                assistive-text={_labels.startImportButtonLabel}
+                name="startImportButton"
+                onclick={handleStartImport}>
+                {_labels.startImportButtonLabel}
+            </site-common-button-ui>
+        </div>
+    </lightning-modal-footer>
+</template>

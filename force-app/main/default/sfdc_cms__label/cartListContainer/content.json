@@ -1,0 +1,14 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartListContainer",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "cancelOperationSpinnerLabel",
+      "value" : "Aborting the operation..."
+    }, {
+      "name" : "loadingCarts",
+      "value" : "Loading"
+    } ]
+  },
+  "urlName" : "cartlistcontainer"
+}

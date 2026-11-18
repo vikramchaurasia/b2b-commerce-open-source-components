@@ -1,0 +1,62 @@
+<template lwc:render-mode="light">
+    <!-- Slot-based empty state -->
+    <div lwc:if={_showSlotEmptyState}>
+        <div class="slds-align_absolute-center slds-p-top_xx-large image-svg">
+            <img
+                src={_emptySvg}
+                alt />
+        </div>
+        <slot name="emptyListView"></slot>
+    </div>
+
+    <!-- Error state when the dispatched ACTION_CARTS_LOAD rejects.
+         role="alert" + aria-live="assertive" so screen readers announce the
+         load failure as soon as it replaces the spinner. -->
+    <div
+        lwc:elseif={_hasError}
+        class="slds-m-around_medium slds-text-align_center"
+        role="alert"
+        aria-live="assertive">
+        <div class="slds-align_absolute-center error-icon-svg">
+            <img
+                src={_errorSvg}
+                alt />
+        </div>
+        <div
+            class="slds-p-top_x-small slds-align_absolute-center slds-text-align_center slds-text-heading_small error-description">
+            <p>
+                <lightning-formatted-rich-text value={_labels.loadErrorMessage}></lightning-formatted-rich-text>
+            </p>
+        </div>
+    </div>
+
+    <!-- Sort control. Sits directly above the cart list region so it stays pinned during a
+         re-sort -->
+    <div
+        lwc:if={_hasCarts}
+        class={_sortDropdownSlotClasses}
+        data-automation="sortDropdown">
+        <slot name="sortDropdown"></slot>
+    </div>
+
+    <!-- Cart list region. Positioned relative so an in-flight reload spinner can
+         overlay the existing cards instead of displacing them. The repeater slot
+         hosts dxp_content_layout:list (injected via metadata). -->
+    <div class="cart-list-repeater-region">
+        <slot name="cartsRepeater"></slot>
+        <!-- Loading spinner until the dispatched ACTION_CARTS_LOAD settles. When carts are
+             already on screen (a re-sort / reload) it overlays them (see _loadingSpinnerClasses)
+             so the list doesn't shift down and snap back; on the initial load it sits centered
+             in the flow because there are no cards to overlay yet. -->
+        <div
+            lwc:if={_showLoading}
+            class={_loadingSpinnerClasses}
+            role="status"
+            aria-live="polite">
+            <lightning-spinner
+                alternative-text={_labels.loadingCarts}
+                size="large"
+                variant="brand"></lightning-spinner>
+        </div>
+    </div>
+</template>

@@ -3,10 +3,13 @@ import { navigate, NavigationContext } from 'lightning/navigation';
 import { generateElementAlignmentClass } from 'experience/styling';
 import { createCheckoutBeginDataEvent, dispatchDataEvent } from 'commerce/dataEventApi';
 import BasePath from '@salesforce/community/basePath';
+import { SessionContextAdapter } from 'commerce/contextApi';
 export default class CheckoutButtonUi extends LightningElement {
   static renderMode = 'light';
   @wire(NavigationContext)
   navContext;
+  @wire(SessionContextAdapter)
+  _sessionContext;
   @api
   cartId;
   @api
@@ -67,16 +70,26 @@ export default class CheckoutButtonUi extends LightningElement {
   get customButtonClasses() {
     return generateElementAlignmentClass(this.alignment || 'center');
   }
+  get isLoggedIn() {
+    return this._sessionContext?.data?.isLoggedIn === true;
+  }
+  get shouldIncludeCartId() {
+    return this.canCheckout === true && !!this.cartId && this.isLoggedIn;
+  }
   handleButtonClick() {
-    if (this.cartId) {
+    if (this.canCheckout && this.cartId) {
       dispatchDataEvent(this, createCheckoutBeginDataEvent(this.cartId));
     }
-    const navContextPageName = this.canCheckout ? 'Current_Checkout' : 'Login';
     navigate(this.navContext, {
       type: 'comm__namedPage',
       attributes: {
-        name: navContextPageName
-      }
+        name: this.canCheckout ? 'Current_Checkout' : 'Login'
+      },
+      ...(this.shouldIncludeCartId ? {
+        state: {
+          recordId: this.cartId
+        }
+      } : {})
     });
   }
 }

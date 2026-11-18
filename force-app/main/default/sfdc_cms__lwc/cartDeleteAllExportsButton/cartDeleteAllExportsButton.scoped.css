@@ -1,0 +1,13 @@
+/* Light-DOM host: block display for flexible sizing by consumers. */
+:host {
+    display: block;
+    width: stretch;
+}
+
+/* Responsive: full-width on mobile (via width="stretch"), content-sized above 48em breakpoint. */
+@media (min-width: 48.0625em) {
+    .cart-delete-all-exports-button .slds-button_stretch {
+        display: inline-flex;
+        width: auto;
+    }
+}

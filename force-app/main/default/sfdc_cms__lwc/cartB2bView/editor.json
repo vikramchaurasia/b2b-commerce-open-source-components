@@ -1,0 +1,314 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartB2bView",
+                "type": "component",
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "{!Cart.Details.displayName}",
+                                    "textDisplayInfo": "{\"headingTag\": \"h1\", \"textStyle\": \"heading-large\"}",
+                                    "textDecoration": "{\"bold\": true}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "emptyHeaderLabel",
+                        "title": "Empty Header Label",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "Your cart is empty",
+                                    "textDisplayInfo": "{\"headingTag\": \"h1\", \"textStyle\": \"heading-large\"}",
+                                    "textDecoration": "{\"bold\": true}",
+                                    "textAlign": "center"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            },
+                            {
+                                "attributes": {
+                                    "text": "Continue Shopping",
+                                    "url": "/"
+                                },
+                                "definition": "dxp_base:button",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "emptyBody",
+                        "title": "Empty Body",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {},
+                                "definition": "site:commonBreadcrumbs",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "emptyStateBreadcrumb",
+                        "title": "Empty State Breadcrumb",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {},
+                                "definition": "site:commonBreadcrumbs",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsBreadcrumb",
+                        "title": "Items Breadcrumb",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "{!Cart.Details.displayName}",
+                                    "textDisplayInfo": "{\"headingTag\": \"p\", \"textStyle\": \"heading-large\"}",
+                                    "textDecoration": "{\"bold\": true}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsHeaderLabel",
+                        "title": "Items Header Label",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "({!Cart.Details.totalProductCount} items)",
+                                    "textDisplayInfo": "{\"headingTag\": \"p\", \"textStyle\": \"heading-large\"}",
+                                    "textDecoration": "{\"bold\": false}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsHeaderCount",
+                        "title": "Items Header Count",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "{!Cart.Details.displayDescription}",
+                                    "textDisplayInfo": "{\"headingTag\": \"p\", \"textStyle\": \"body-regular\"}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsDescription",
+                        "title": "Items Description",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "text": "{!Cart.Details.displayDescription}",
+                                    "textDisplayInfo": "{\"headingTag\": \"p\", \"textStyle\": \"body-regular\"}"
+                                },
+                                "definition": "dxp_base:textBlock",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "emptyStateDescription",
+                        "title": "Empty State Description",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {},
+                                "definition": "site:promotionDiscountsApproaching",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "promotionDiscountsApproaching",
+                        "title": "Promotion Discounts Approaching",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "paginationType": "showMore",
+                                    "showRemoveItem": true,
+                                    "showProductImage": true,
+                                    "showProductVariants": true,
+                                    "showPricePerUnit": true,
+                                    "showTotalPrices": true,
+                                    "showOriginalPrice": true,
+                                    "showActualPrice": true,
+                                    "showPromotions": true,
+                                    "showSku": true
+                                },
+                                "definition": "site:cartItems",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsBody",
+                        "title": "Items Body",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartData": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartOptions",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "cartOptions",
+                        "title": "Cart Options",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "labelText": "Default"
+                                },
+                                "definition": "site:commonPillBuilder",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "defaultPill",
+                        "title": "Default Pill",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "variant": "secondary"
+                                },
+                                "definition": "site:cartCreateButton",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "newCartButton",
+                        "title": "New Cart Button",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartData": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartOptions",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsCartOptions",
+                        "title": "Items Cart Options",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "labelText": "Default"
+                                },
+                                "definition": "site:commonPillBuilder",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsDefaultPill",
+                        "title": "Items Default Pill",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "variant": "secondary"
+                                },
+                                "definition": "site:cartCreateButton",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsNewCartButton",
+                        "title": "Items New Cart Button",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartData": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartAsyncStateView",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "cartAsyncStateView",
+                        "title": "Cart Async State View",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartData": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartAsyncStateView",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "cartAsyncStateViewItems",
+                        "title": "Cart Async State View Items",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartDetails": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartCollaboratorList",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "cartCollaboratorList",
+                        "title": "Cart Collaborator List",
+                        "type": "region"
+                    },
+                    {
+                        "children": [
+                            {
+                                "attributes": {
+                                    "cartDetails": "{!Cart.Details}"
+                                },
+                                "definition": "site:cartCollaboratorList",
+                                "type": "component"
+                            }
+                        ],
+                        "name": "itemsCartCollaboratorList",
+                        "title": "Items Cart Collaborator List",
+                        "type": "region"
+                    }
+                ]
+            }
+        }
+    ]
+}

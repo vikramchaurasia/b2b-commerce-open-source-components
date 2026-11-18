@@ -1,0 +1,154 @@
+:host {
+    /*
+   * Customizable styling hooks (defaults shown). The grid is a fixed block:
+   * 100/101px on desktop, 90/93px on mobile, with a 1px gap and 4px outer radius. Cells carry a
+   * light fill so contained (uncropped) images letterbox cleanly; the GAP itself is transparent so
+   * it shows the card background behind it.
+   */
+    --com-c-cart-preview-gap: var(--com-c-cart-image-preview-grid-gap, 1px);
+    --com-c-cart-preview-radius: var(--com-c-cart-image-preview-grid-radius, 4px);
+    --com-c-cart-preview-cell-bg: var(--com-c-cart-image-preview-grid-cell-bg, #f7f9fa);
+    /*
+   * The host is a plain inline-block box sized to the grid (no vertical padding). The consumer is
+   * responsible ONLY for how the grid aligns within its own container — it must NOT position the
+   * grid relative to anything that changes with a sibling (e.g. a card's banner-toggled bottom
+   * padding), so the grid stays put whether or not those siblings are present.
+   */
+    display: inline-block;
+}
+
+.cart-image-preview-grid {
+    display: grid;
+    gap: var(--com-c-cart-preview-gap);
+    /*
+   * A single 4px radius + overflow:hidden on the container rounds ONLY the outer corners of
+   * whichever cells touch them, and clips inner corners square — which reproduces the whole
+   * corner spec with no per-cell rules: 1 image → all four corners; 2 images → each cell two
+   * outer corners; 4 images → each cell one outer corner; 3 images → the three filled cells get
+   * their outer corner and the empty quadrant is clipped.
+   */
+    border-radius: var(--com-c-cart-preview-radius);
+    overflow: hidden;
+    /* Gap is transparent: no container background, so the 1px divider shows the card behind it. */
+    background-color: transparent;
+    flex: 0 0 auto;
+    /* Default template = 3- and 4-image 2×2 (101×101 desktop). */
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 101px;
+    height: 101px;
+}
+
+/* 2 images: two side-by-side full-height cells (101×100 desktop). */
+.cart-image-preview-grid.slots-2 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    width: 101px;
+    height: 100px;
+}
+
+/* 1 image and the empty placeholder: a single square (100×100 desktop). */
+.cart-image-preview-grid.slots-1,
+.cart-image-preview-grid.is-empty {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    width: 100px;
+    height: 100px;
+}
+
+.preview-cell {
+    /*
+   * Flex-center the thumbnail inside the cell. The cell carries a light fill so the block stays a
+   * clean square when a contained image doesn't fill it (portrait/landscape letterboxing).
+   */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--com-c-cart-preview-cell-bg);
+    /*
+   * `experience-picture` (light DOM) renders `<picture><img></picture>`, and its OWN scoped CSS
+   * styles the inner <img> purely with INHERITED values:
+   *     img { object-fit: inherit; width: inherit; max-height: inherit }
+   * That <img> lives in experience-picture's style scope, so an `img { … }` rule from THIS
+   * component never matches it — the sizing must be set on an ancestor and inherited down.
+   *
+   * So put `object-fit: contain` + `max-height: 100%` on `experience-picture` and DO NOT set an explicit
+   * `width` on it. The inner <img> then inherits `object-fit: contain`, `max-height: 100%`, and an
+   * auto width → the image scales DOWN to fit the cell and is centered/letterboxed on the light
+   * fill, never cropped and never stretched. (Setting `width: 100%` here would force the inner img
+   * to inherit width:100% and overflow-crop tall images.)
+   */
+}
+.preview-cell experience-picture,
+.preview-cell picture {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 100%;
+    object-fit: contain;
+}
+.preview-cell img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Keep the empty-cart glyph inset from the thumbnail's grey background. */
+.preview-cell_placeholder experience-picture {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    padding: var(--dxp-g-spacing-xsmall, 0.5rem);
+}
+
+/*
+ * Inset the thumbnail so the grey cell fill shows around each image. Scoped to the populated layouts
+ * only (`:not(.is-empty)`) so the empty-state placeholder is left untouched. `border-box` keeps the
+ * cell at its grid-track size while padding shrinks the image; 4px is the 2/3/4-up value, single-image
+ * overrides to 10px (desktop) / 5px (mobile). The picture chain is reset to 0 because experience-picture
+ * uses `all: inherit`, which would otherwise re-stack the cell's padding down each level.
+ */
+.cart-image-preview-grid:not(.is-empty) .preview-cell {
+    box-sizing: border-box;
+    padding: 4px;
+}
+.cart-image-preview-grid:not(.is-empty) .preview-cell experience-picture,
+.cart-image-preview-grid:not(.is-empty) .preview-cell picture {
+    padding: 0;
+}
+
+.cart-image-preview-grid.slots-1 .preview-cell {
+    padding: 10px;
+}
+
+/* The empty-state placeholder glyph (smiling cart) is a smaller centered icon, also contained. */
+.preview-cell_placeholder img {
+    max-width: 60%;
+    max-height: 60%;
+}
+
+/*
+ * Mobile: 93×93 for the 2×2 (3/4 images), 93×90 for 2 images, 90×90 for 1 image / empty.
+ * Same 1px gap and 4px radius.
+ */
+@media (max-width: 64em) {
+    .cart-image-preview-grid {
+        width: 93px;
+        height: 93px;
+    }
+    .cart-image-preview-grid.slots-2 {
+        width: 93px;
+        height: 90px;
+    }
+    .cart-image-preview-grid.slots-1,
+    .cart-image-preview-grid.is-empty {
+        width: 90px;
+        height: 90px;
+    }
+    /* Single-image (mobile): 5px inset (vs desktop 10px). */
+    .cart-image-preview-grid.slots-1 .preview-cell {
+        padding: 5px;
+    }
+}

@@ -18,6 +18,11 @@
       <property name="variant" type="String" default="secondary" datasource="java://siteforce.customComponent.datasource.ButtonStyleDataSource" label="Button Style"></property>
       <property name="size" type="String" default="standard" datasource="java://siteforce.customComponent.datasource.ButtonSizeDataSource" label="Button Size"></property>
       <property name="width" type="String" default="stretch" datasource="java://siteforce.customComponent.datasource.ButtonStretchDataSource" label="Max Button Width"></property>
+      <property name="buttonTextColor" type="Color" label="Button Text Color"></property>
+      <property name="buttonTextHoverColor" type="Color" label="Button Text Hover Color"></property>
+      <property name="buttonBackgroundColor" type="Color" label="Button Background Color"></property>
+      <property name="buttonBackgroundHoverColor" type="Color" label="Button Background Hover Color"></property>
+      <property name="buttonBorderColor" type="Color" label="Button Border Color"></property>
       <property name="showTitle" type="Boolean" default="true" label="Show Title"></property>
       <property name="titleText" type="String" default="New Quote Request" translatable="true" label="Title"></property>
       <property name="showQuoteRequiredByDate" type="Boolean" default="true" label="Show Field"></property>
@@ -41,6 +46,11 @@
             <designLayoutProperty name="variant"></designLayoutProperty>
             <designLayoutProperty name="size"></designLayoutProperty>
             <designLayoutProperty name="width"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBorderColor"></designLayoutProperty>
           </designLayoutItems>
         </designSection>
         <designSection name="Title">

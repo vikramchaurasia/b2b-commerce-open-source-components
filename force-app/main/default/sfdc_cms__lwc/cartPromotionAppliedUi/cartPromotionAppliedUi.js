@@ -13,6 +13,8 @@ export default class CartPromotionAppliedUi extends LightningElement {
   @api
   name;
   @api
+  tierLabel;
+  @api
   showTermsAndConditions = false;
   @api
   showDiscountAmount = false;
@@ -25,14 +27,21 @@ export default class CartPromotionAppliedUi extends LightningElement {
   get showTermsAndConditionsButton() {
     return Boolean(this.showTermsAndConditions && this.termsAndConditions);
   }
+  @api
+  disableRemoveButton = false;
+  @api
+  lockedForViewer = false;
   get showRemoveButton() {
-    return !!this.couponId;
+    return !!this.couponId && !this.disableRemoveButton && !this.lockedForViewer;
   }
   get showInfoIcon() {
-    return Boolean(this.couponCode && this.name);
+    return Boolean(this.couponCode && (this.tierLabel || this.name));
+  }
+  get popoverText() {
+    return this.tierLabel || this.name;
   }
   get promoText() {
-    return this.couponCode ? this.couponCode : this.name;
+    return this.couponCode ? this.couponCode : this.tierLabel || this.name;
   }
   async showTermsAndConditionsModal() {
     await TermsAndConditionsModal.open({

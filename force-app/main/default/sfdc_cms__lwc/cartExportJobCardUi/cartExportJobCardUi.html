@@ -1,0 +1,107 @@
+<template lwc:render-mode="light">
+    <div class="export-job-card slds-box">
+        <div class={_mainClass}>
+            <!-- Left: name, status badge, date, deleted info line -->
+            <div class="export-job-card__info">
+                <div
+                    class="export-job-card__name bold slds-text-heading_small"
+                    title={_cartName}>
+                    <span>{_cartName}</span>
+                </div>
+                <div class={_badgeClass}>
+                    <span class={_badgeLabelClass}>{_statusLabel}</span>
+                </div>
+                <div
+                    class="export-job-card__date dxp-text-body"
+                    lwc:if={_createdDate}>
+                    <span class="export-job-card__date-label">{_onDateLabel}</span>
+                    <lightning-formatted-date-time
+                        value={_createdDate}
+                        year="numeric"
+                        month="short"
+                        day="numeric"
+                        hour="2-digit"
+                        minute="2-digit"
+                        time-zone-name="short"></lightning-formatted-date-time>
+                </div>
+                <div
+                    class="export-job-card__deleted-info"
+                    lwc:if={_isCartDeleted}>
+                    <svg
+                        class="export-job-card__deleted-icon slds-m-right_xx-small"
+                        aria-hidden="true"
+                        focusable="false">
+                        <use href={_infoIconUrl}></use>
+                    </svg>
+                    <span>{_labels.cartDeletedInfo}</span>
+                </div>
+            </div>
+
+            <!-- Right: inline per-status actions -->
+            <div class="export-job-card__actions">
+                <!-- Download link: visible when status is Completed and a file exists -->
+                <a
+                    lwc:if={_showDownload}
+                    class="export-job-card__download slds-button slds-button_neutral"
+                    href={_downloadUrl}
+                    download
+                    aria-label={_downloadAssistiveText}
+                    onclick={handleDownload}>
+                    {_downloadButtonLabel}
+                </a>
+
+                <!-- Options menu: custom disclosure dropdown for terminal statuses -->
+                <div
+                    lwc:if={_showOptions}
+                    class="export-job-card__options"
+                    lwc:ref="optionsWrapper"
+                    onkeydown={handleKeyDown}
+                    onfocusout={handleFocusOut}>
+                    <div class="options-anchor">
+                        <button
+                            type="button"
+                            class="options-trigger"
+                            lwc:ref="optionsTrigger"
+                            aria-haspopup="true"
+                            aria-expanded={_ariaExpanded}
+                            aria-label={_labels.optionsButton}
+                            onclick={handleTriggerClick}>
+                            {_labels.optionsButton}
+                            <lightning-icon
+                                icon-name="utility:chevrondown"
+                                size="xx-small"
+                                class="options-trigger__chevron"
+                                alternative-text></lightning-icon>
+                        </button>
+                        <div
+                            lwc:if={_isOptionsOpen}
+                            class="options-dropdown">
+                            <button
+                                type="button"
+                                class="options-dropdown__item"
+                                lwc:ref="deleteOption"
+                                onclick={handleOptionSelect}>
+                                <svg
+                                    class="delete-icon"
+                                    aria-hidden="true"
+                                    focusable="false">
+                                    <use href={_trashIconUrl}></use>
+                                </svg>
+                                <span class="delete-label">{_deleteExportOptionLabel}</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancel button: visible for in-progress statuses -->
+                <button
+                    lwc:if={_showCancel}
+                    type="button"
+                    class="export-job-card__cancel"
+                    onclick={handleCancel}>
+                    {_cancelButtonLabel}
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

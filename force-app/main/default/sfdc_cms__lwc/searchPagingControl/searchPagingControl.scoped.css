@@ -1,10 +1,12 @@
 :host {
     display: block;
 }
+
 .pageControlPart {
     display: flex;
     justify-content: center;
 }
+
 .nav-button-current,
 .nav-direction,
 .nav-button {
@@ -18,9 +20,11 @@
     transition: 0.2s ease-out;
     line-height: 1.875rem;
 }
+
 .nav-button {
     border-style: none;
 }
+
 .range-symbol-container {
     text-align: center;
     width: 32px;

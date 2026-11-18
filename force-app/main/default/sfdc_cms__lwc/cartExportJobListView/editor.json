@@ -1,0 +1,91 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartExportJobListView",
+                "type": "component",
+                "attributes": {
+                    "cartExportJobListData": "{!CartExportJobList.List}"
+                },
+                "children": [
+                    {
+                        "name": "emptyBody",
+                        "title": "Empty Body",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_base:textBlock",
+                                "type": "component",
+                                "attributes": {
+                                    "text": "{!Label.Commerce_Cart_Export_Job_List.emptyMessage}",
+                                    "textDisplayInfo": "{\"headingTag\": \"h3\", \"textStyle\": \"heading-medium\"}",
+                                    "textDecoration": "{\"bold\": true}",
+                                    "textAlign": "center"
+                                }
+                            },
+                            {
+                                "definition": "dxp_base:button",
+                                "type": "component",
+                                "attributes": {
+                                    "text": "{!Label.Commerce_Cart_Export_Job_List.goToCartListButton}",
+                                    "url": "/carts"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "jobsRepeater",
+                        "title": "Jobs Repeater",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_content_layout:list",
+                                "type": "component",
+                                "attributes": {
+                                    "itemSpacing": "large",
+                                    "listType": "unformatted",
+                                    "showPagination": false
+                                },
+                                "children": [
+                                    {
+                                        "name": "sfdcRepeaterItem",
+                                        "title": "Repeater",
+                                        "type": "region",
+                                        "children": [
+                                            {
+                                                "definition": "site:cartExportJobCard",
+                                                "type": "component",
+                                                "attributes": {
+                                                    "cartExportJobData": "{!CartExportJob}",
+                                                    "exportDateLabel": "{!Label.Commerce_Cart_Export_Job_List.onDateLabel}",
+                                                    "downloadButtonLabel": "{!Label.Commerce_Cart_Export_Job_List.downloadButton}",
+                                                    "cancelExportLabel": "{!Label.Commerce_Cart_Export_Job_List.cancelButton}",
+                                                    "exportPillTextSize": "body-small",
+                                                    "exportPillBorderRadius": 8,
+                                                    "exportedPillLabel": "{!Label.Commerce_Cart_Export_Job_List.statusJobComplete}",
+                                                    "exportInProgressPillLabel": "{!Label.Commerce_Cart_Export_Job_List.statusInProgress}",
+                                                    "exportFailedPillLabel": "{!Label.Commerce_Cart_Export_Job_List.statusFailed}",
+                                                    "deleteButtonLabel": "{!Label.Commerce_Cart_Export_Job_List.deleteExportOption}"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "dataProviders": [
+                                    {
+                                        "definition": "sfdc_cms__expressionDataProvider",
+                                        "type": "dataProvider",
+                                        "sfdcExpressionKey": "CartExportJob",
+                                        "attributes": {
+                                            "listSource": "{!CartExportJobList.List.jobs}"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

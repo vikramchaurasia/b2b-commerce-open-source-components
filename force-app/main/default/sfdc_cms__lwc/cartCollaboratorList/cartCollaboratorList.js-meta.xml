@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+  <masterLabel>Cart Collaborator Count</masterLabel>
+  <description>Shows the total number of collaborators who have access to the cart.</description>
+  <apiVersion>67</apiVersion>
+  <isExposed>true</isExposed>
+  <capabilities>
+    <capability>lightning__ServerRenderableWithHydration</capability>
+  </capabilities>
+  <targets>
+    <target>lightningCommunity__Page</target>
+    <target>lightningCommunity__Default</target>
+  </targets>
+  <targetConfigs>
+    <targetConfig targets="lightningCommunity__Page">
+      <paletteSection>Open Code</paletteSection>
+    </targetConfig>
+    <targetConfig targets="lightningCommunity__Default">
+      <property name="cartDetails" label="Cart Details Expression" type="String" default="{!Cart.Details}"></property>
+      <property name="sharedWithOthersFullLabel" label="Shared with Others Field Label" type="String" default="Shared with {0} others" translatable="true"></property>
+      <property name="sharedWithOneOtherLabel" label="Shared with One Other Label" type="String" default="Shared with 1 other" translatable="true"></property>
+      <property name="collaboratorsCountLabel" label="Collaborators Count Field Label" type="String" default="{0} Collaborators" translatable="true"></property>
+      <property name="variant" label="Button Variant" type="String" default="bare" datasource="container,border,bare,border-filled"></property>
+      <property name="buttonTextColor" label="Button Text Color" type="Color"></property>
+      <property name="buttonTextHoverColor" label="Button Text Hover Color" type="Color"></property>
+      <property name="buttonBackgroundColor" label="Button Background Color" type="Color"></property>
+      <property name="buttonBackgroundHoverColor" label="Button Background Hover Color" type="Color"></property>
+      <property name="buttonBorderColor" label="Button Border Color" type="Color"></property>
+      <designLayout>
+        <designSection>
+          <designLayoutItems>
+            <designLayoutProperty name="cartDetails"></designLayoutProperty>
+            <designLayoutProperty name="sharedWithOthersFullLabel"></designLayoutProperty>
+            <designLayoutProperty name="sharedWithOneOtherLabel"></designLayoutProperty>
+            <designLayoutProperty name="collaboratorsCountLabel"></designLayoutProperty>
+            <designLayoutProperty name="variant"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonTextHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBackgroundHoverColor"></designLayoutProperty>
+            <designLayoutProperty name="buttonBorderColor"></designLayoutProperty>
+          </designLayoutItems>
+        </designSection>
+      </designLayout>
+    </targetConfig>
+  </targetConfigs>
+</LightningComponentBundle>

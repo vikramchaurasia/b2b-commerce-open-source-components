@@ -1,10 +1,13 @@
 import { LightningElement, api, wire } from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 import { CartContentsAdapter, CartStatusAdapter } from 'commerce/checkoutCartApi';
 import currency from '@salesforce/i18n/currency';
 import { LAYOUT_LABEL_AND_TOTAL_PRICE } from './constants';
-import { SessionContextAdapter } from 'commerce/contextApi';
+import { AppContextAdapter, CartConfigurationContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
 import { generateStyleProperties } from 'experience/styling';
-import { AppContextAdapter } from 'commerce/contextApi';
+import { isCartLocked, isLockHolder, shouldRestrictOwnerActions, getCurrentUserAccessLevel } from 'site/cartDetailsCardUtils';
+import { hasActiveAsyncOperationFromWires } from 'site/commonUtils';
+import { asNonEmptyString } from './utils';
 export { LAYOUT_LABEL, LAYOUT_LABEL_AND_TOTAL_PRICE } from './constants';
 export default class CheckoutButton extends LightningElement {
   static renderMode = 'light';
@@ -37,7 +40,23 @@ export default class CheckoutButton extends LightningElement {
   get hasProducts() {
     return Number(this.cartSummary?.totalProductCount) > 0;
   }
-  @wire(CartContentsAdapter)
+  get showButton() {
+    return this.hasProducts && !this.isRestrictedCollaborator;
+  }
+  _currentPageReference;
+  get effectiveCartId() {
+    const cartIdFromRecordId = asNonEmptyString(this._currentPageReference?.state?.recordId);
+    return cartIdFromRecordId ?? 'current';
+  }
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
   cartContentsEntry;
   get cartSummary() {
     return this.cartContentsEntry?.data?.cartSummary;
@@ -47,6 +66,11 @@ export default class CheckoutButton extends LightningElement {
   @wire(SessionContextAdapter)
   sessionContext;
   _managedCheckoutVersion;
+  @wire(CartConfigurationContextAdapter)
+  _cartConfiguration;
+  get _isShareCartEnabled() {
+    return Boolean(this._cartConfiguration?.data?.shareCart?.isEnabled);
+  }
   @wire(AppContextAdapter)
   appContextHandler(response) {
     if (response.data && response?.data?.checkoutSettings) {
@@ -87,8 +111,29 @@ export default class CheckoutButton extends LightningElement {
     }
     return undefined;
   }
+  get _hasActiveAsyncOperation() {
+    return hasActiveAsyncOperationFromWires(this.cartStatusHandler?.data, this.cartSummary);
+  }
+  get isGuest() {
+    return this.sessionContext?.data?.isLoggedIn === false;
+  }
+  get isRestrictedCollaborator() {
+    if (!this._isShareCartEnabled) {
+      return false;
+    }
+    if (this.isGuest) {
+      return false;
+    }
+    if (!shouldRestrictOwnerActions(this.cartSummary, this.sessionContext?.data?.userId)) {
+      return false;
+    }
+    return getCurrentUserAccessLevel(this.cartSummary, this.sessionContext?.data?.userId) !== 'Checkout';
+  }
+  get isLockedForViewer() {
+    return isCartLocked(this.cartSummary) && !isLockHolder(this.cartSummary, this.sessionContext?.data?.userId);
+  }
   get isDisabled() {
-    return !this.hasProducts || this.isCartProcessing || this.cartHasError || this.cartStatusHandler?.data?.isReadyForCheckout === false;
+    return !this.hasProducts || this.isCartProcessing || this.cartHasError || this.cartStatusHandler?.data?.isReadyForCheckout === false || this._hasActiveAsyncOperation || this.isLockedForViewer;
   }
   get buttonStyle() {
     const styles = [{

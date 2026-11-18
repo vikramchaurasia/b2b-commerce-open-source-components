@@ -1,0 +1,23 @@
+{
+  "type" : "sfdc_cms__label",
+  "title" : "cartImportModal",
+  "contentBody" : {
+    "labels" : [ {
+      "name" : "importCartHeader",
+      "value" : "Import Cart"
+    }, {
+      "name" : "importingSpinnerText",
+      "value" : "Importing cart items..."
+    }, {
+      "name" : "cancelButtonLabel",
+      "value" : "Cancel"
+    }, {
+      "name" : "startImportButtonLabel",
+      "value" : "Start Import"
+    }, {
+      "name" : "importFailedError",
+      "value" : "We couldn't start the import. Try again."
+    } ]
+  },
+  "urlName" : "cartimportmodal"
+}

@@ -1,0 +1,34 @@
+<template lwc:render-mode="light">
+    <!-- Only shared carts have collaborator activity to surface, so the trigger
+         is hidden entirely for private carts. -->
+    <template lwc:if={isShared}>
+        <!-- Rendered through the shared site/commonButtonUi building block so the
+             Checkout-parity styling properties (variant, size, width, alignment, and
+             the color/border custom properties) are honored identically. The dialog
+             disclosure semantics are preserved via popup-type / expanded, which the
+             building block forwards to its inner button. -->
+        <site-common-button-ui
+            variant={variant}
+            size={size}
+            width={width}
+            alignment={alignment}
+            style={buttonStyle}
+            popup-type="dialog"
+            expanded={displayPanel}
+            data-automation="cart-audit-history-button"
+            lwc:ref="trigger"
+            onclick={handleOpen}>
+            <span class="cart-audit-history-button__label">{displayLabel}</span>
+            <lightning-icon
+                class="cart-audit-history-button__chevron"
+                icon-name="utility:chevronright"
+                size="x-small"
+                alternative-text></lightning-icon>
+        </site-common-button-ui>
+        <template lwc:if={displayPanel}>
+            <site-cart-audit-history-panel
+                cart-id={cartId}
+                onclose={handleClose}></site-cart-audit-history-panel>
+        </template>
+    </template>
+</template>

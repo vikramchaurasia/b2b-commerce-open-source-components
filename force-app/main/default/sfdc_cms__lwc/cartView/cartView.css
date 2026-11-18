@@ -1,0 +1,4 @@
+.sort-container lightning-combobox.sort-menu.slds-form-element:not(.slds-has-error) {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}

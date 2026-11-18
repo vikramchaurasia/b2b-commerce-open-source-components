@@ -1,0 +1,63 @@
+<template lwc:render-mode="light">
+    <!-- Loading spinner until the dispatched ACTION_CART_EXPORT_JOBS_LOAD settles. -->
+    <div
+        lwc:if={_showLoading}
+        class="export-job-list-loading"
+        role="status"
+        aria-live="polite">
+        <lightning-spinner
+            alternative-text={_labels.loadingJobs}
+            size="medium"></lightning-spinner>
+    </div>
+
+    <!-- Empty state: illustration + emptyBody slot. `inert` withdraws it while the overlay is on top. -->
+    <div
+        lwc:elseif={_showSlotEmptyState}
+        inert={_backgroundInert}>
+        <div class="slds-align_absolute-center slds-p-top_xx-large slds-p-bottom_medium export-job-list-empty-image">
+            <img
+                src={_emptySvg}
+                alt />
+        </div>
+        <div class="export-job-list-empty-body">
+            <slot name="emptyBody"></slot>
+        </div>
+    </div>
+
+    <!-- Error state when the dispatched load rejects. -->
+    <div
+        lwc:elseif={_hasError}
+        role="alert"
+        class="slds-m-around_medium slds-text-align_center"
+        inert={_backgroundInert}>
+        <div
+            class="slds-p-top_x-small slds-align_absolute-center slds-text-align_center slds-text-heading_small export-job-list-error">
+            <p>
+                <lightning-formatted-rich-text value={_labels.loadErrorMessage}></lightning-formatted-rich-text>
+            </p>
+        </div>
+    </div>
+
+    <!-- Repeater slot for the job list. Listens for card delete/cancel events to restore focus and reload. -->
+    <div
+        lwc:if={_showRepeater}
+        class="export-job-list-repeater"
+        oncartexportjobdeleted={handleJobDeleted}
+        oncartexportjobcancelled={handleJobCancelled}
+        inert={_backgroundInert}>
+        <slot name="jobsRepeater"></slot>
+    </div>
+
+    <!-- Full-screen overlay while a cancel/delete/delete-all and its refresh are in flight. -->
+    <div
+        lwc:if={_showMutationOverlay}
+        class="export-job-list-mutation-overlay slds-spinner_container"
+        role="status"
+        aria-live="polite"
+        aria-busy="true">
+        <!-- Uses default spinner variant (no variant attr) to match site-wide spinners -->
+        <lightning-spinner
+            alternative-text={_labels.processingJobs}
+            size="large"></lightning-spinner>
+    </div>
+</template>

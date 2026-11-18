@@ -2,9 +2,8 @@
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
   <apiVersion>67</apiVersion>
   <isExposed>true</isExposed>
-  <masterLabel>Cart Lock</masterLabel>
-  <description>Shows a banner on a shared cart while another user is checking out. For use on the cart list and cart detail
-        pages.</description>
+  <masterLabel>Cart Lock Status</masterLabel>
+  <description>Shows cart lock status during cart collaboration and on the Cart Detail page, shows the user who is checking out the cart.</description>
   <capabilities>
     <capability>lightning__ServerRenderableWithHydration</capability>
   </capabilities>

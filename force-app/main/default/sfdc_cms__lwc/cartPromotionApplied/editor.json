@@ -1,0 +1,48 @@
+{
+    "presets": [
+        {
+            "view": {
+                "definition": "site:cartPromotionApplied",
+                "type": "component",
+                "children": [
+                    {
+                        "name": "termsAndConditions",
+                        "title": "Terms & Conditions",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "dxp_base:button",
+                                "type": "component",
+                                "attributes": {
+                                    "text": "Terms & Conditions",
+                                    "size": "standard",
+                                    "type": "tertiary",
+                                    "alignment": "left",
+                                    "url": ""
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "discountAmount",
+                        "title": "Discount Amount",
+                        "type": "region",
+                        "children": [
+                            {
+                                "definition": "commerce_builder:formattedCurrency",
+                                "type": "component",
+                                "attributes": {
+                                    "value": "{!Promotion.discountAmount}",
+                                    "currencyCode": "{!Cart.Details.currencyIsoCode}",
+                                    "displayAs": "symbol",
+                                    "textDisplayInfo": "{\"headingTag\": \"p\", \"textStyle\": \"body-regular\"}",
+                                    "paddingVertical": "xx-small"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

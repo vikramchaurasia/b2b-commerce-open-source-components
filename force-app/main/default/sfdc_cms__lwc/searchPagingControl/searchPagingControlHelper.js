@@ -55,3 +55,18 @@ export function generatePagesForRange(currentPage, totalPage, maxPageButtons) {
   });
   return pageRange;
 }
+export function generateSlidingWindowPages(currentPage, totalPage) {
+  const start = Math.max(1, Math.min(currentPage - 2, totalPage - 4));
+  const end = Math.min(totalPage, 5);
+  return Array.from({
+    length: end
+  }, (_, i) => {
+    const pageNum = start + i;
+    return {
+      id: pageNum,
+      pageNumber: pageNum,
+      isCurrentPage: pageNum === currentPage,
+      isRange: false
+    };
+  });
+}

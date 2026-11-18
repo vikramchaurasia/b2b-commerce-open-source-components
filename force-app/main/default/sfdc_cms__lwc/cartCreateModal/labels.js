@@ -16,6 +16,10 @@ import editCartSpinnerHelpText from '@salesforce/label/site.cartCreateModal.edit
 import cartNameMandatoryErrorMessage from '@salesforce/label/site.cartCreateModal.cartNameMandatoryErrorMessage';
 import cartNameInvalidCharactersErrMsg from '@salesforce/label/site.cartCreateModal.cartNameInvalidCharactersErrMsg';
 import cartDescInvalidCharactersErrMsg from '@salesforce/label/site.cartCreateModal.cartDescInvalidCharactersErrMsg';
+import finishAndCreateButton from '@salesforce/label/site.cartCreateModal.finishAndCreateButton';
+import createWithoutImportButton from '@salesforce/label/site.cartCreateModal.createWithoutImportButton';
+import createCartWithImportSuccessMessage from '@salesforce/label/site.cartCreateModal.createCartWithImportSuccessMessage';
+import importFailedError from '@salesforce/label/site.cartCreateModal.importFailedError';
 export default {
   createNewCartHeader,
   editCartConfirmTitle,
@@ -34,5 +38,9 @@ export default {
   editCartSpinnerHelpText,
   cartNameMandatoryErrorMessage,
   cartNameInvalidCharactersErrMsg,
-  cartDescInvalidCharactersErrMsg
+  cartDescInvalidCharactersErrMsg,
+  finishAndCreateButton,
+  createWithoutImportButton,
+  createCartWithImportSuccessMessage,
+  importFailedError
 };

@@ -1,16 +1,38 @@
-import { api, LightningElement } from 'lwc';
+import { api, LightningElement, wire } from 'lwc';
 import labels from './labels';
 import { COUPON_APPLY_EVENT, VALUE_CHANGED_EVENT, ENTER_COUPON_ACTION_EVENT } from './constants';
 import { debounce } from 'experience/utils';
 import { getThemeVersion } from 'site/checkoutData';
+import { CartContentsAdapter } from 'commerce/checkoutCartApi';
 export { COUPON_APPLY_EVENT };
 const DEFAULT_THEME_VERSION = 2;
 export const applyCouponInputLocator = '.coupon-code-input';
 export default class CartApplyCouponUi extends LightningElement {
   static renderMode = 'light';
+  @api
+  cartId = 'current';
+  @wire(CartContentsAdapter, {
+    cartId: '$cartId'
+  })
+  cartContentsEntry;
   _revealButtonClicked = false;
   @api
   showRevealButton = false;
+  @api
+  lockedForViewer = false;
+  get hasQuoteLineItemsInCart() {
+    if (!this.cartContentsEntry || this.cartContentsEntry.loading) {
+      return true;
+    }
+    const cartItems = this.cartContentsEntry.data?.cartItems;
+    if (!Array.isArray(cartItems)) {
+      return false;
+    }
+    return cartItems.some(itemSummary => itemSummary?.cartItem?.quoteLineItemId != null && itemSummary.cartItem.quoteLineItemId !== '');
+  }
+  get quoteItemsPromotionsDisabledText() {
+    return labels.quoteItemsPromotionsDisabledText;
+  }
   @api
   applyCouponButtonText;
   @api
@@ -19,6 +41,9 @@ export default class CartApplyCouponUi extends LightningElement {
   couponInputText;
   @api
   disableApplyCouponButton = false;
+  get isApplyCouponButtonDisabled() {
+    return this.disableApplyCouponButton || this.isCouponDisabledForQuotedCartItems;
+  }
   @api
   errorMessage;
   couponInput;
@@ -48,6 +73,9 @@ export default class CartApplyCouponUi extends LightningElement {
     if (this.showInputForm) {
       classes.push('slds-hide');
     }
+    if (this.hasQuoteLineItemsInCart || this.lockedForViewer) {
+      classes.push('disabled-reveal-button');
+    }
     return classes.join(' ');
   }
   get couponInputContainerClasses() {
@@ -55,6 +83,15 @@ export default class CartApplyCouponUi extends LightningElement {
   }
   get showInputForm() {
     return this.showRevealButton && this._revealButtonClicked || !this.showRevealButton;
+  }
+  get isCouponDisabledForQuotedCartItems() {
+    return !this.showRevealButton && this.hasQuoteLineItemsInCart;
+  }
+  get isCouponInputDisabled() {
+    return this.isCouponDisabledForQuotedCartItems || this.lockedForViewer;
+  }
+  get showRevealButtonWithQuoteItems() {
+    return this.showRevealButton && this.hasQuoteLineItemsInCart;
   }
   get hasError() {
     return this.isInvalid;
@@ -81,6 +118,9 @@ export default class CartApplyCouponUi extends LightningElement {
     this.focusInput();
   }, 100);
   handleRevealButtonClick() {
+    if (this.hasQuoteLineItemsInCart || this.lockedForViewer) {
+      return;
+    }
     this._focusOnReveal();
     this._revealButtonClicked = true;
   }
@@ -102,5 +142,9 @@ export default class CartApplyCouponUi extends LightningElement {
   }
   renderedCallback() {
     this.couponInput = this.refs.couponInput;
+    const revealButton = this.refs?.revealButton;
+    if (revealButton) {
+      revealButton.inert = this.lockedForViewer;
+    }
   }
 }
