@@ -95,7 +95,7 @@
                                                         "type": "region",
                                                         "children": [
                                                             {
-                                                                "definition": "commerce_builder:requestQuoteButton",
+                                                                "definition": "site:cartListRequestQuoteButton",
                                                                 "type": "component",
                                                                 "attributes": {
                                                                     "cartSummaryData": "{!CartSummary}"
@@ -109,7 +109,7 @@
                                                         "type": "region",
                                                         "children": [
                                                             {
-                                                                "definition": "commerce_builder:cartOptions",
+                                                                "definition": "site:cartOptions",
                                                                 "type": "component",
                                                                 "attributes": {
                                                                     "cartData": "{!CartSummary}"
