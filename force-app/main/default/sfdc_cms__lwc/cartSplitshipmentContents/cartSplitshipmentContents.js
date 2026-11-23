@@ -12,7 +12,7 @@ import { generateDeliveryGroupName } from './utils';
 import { addressModalDescriptionLabel, shipmentModalDescriptionLabel, genericApiErrorMessage, splitShipAddressModalHeading, saveNewShipmentLabel } from './labels';
 import Toast from 'site/commonToast';
 import EmptyShipmentModal from 'site/checkoutEmptyshipmentModal';
-import { NavigationContext, CurrentPageReference, navigate } from 'lightning/navigation';
+import { NavigationContext, navigate } from 'lightning/navigation';
 export const OPEN_ADDRESS_MODAL_EVENT = 'openaddressmodal';
 export const OPEN_NEW_SHIPMENT_MODAL_EVENT = 'opennewshipmentmodal';
 export default class CartSplitshipmentContents extends LightningElement {
@@ -33,8 +33,6 @@ export default class CartSplitshipmentContents extends LightningElement {
   }
   @wire(NavigationContext)
   _navigationContext;
-  @wire(CurrentPageReference)
-  _currentPageReference;
   get _currencyIsoCode() {
     const cartCurrency = this.products?.[0].currencyIsoCode;
     return cartCurrency || this._defaultCurrencyIsoCode;
@@ -296,18 +294,12 @@ export default class CartSplitshipmentContents extends LightningElement {
     }
   }
   navigateToCartPage() {
-    if (this._navigationContext) {
-      const recordId = this._currentPageReference?.state?.recordId;
-      navigate(this._navigationContext, {
-        type: 'comm__namedPage',
-        attributes: {
-          name: 'Current_Cart'
-        },
-        state: recordId ? {
-          recordId
-        } : undefined
-      });
-    }
+    this._navigationContext && navigate(this._navigationContext, {
+      type: 'comm__namedPage',
+      attributes: {
+        name: 'Current_Cart'
+      }
+    });
   }
   handleSplitShipGoToPage(event) {
     dispatchAction(this, createSplitShipmentPageLoadAction(event.detail.pageNumber, event.detail.pageSize));

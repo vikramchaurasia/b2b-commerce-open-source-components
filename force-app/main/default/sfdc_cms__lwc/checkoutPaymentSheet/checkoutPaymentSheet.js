@@ -3,7 +3,7 @@ import { CheckoutComponentBase, postAuthorizePayment, CheckoutStatus, processShi
 import { CheckoutStage } from 'commerce/checkoutApi';
 import { CheckoutStencilType } from 'site/checkoutStencil';
 import { AppContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
-import { CurrentPageReference, generateUrl, NavigationContext } from 'lightning/navigation';
+import { generateUrl, NavigationContext } from 'lightning/navigation';
 import currency from '@salesforce/i18n/currency';
 import requiredFieldError from '@salesforce/label/site.checkoutPaymentSheet.requiredFieldError';
 import duplicateUserError from '@salesforce/label/site.checkoutPaymentSheet.duplicateUserError';
@@ -209,13 +209,6 @@ export default class CheckoutPaymentSheet extends CheckoutComponentBase {
       this.paymentDataUpdate();
     });
   }
-  _currentPageReference;
-  @wire(CurrentPageReference)
-  wireCurrentPageReference(pageRef) {
-    if (pageRef) {
-      this._currentPageReference = pageRef;
-    }
-  }
   get _paymentRedirectUrl() {
     if (this.navigationContext) {
       if (this.isPayNowInvoice()) {
@@ -223,14 +216,7 @@ export default class CheckoutPaymentSheet extends CheckoutComponentBase {
       }
       const paymentProcessingPath = generateUrl(this.navigationContext, paymentProcessingPageRef);
       const url = new URL(window.location.origin + paymentProcessingPath);
-      const recordId = this._currentPageReference?.state?.recordId;
-      if (typeof recordId === 'string' && recordId) {
-        url.searchParams.append('recordId', recordId);
-        const checkoutId = this._checkoutDetails?.checkoutId;
-        if (checkoutId) {
-          url.searchParams.append('checkoutId', checkoutId);
-        }
-      } else if (this._cartId) {
+      if (this._cartId) {
         url.searchParams.append('cartId', this._cartId);
       }
       return url.toString();
