@@ -11,6 +11,7 @@ import { ProductErrors } from 'site/commerceErrors';
 import { createCartItemAddAction, createProductQuantityUpdateAction, createWishlistItemAddAction, dispatchAction } from 'commerce/actionApi';
 const GUEST_INSUFFICIENT_ACCESS = 'GUEST_INSUFFICIENT_ACCESS';
 const INSUFFICIENT_ACCESS = 'INSUFFICIENT_ACCESS';
+const SELLING_MODEL_TYPE_TERM_DEFINED = 'TermDefined';
 
 /**
  * @slot combinedPurchaseQuantityRuleInfo
@@ -174,11 +175,14 @@ export default class ProductPurchaseOptions extends LightningElement {
       '--com-c-button-radius-border': this.addToListButtonBorderRadius ? this.addToListButtonBorderRadius + 'px' : 'initial'
     });
   }
+  get isSubscriptionTermMissing() {
+    return this.selectedProductSellingModel?.detail?.sellingModelType === SELLING_MODEL_TYPE_TERM_DEFINED && !this.selectedProductSellingModel?.subscriptionTerm;
+  }
   get isAddToCartButtonDisabled() {
     if (isPreviewMode) {
       return false;
     }
-    return this.isCartProcessing || !this.productPricing || Object.keys(this.productPricing).length === 0 || this.productVariant?.isValid === false || this.product?.productClass === 'VariationParent' || (this.product?.productSellingModels?.length ?? 0) > 0 && !this.selectedProductSellingModel;
+    return this.isCartProcessing || !this.productPricing || Object.keys(this.productPricing).length === 0 || this.productVariant?.isValid === false || this.product?.productClass === 'VariationParent' || (this.product?.productSellingModels?.length ?? 0) > 0 && (!this.selectedProductSellingModel || this.isSubscriptionTermMissing);
   }
   handleAddToCart({
     detail,
@@ -268,6 +272,12 @@ export default class ProductPurchaseOptions extends LightningElement {
       return subscriptionPlusEnabled === true || rlmSubscriptionEnabled === true;
     }
     return false;
+  }
+  get displayOrderTemplateButton() {
+    return !!this.showOrderTemplateButton && this.isProductLoaded;
+  }
+  get isAddToOrderTemplateButtonDisabled() {
+    return this.isAddToSecondaryCartMenuDisabled;
   }
   get displayOrderTemplateButton() {
     return !!this.showOrderTemplateButton && this.isProductLoaded;

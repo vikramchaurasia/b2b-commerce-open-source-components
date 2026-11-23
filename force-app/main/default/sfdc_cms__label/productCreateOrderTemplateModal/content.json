@@ -46,25 +46,25 @@
       "value" : "Description cannot exceed {maxLength} characters"
     }, {
       "name" : "createSuccessMessage",
-      "value" : "\"{templateName}\" has been created"
+      "value" : "\"{templateName}\" was created."
     }, {
       "name" : "createAndAddSuccessToast",
-      "value" : "Order Template created. Product added."
+      "value" : "\"{templateName}\" was created, and {productName} was added to it."
     }, {
       "name" : "createFailureMessage",
-      "value" : "Failed to create template. Please try again."
+      "value" : "We couldn't create \"{templateName}\". Try again."
     }, {
       "name" : "editSuccessMessage",
-      "value" : "\"{templateName}\" has been updated"
+      "value" : "\"{templateName}\" was updated."
     }, {
       "name" : "editFailureMessage",
-      "value" : "Failed to update template. Please try again."
+      "value" : "We couldn't update \"{templateName}\". Try again."
     }, {
       "name" : "addToOrderTemplateSuccessToast",
-      "value" : "{0} was added to {1}"
+      "value" : "{0} added to \"{1}\""
     }, {
       "name" : "addToOrderTemplateFailureToast",
-      "value" : "Failed to add {0} to {1}"
+      "value" : "We couldn't add \"{0}\" to \"{1}\". Try again."
     } ]
   },
   "urlName" : "productcreateordertemplatemodal"

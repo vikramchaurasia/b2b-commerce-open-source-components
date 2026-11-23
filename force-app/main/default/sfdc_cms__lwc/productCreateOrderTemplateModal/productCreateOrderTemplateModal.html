@@ -4,7 +4,7 @@
     <lightning-modal-body>
         <div
             lwc:if={_isNotLoading}
-            class="slds-p-top_medium slds-p-left_medium slds-p-right_medium">
+            class="create-template-modal-body">
             <lightning-input
                 data-name="name"
                 label={_templateNameLabel}
@@ -20,17 +20,18 @@
                 label={_descriptionLabel}
                 value={templateDescription}
                 onchange={handleDescriptionChange}
+                onblur={handleDescriptionBlur}
                 data-validate="true"></lightning-textarea>
         </div>
         <div
             lwc:else
             class="modal-contents slds-p-vertical_x-large">
-            <div class="spinner-loading-group">
-                <div class="spinner-container">
-                    <lightning-spinner alternative-text={_spinnerHelpText}></lightning-spinner>
-                </div>
-                <div class="slds-text-align_center slds-text-heading_small">{_spinnerHelpText}</div>
+            <div class="slds-align_absolute-center slds-is-relative spinner-container">
+                <lightning-spinner
+                    aria-hidden="true"
+                    alternative-text={_spinnerHelpText}></lightning-spinner>
             </div>
+            <h2 class="slds-text-align_center slds-text-heading_small">{_spinnerHelpText}</h2>
         </div>
     </lightning-modal-body>
 

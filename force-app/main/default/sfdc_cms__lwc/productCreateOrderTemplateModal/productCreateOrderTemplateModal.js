@@ -107,6 +107,15 @@ export default class ProductCreateOrderTemplateModal extends LightningModal {
     this._description = event?.target?.value || '';
     this._isSaveButtonDisabled = false;
   }
+  handleDescriptionBlur() {
+    const textarea = this.template?.querySelector('lightning-textarea');
+    if (textarea) {
+      const {
+        isDescriptionValid
+      } = this.validateDescriptionField(textarea);
+      this._isSaveButtonDisabled = !isDescriptionValid;
+    }
+  }
   async handleSave() {
     const input = this.template?.querySelector('lightning-input');
     const textarea = this.template?.querySelector('lightning-textarea');
@@ -189,11 +198,12 @@ export default class ProductCreateOrderTemplateModal extends LightningModal {
           }
         });
         const displayName = this.getDisplayName(nameValue);
-        const successMsg = LABELS.editSuccessMessage.replace('{templateName}', displayName);
+        const successMsg = LABELS.editSuccessMessage.replace('{templateName}', () => displayName);
         Toast.show({
           label: successMsg,
           variant: 'success'
         }, this);
+        this.reloadWishlistList();
       } else {
         if (!this._createdWishlistId) {
           const result = await createWishlist({
@@ -204,8 +214,10 @@ export default class ProductCreateOrderTemplateModal extends LightningModal {
           });
           const newWishlistId = result?.summary?.id;
           if (!newWishlistId) {
+            const displayName = this.getDisplayName(nameValue);
+            const failureMsg = LABELS.createFailureMessage.replace('{templateName}', () => displayName);
             Toast.show({
-              label: LABELS.createFailureMessage,
+              label: failureMsg,
               variant: 'error'
             }, this);
             return;
@@ -247,18 +259,13 @@ export default class ProductCreateOrderTemplateModal extends LightningModal {
           label: this.getCreateSuccessMessage(templateName),
           variant: 'success'
         }, this);
-        if (typeof document !== 'undefined') {
-          document.dispatchEvent(new CustomEvent('reloadWishlistList', {
-            bubbles: true,
-            composed: true
-          }));
-        }
+        this.reloadWishlistList();
         this.close(ProductCreateOrderTemplateModal.DISMISSAL.success);
         return;
       }
       this.close(ProductCreateOrderTemplateModal.DISMISSAL.success);
     } catch {
-      const errorMsg = this.getSaveErrorMessage();
+      const errorMsg = this.getSaveErrorMessage(nameValue);
       Toast.show({
         label: errorMsg,
         variant: 'error'
@@ -272,19 +279,31 @@ export default class ProductCreateOrderTemplateModal extends LightningModal {
   }
   getCreateSuccessMessage(templateName) {
     if (this.productId) {
-      return LABELS.createAndAddSuccessToast;
+      const values = {
+        templateName: this.getDisplayName(templateName),
+        productName: this.getDisplayName(this.productName ?? '')
+      };
+      return LABELS.createAndAddSuccessToast.replace(/\{(templateName|productName)\}/g, (_match, key) => values[key]);
     }
-    return LABELS.createSuccessMessage.replace('{templateName}', this.getDisplayName(templateName));
+    return LABELS.createSuccessMessage.replace('{templateName}', () => this.getDisplayName(templateName));
   }
-  getSaveErrorMessage() {
+  getSaveErrorMessage(templateName) {
     if (this.mode === 'edit') {
-      return LABELS.editFailureMessage;
+      return LABELS.editFailureMessage.replace('{templateName}', () => this.getDisplayName(templateName));
     }
     const productName = this.getDisplayName(this.productName ?? '');
     if (this._createdWishlistId && this.productId && productName) {
       return ProductCreateOrderTemplateModal.formatMessage(LABELS.addToOrderTemplateFailureToast, productName, this.getDisplayName(this._createdWishlistName));
     }
-    return LABELS.createFailureMessage;
+    return LABELS.createFailureMessage.replace('{templateName}', () => this.getDisplayName(templateName));
+  }
+  reloadWishlistList() {
+    if (typeof document !== 'undefined') {
+      document.dispatchEvent(new CustomEvent('reloadWishlistList', {
+        bubbles: true,
+        composed: true
+      }));
+    }
   }
   getDisplayName(name) {
     if (name.length > ProductCreateOrderTemplateModal.MAX_NAME_DISPLAY_LENGTH) {

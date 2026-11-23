@@ -3,10 +3,10 @@ import { navigate, NavigationContext } from 'lightning/navigation';
 import { SessionContextAdapter } from 'commerce/contextApi';
 import { createWishlistsGetAction, createWishlistItemAddAction, dispatchAction } from 'commerce/actionApi';
 import ProductCreateOrderTemplateModal from 'site/productCreateOrderTemplateModal';
-import { MAX_ORDER_TEMPLATES, CREATE_NEW_TEMPLATE_VALUE } from './constants';
+import { MAX_ORDER_TEMPLATES, CREATE_NEW_TEMPLATE_VALUE, ORDER_TEMPLATES_SORT_ORDER } from './constants';
 import { addToOrderTemplate, addToOrderTemplateSuccessToast, addToOrderTemplateFailureToast, fetchOrderTemplatesNoResult, fetchOrderTemplatesErrorLine1, fetchOrderTemplatesErrorLine2, fetchOrderTemplatesLoading, createNewTemplate, itemsLabel, itemSingularLabel, openModalError, configurableProductError } from './labels';
 import { getTemplateMenuLabel, getOrderTemplateCountByType, getTruncatedName, showOrderTemplateSuccessToast, showOrderTemplateErrorToast, formatMessage } from './utils';
-export { MAX_ORDER_TEMPLATES, MAX_NAME_LENGTH, TRAILING_DOTS, CREATE_NEW_TEMPLATE_VALUE, DISALLOWED_TEMPLATE_FIELD_CHARACTERS, MAX_TEMPLATE_NAME_LENGTH, MAX_TEMPLATE_DESCRIPTION_LENGTH } from './constants';
+export { MAX_ORDER_TEMPLATES, MAX_NAME_LENGTH, TRAILING_DOTS, CREATE_NEW_TEMPLATE_VALUE, DISALLOWED_TEMPLATE_FIELD_CHARACTERS, MAX_TEMPLATE_NAME_LENGTH, MAX_TEMPLATE_DESCRIPTION_LENGTH, ORDER_TEMPLATES_SORT_ORDER } from './constants';
 export { getTemplateMenuLabel, getTruncatedName, showOrderTemplateErrorToast } from './utils';
 export default class ProductAddToOrderTemplate extends LightningElement {
   static renderMode = 'light';
@@ -88,7 +88,9 @@ export default class ProductAddToOrderTemplate extends LightningElement {
   }
   populateOrderTemplateMenuItems() {
     this._isMenuPopulated = false;
-    dispatchAction(this, createWishlistsGetAction(), {
+    dispatchAction(this, createWishlistsGetAction({
+      sortItemsBy: ORDER_TEMPLATES_SORT_ORDER
+    }), {
       onSuccess: data => {
         const summaries = data?.summaries ?? [];
         const shouldShowItemCount = this.showItemCount !== false;

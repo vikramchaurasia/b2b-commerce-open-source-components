@@ -1,21 +1,33 @@
+/* lightning-modal-body has 16px padding by default. Add 8px for a 24px desktop
+   total; drop the extra on mobile for a 16px total. Matches exportCartModal. */
+.create-template-modal-body {
+    padding: 8px;
+}
+
+@media (max-width: 30em) {
+    .create-template-modal-body {
+        padding: 0;
+    }
+}
+
+.create-template-modal-body lightning-textarea.slds-form-element:not(.slds-has-error) {
+    padding-bottom: 0;
+}
+
+/* Loading/saving state — identical to exportCartModal so every 264 Cart-options
+   modal shares the same spinner block (1.5rem gap, 2.25rem spinner, 3rem vertical
+   padding via slds-p-vertical_x-large in the template). slds-text-heading_small
+   carries no font-weight, so the status text renders at the regular 400 weight
+   per the loader guideline. */
 .modal-contents {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 1.5rem;
 }
 
-/* Tight, mock-aligned spacing between spinner and status text (matches createCartModal). */
-.spinner-loading-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--dxp-g-spacing-x-small, 0.5rem);
-}
-
-.spinner-loading-group .spinner-container {
-    min-height: auto;
-    display: flex;
-    justify-content: center;
+.spinner-container {
+    width: 2.25rem;
+    height: 2.25rem;
 }
 
 .footer-content-container {
