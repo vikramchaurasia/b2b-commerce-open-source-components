@@ -1,8 +1,9 @@
 import { LightningElement, api, wire } from 'lwc';
+import { isDesignMode } from 'experience/clientApi';
 import { CurrentPageReference } from 'lightning/navigation';
 import { CartContentsAdapter, CartStatusAdapter } from 'commerce/checkoutCartApi';
 import currency from '@salesforce/i18n/currency';
-import { LAYOUT_LABEL_AND_TOTAL_PRICE } from './constants';
+import { DESIGN_MODE_SAMPLE_CART_TOTAL, LAYOUT_LABEL_AND_TOTAL_PRICE } from './constants';
 import { AppContextAdapter, CartConfigurationContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
 import { generateStyleProperties } from 'experience/styling';
 import { isCartLocked, isLockHolder, shouldRestrictOwnerActions, getCurrentUserAccessLevel } from 'site/cartDetailsCardUtils';
@@ -41,6 +42,9 @@ export default class CheckoutButton extends LightningElement {
     return Number(this.cartSummary?.totalProductCount) > 0;
   }
   get showButton() {
+    if (isDesignMode) {
+      return true;
+    }
     return this.hasProducts && !this.isRestrictedCollaborator;
   }
   _currentPageReference;
@@ -97,15 +101,21 @@ export default class CheckoutButton extends LightningElement {
   get cartHasError() {
     return !!this.cartStatusHandler?.error || !!this.cartContentsEntry?.error;
   }
+  get _cartTotal() {
+    if (isDesignMode && !this.hasProducts) {
+      return DESIGN_MODE_SAMPLE_CART_TOTAL;
+    }
+    return this.cartSummary?.grandTotalAmount;
+  }
   get mediumCartTotal() {
-    const cartTotal = this.cartSummary?.grandTotalAmount;
+    const cartTotal = this._cartTotal;
     if (cartTotal && this.layoutDesktop === LAYOUT_LABEL_AND_TOTAL_PRICE) {
       return cartTotal;
     }
     return undefined;
   }
   get smallCartTotal() {
-    const cartTotal = this.cartSummary?.grandTotalAmount;
+    const cartTotal = this._cartTotal;
     if (cartTotal && this.layoutMobile === LAYOUT_LABEL_AND_TOTAL_PRICE) {
       return cartTotal;
     }
@@ -133,6 +143,9 @@ export default class CheckoutButton extends LightningElement {
     return isCartLocked(this.cartSummary) && !isLockHolder(this.cartSummary, this.sessionContext?.data?.userId);
   }
   get isDisabled() {
+    if (isDesignMode) {
+      return false;
+    }
     return !this.hasProducts || this.isCartProcessing || this.cartHasError || this.cartStatusHandler?.data?.isReadyForCheckout === false || this._hasActiveAsyncOperation || this.isLockedForViewer;
   }
   get buttonStyle() {
