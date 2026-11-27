@@ -1,7 +1,9 @@
 import { api } from 'lwc';
 import { CheckoutComponentBase } from 'commerce/checkoutApi';
 import { createCartItemAddAction, dispatchActionAsync, createCartItemDeleteAction } from 'commerce/actionApi';
-import { CheckoutStage } from 'commerce/checkoutApi';
+import { CheckoutStage, checkoutStatusIsReady } from 'commerce/checkoutApi';
+import { CheckoutStencilType } from 'site/checkoutStencil';
+import { handleAddToCartSuccessWithToast } from 'site/productAddToCartUtils';
 export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
   static renderMode = 'light';
   _labels;
@@ -9,7 +11,9 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
   @api
   set items(cartItems) {
     this._items = cartItems;
-    this._isGiftWrapSelected = this.checkGiftWrapPresence(this._items);
+    if (!this._hasStateChanged) {
+      this._isGiftWrapSelected = this.checkGiftWrapPresence(this._items);
+    }
   }
   get items() {
     return this._items;
@@ -18,7 +22,9 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
   @api
   set checkoutDetails(details) {
     this._checkoutDetails = details;
-    this.updateGiftingDetails(this._checkoutDetails);
+    if (!this._hasStateChanged) {
+      this.updateGiftingDetails(this._checkoutDetails);
+    }
     this.updateSplitShipmentDetails(this._checkoutDetails);
   }
   get checkoutDetails() {
@@ -40,11 +46,14 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
     return this._labels?.orderIsAGiftLabel ?? '';
   }
   _summaryMode = false;
+  _stencilType = CheckoutStencilType.DEFAULT_STENCIL;
   setAspect(newAspect) {
     this._summaryMode = newAspect.summary;
   }
   @api
   giftWraps;
+  @api
+  isSecondaryCart = false;
   hasGiftWrap() {
     return !!this.giftWraps?.productIds?.length;
   }
@@ -68,6 +77,7 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
   _isGiftWrapSelected = false;
   _isGiftMessagingSelected = false;
   _showDefaultGiftDelivery = false;
+  _hasStateChanged = false;
   @api
   get showDefaultGiftDelivery() {
     return this._showDefaultGiftDelivery;
@@ -152,36 +162,64 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
   get defaultDeliveryGroupId() {
     return this.checkoutDetails?.deliveryGroups?.items[0]?.id;
   }
+  _pendingUpdateTimeout = null;
+  UPDATE_DEBOUNCE_WAIT = 3000;
+  debounceCommit() {
+    if (this._pendingUpdateTimeout !== null) {
+      clearTimeout(this._pendingUpdateTimeout);
+    }
+    this._pendingUpdateTimeout = setTimeout(() => {
+      this.dispatchCommit();
+    }, this.UPDATE_DEBOUNCE_WAIT);
+  }
   handleToggleGiftOptions(event) {
     const isChecked = event.target.checked;
     this._isGiftingOptedByUser = isChecked;
+    this._hasStateChanged = true;
     this.updateSplitShipmentDetails(this._checkoutDetails);
+    this.debounceCommit();
   }
   handleGiftMessagingSelection(event) {
     event.stopPropagation();
+    this._hasStateChanged = true;
     this._isGiftMessagingSelected = event.detail.isGiftMessagingSelected;
+  }
+  @api
+  get showStencil() {
+    return this.checkoutDetails?.deliveryGroups?.items[0]?.availableDeliveryMethods?.length === 0 || !this._summaryMode && this._isLoading;
+  }
+  get _isLoading() {
+    return !checkoutStatusIsReady(this.checkoutDetails?.checkoutStatus);
   }
   handleGiftWrapEvent(event) {
     event.stopPropagation();
+    this._hasStateChanged = true;
     this._isGiftWrapSelected = event.detail;
+    this.debounceCommit();
   }
   handleGiftMessageEvent(event) {
     event.stopPropagation();
+    this._hasStateChanged = true;
     this._giftMessage = event.detail.giftMessage;
-    this.dispatchCommit();
+    this.debounceCommit();
   }
   async reportValiditySave() {
     if (!this._isGiftingOptedByUser) {
       this._giftMessage = '';
       this._isGiftWrapSelected = false;
-      this.dispatchCommit();
     }
     if (!this.isGiftMessagingSelected) {
       this._giftMessage = '';
     }
     const promises = [];
     if (this.isGiftWrapSelected && !this.checkGiftWrapPresence(this.items)) {
-      promises.push(dispatchActionAsync(this, createCartItemAddAction(String(this.giftWraps?.productIds[0]))));
+      const addPromise = dispatchActionAsync(this, createCartItemAddAction(String(this.giftWraps?.productIds[0]))).then(result => {
+        if (this.isSecondaryCart) {
+          handleAddToCartSuccessWithToast(this._labels?.successfullyAddedToCartPopupMessage ?? '', this);
+        }
+        return result;
+      });
+      promises.push(addPromise);
     } else if (!this.isGiftWrapSelected && this.checkGiftWrapPresence(this.items)) {
       promises.push(dispatchActionAsync(this, createCartItemDeleteAction(String(this.giftWrapCartItemId))));
     }
@@ -197,6 +235,7 @@ export default class CheckoutGiftOptionsUi extends CheckoutComponentBase {
       }));
     }
     await Promise.all(promises);
+    this._hasStateChanged = false;
     return true;
   }
   stageAction(checkoutStage) {

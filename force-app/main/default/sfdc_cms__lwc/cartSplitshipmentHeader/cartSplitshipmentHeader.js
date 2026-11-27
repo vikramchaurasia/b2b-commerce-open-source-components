@@ -1,5 +1,6 @@
 import { LightningElement, wire } from 'lwc';
-import { NavigationContext, navigate } from 'lightning/navigation';
+import { NavigationContext, CurrentPageReference } from 'lightning/navigation';
+import { navigateToNamedPage } from 'site/navUtils';
 import { createSplitShipmentSaveAction, createSplitShipmentMergeSaveAction, dispatchActionAsync } from 'commerce/actionApi';
 import Toast from 'site/commonToast';
 import { genericApiErrorMessage, emptyDefaultDeliveryGroupErrorMessage, shipToOneAddress, cancelMergeShipments, shipToOneAddressModalMessage, shipToOneAddressModalTitle } from './labels';
@@ -13,6 +14,8 @@ export default class CartSplitshipmentHeader extends LightningElement {
   static renderMode = 'light';
   @wire(NavigationContext)
   _navigationContext;
+  @wire(CurrentPageReference)
+  _currentPageReference;
   async handleSaveAndCheckout(event) {
     event.stopPropagation();
     try {
@@ -44,11 +47,8 @@ export default class CartSplitshipmentHeader extends LightningElement {
     });
   }
   navigateToCheckout() {
-    this._navigationContext && navigate(this._navigationContext, {
-      type: 'comm__namedPage',
-      attributes: {
-        name: 'Current_Checkout'
-      }
-    });
+    if (this._navigationContext) {
+      navigateToNamedPage(this._navigationContext, 'Current_Checkout', this._currentPageReference);
+    }
   }
 }

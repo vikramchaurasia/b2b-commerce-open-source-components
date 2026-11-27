@@ -1,8 +1,16 @@
 <template lwc:render-mode="light">
+    <!-- Screen reader announcement region - must exist before content changes -->
+    <div
+        aria-live="polite"
+        aria-atomic="true"
+        class="slds-assistive-text">
+        {_ariaLiveMessage}
+    </div>
+
     <template lwc:if={_isLoading}>
         <div class={_subHeadingBodyContainerClassGenerator}>
             <div class="slds-align_absolute-center slds-is-relative spinner-container">
-                <lightning-spinner alternative-text=""></lightning-spinner>
+                <lightning-spinner alternative-text={_spinnerHelpText}></lightning-spinner>
             </div>
             <h2 class="slds-text-align_center slds-text-heading_small"><b>{_spinnerHelpText}</b></h2>
         </div>

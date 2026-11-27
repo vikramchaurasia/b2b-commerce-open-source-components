@@ -5,12 +5,8 @@ import QuoteToCartModal from 'site/quoteTocartModal';
 import { isDesignMode } from 'experience/clientApi';
 import buyButtonLabel from '@salesforce/label/site.quoteAcceptandbuyButton.buyButtonLabel';
 import acceptAndBuyButtonLabel from '@salesforce/label/site.quoteAcceptandbuyButton.acceptAndBuyButtonLabel';
-const CART_PAGE_REF = {
-  type: 'comm__namedPage',
-  attributes: {
-    name: 'Current_Cart'
-  }
-};
+const CART_PAGE_TYPE = 'comm__namedPage';
+const CURRENT_CART_PAGE_NAME = 'Current_Cart';
 export default class QuoteAcceptandbuyButton extends LightningElement {
   static renderMode = 'light';
   @wire(NavigationContext)
@@ -125,7 +121,15 @@ export default class QuoteAcceptandbuyButton extends LightningElement {
     });
     const result = await modal;
     if (result?.success && result?.cartId && this.navContext) {
-      navigate(this.navContext, CART_PAGE_REF);
+      navigate(this.navContext, {
+        type: CART_PAGE_TYPE,
+        attributes: {
+          name: CURRENT_CART_PAGE_NAME
+        },
+        state: {
+          recordId: result.cartId
+        }
+      });
     }
   }
 }

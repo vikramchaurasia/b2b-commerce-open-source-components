@@ -4,8 +4,4 @@
   <isExposed>true</isExposed>
   <masterLabel>Order Summary Product Media</masterLabel>
   <description>Displays product images from an order in a responsive tile grid with support for overflow indication.</description>
-  <targets>
-    <target>lightningCommunity__Page</target>
-    <target>lightningCommunity__Default</target>
-  </targets>
 </LightningComponentBundle>

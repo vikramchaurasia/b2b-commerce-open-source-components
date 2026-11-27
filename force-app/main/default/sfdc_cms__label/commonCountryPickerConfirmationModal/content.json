@@ -4,25 +4,25 @@
   "contentBody" : {
     "labels" : [ {
       "name" : "continueChangeCountryText",
-      "value" : "Yes, Continue"
+      "value" : "Change Location"
     }, {
       "name" : "cancelChangeCountryText",
-      "value" : "No, Cancel"
+      "value" : "Cancel"
     }, {
       "name" : "continueChangeCountryAriaLabel",
-      "value" : "Yes, Continue"
+      "value" : "Change Location"
     }, {
       "name" : "cancelChangeCountryTextAriaLabel",
-      "value" : "No, Cancel"
+      "value" : "Cancel"
     }, {
       "name" : "modalHeadingLabel",
-      "value" : "You're Changing Currency"
+      "value" : "Change location?"
     }, {
       "name" : "confirmationModalText1",
-      "value" : "Some products may no longer be available, and prices may vary."
+      "value" : "Your shopping location will be changed to \"{0}\". Some products may no longer be available, and prices may vary."
     }, {
       "name" : "confirmationModalText2",
-      "value" : "Your cart will also be cleared, would you like to continue?"
+      "value" : "This action deletes your default cart."
     } ]
   },
   "urlName" : "commoncountrypickerconfirmationmodal"

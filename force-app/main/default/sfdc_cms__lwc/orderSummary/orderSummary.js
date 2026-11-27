@@ -128,10 +128,19 @@ export default class OrderSummary extends LightningElement {
       size: 'small',
       orderSummaryIdOrRefNumber: event.detail.orderId,
       cartUrl: this._cartUrl,
-      onviewcart: () => {
-        navigate(this._navContext, CART_PAGE_REF);
+      onviewcart: viewCartEvent => {
+        this.handleViewCart(viewCartEvent?.detail?.cartId);
       }
     });
+  }
+  handleViewCart(cartId) {
+    const cartPageRef = cartId ? {
+      ...CART_PAGE_REF,
+      state: {
+        recordId: cartId
+      }
+    } : CART_PAGE_REF;
+    navigate(this._navContext, cartPageRef);
   }
   generateOrderDetailUrl(navContext) {
     if (this._order) {

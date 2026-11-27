@@ -28,7 +28,7 @@
       "value" : "Unable to create a cart from this quote. Please try again later."
     }, {
       "name" : "outOfStockError",
-      "value" : "Some items are out of stock."
+      "value" : "Some items aren't available. Try again later. If the issue persists, contact customer support."
     } ]
   },
   "urlName" : "quotecartmodalui"

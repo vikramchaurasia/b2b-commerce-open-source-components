@@ -4,8 +4,4 @@
   <isExposed>true</isExposed>
   <masterLabel>Order Summary UI</masterLabel>
   <description>Presentational component for displaying order summary details including fields, products, and navigation links.</description>
-  <targets>
-    <target>lightningCommunity__Page</target>
-    <target>lightningCommunity__Default</target>
-  </targets>
 </LightningComponentBundle>

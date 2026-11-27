@@ -25,6 +25,8 @@ export default class QuoteDeclineRenegotiateButton extends LightningElement {
   quoteStatus;
   @api
   quoteId;
+  @api
+  hasLineItems;
   modalConfiguration = {};
   get content() {
     return this.buttonText ?? 'Renegotiate or Decline';
@@ -34,6 +36,12 @@ export default class QuoteDeclineRenegotiateButton extends LightningElement {
       return true;
     }
     return (this.quoteStatus ?? '').trim().toLowerCase() === 'approved';
+  }
+  get isDisabled() {
+    if (isDesignMode) {
+      return false;
+    }
+    return !this.quoteId || !this.hasLineItems;
   }
   renderedCallback() {
     this.modalConfiguration = {
@@ -46,6 +54,13 @@ export default class QuoteDeclineRenegotiateButton extends LightningElement {
     };
   }
   handleButtonClick() {
+    if (isDesignMode) {
+      this.openDeclineRenegotiateModal();
+      return;
+    }
+    if (!this.quoteId || !this.hasLineItems) {
+      return;
+    }
     this.openDeclineRenegotiateModal();
   }
   async openDeclineRenegotiateModal() {

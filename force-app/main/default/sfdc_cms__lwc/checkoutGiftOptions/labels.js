@@ -9,6 +9,7 @@ import giftMessageRemainingCharactersLabel from '@salesforce/label/site.checkout
 import orderAsGiftCheckBoxLabel from '@salesforce/label/site.checkoutGiftOptions.orderAsGiftCheckBoxLabel';
 import addGiftWrapLabel from '@salesforce/label/site.checkoutGiftOptions.addGiftWrapLabel';
 import defaultDeliveryGroupMessage from '@salesforce/label/site.checkoutGiftOptions.defaultDeliveryGroupMessage';
+import successfullyAddedToCartPopupMessage from '@salesforce/label/site.checkoutGiftOptions.successfullyAddedToCartPopupMessage';
 export const Labels = {
   noGiftOptionsLabel,
   giftMessageLabel,
@@ -20,5 +21,6 @@ export const Labels = {
   giftMessageRemainingCharactersLabel,
   orderAsGiftCheckBoxLabel,
   addGiftWrapLabel,
-  defaultDeliveryGroupMessage
+  defaultDeliveryGroupMessage,
+  successfullyAddedToCartPopupMessage
 };

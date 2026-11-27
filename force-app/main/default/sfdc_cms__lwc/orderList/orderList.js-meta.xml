@@ -3,6 +3,7 @@
   <apiVersion>64</apiVersion>
   <isExposed>true</isExposed>
   <masterLabel>Order List</masterLabel>
+  <description>A list of orders</description>
   <targets>
     <target>lightningCommunity__Page</target>
     <target>lightningCommunity__Default</target>
@@ -12,7 +13,7 @@
       <paletteSection>Open Code</paletteSection>
     </targetConfig>
     <targetConfig targets="lightningCommunity__Default">
-      <property label="Show Pending and Failed Orders" name="includePendingAndFailedOrders" type="Boolean" default="true" description="When checked, orders that are still in progress will be included in the list."></property>
+      <property label="Show Pending and Failed Orders" name="includePendingAndFailedOrders" type="Boolean" default="false" description="When checked, orders that are still in progress will be included in the list."></property>
       <designLayout>
         <designSection>
           <designLayoutItems>

@@ -13,6 +13,7 @@ export default class ReorderModal extends LightningModal {
   _succeededProductCount = 0;
   _failedProductCount = 0;
   _unaddedProductList = [];
+  _cartId;
   _errors = false;
   _errorCode;
   _isLoading = false;
@@ -45,6 +46,7 @@ export default class ReorderModal extends LightningModal {
     startReOrder(options).then(data => {
       if (data) {
         this._isLoading = false;
+        this._cartId = data.cartId;
         this._succeededProductCount = data.totalSucceededProductCount;
         this._failedProductCount = data.totalFailedProductCount;
         this._unaddedProductList = data.unaddedProducts || [];
@@ -56,8 +58,13 @@ export default class ReorderModal extends LightningModal {
       this._errorCode = Array.isArray(error.errors) ? error.errors[0]?.type : error.errors?.type;
     });
   }
-  handleViewCart() {
-    const viewcart = new CustomEvent('viewcart');
+  handleViewCart(event) {
+    event?.preventDefault();
+    const viewcart = new CustomEvent('viewcart', {
+      detail: {
+        cartId: this._cartId
+      }
+    });
     this.dispatchEvent(viewcart);
     this.handleClose();
   }

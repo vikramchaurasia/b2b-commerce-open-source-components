@@ -1,6 +1,7 @@
 import { LightningElement, api, wire } from 'lwc';
-import { generateButtonVariantClass, generateButtonSizeClass, generateButtonStretchClass } from 'experience/styling';
+import { generateButtonSizeClass, generateButtonStretchClass } from 'experience/styling';
 import ReorderModal from 'site/reorderModal';
+import { SessionContextAdapter } from 'commerce/contextApi';
 import { CurrentPageReference, NavigationContext, generateUrl, navigate } from 'lightning/navigation';
 import { isDesignMode } from 'experience/clientApi';
 export const MODAL_SIZE = 'small';
@@ -11,6 +12,14 @@ const CART_PAGE_REF = {
   }
 };
 const ORDER_SUMMARY_KEY_PREFIX = '1Os';
+function generateVariantClass(variant) {
+  if (variant === 'primary') {
+    return 'slds-button_brand';
+  } else if (variant === 'secondary') {
+    return 'slds-button_outline-brand';
+  }
+  return '';
+}
 function generateAlignmentClass(alignment) {
   if (alignment === 'center') {
     return 'slds-grid_align-center';
@@ -54,8 +63,19 @@ export default class ReorderButton extends LightningElement {
   getCurrentPageReference(pageRef) {
     this._accessToken = pageRef?.state?.accessToken && decodeURIComponent(pageRef.state.accessToken);
   }
-  handleViewCart() {
-    navigate(this._navContext, CART_PAGE_REF);
+  @wire(SessionContextAdapter)
+  _sessionContext;
+  get isLoggedIn() {
+    return this._sessionContext?.data?.isLoggedIn === true;
+  }
+  handleViewCart(cartId) {
+    const cartPageRef = cartId && this.isLoggedIn ? {
+      ...CART_PAGE_REF,
+      state: {
+        recordId: cartId
+      }
+    } : CART_PAGE_REF;
+    navigate(this._navContext, cartPageRef);
   }
   async handleReorder() {
     await ReorderModal.open({
@@ -63,13 +83,13 @@ export default class ReorderButton extends LightningElement {
       orderSummaryIdOrRefNumber: this.orderSummaryId,
       accessToken: this._accessToken,
       cartUrl: this._cartUrl,
-      onviewcart: () => {
-        this.handleViewCart();
+      onviewcart: viewCartEvent => {
+        this.handleViewCart(viewCartEvent?.detail?.cartId);
       }
     });
   }
   get customButtonClasses() {
-    return ['slds-button', generateButtonVariantClass(this.variant ?? null), generateButtonSizeClass(this.size ?? null), generateButtonStretchClass(this.width ?? null)].filter(Boolean).join(' ');
+    return ['slds-button', generateVariantClass(this.variant), generateButtonSizeClass(this.size ?? null), generateButtonStretchClass(this.width ?? null)].filter(Boolean).join(' ');
   }
   get alignmentClasses() {
     return ['slds-grid', generateAlignmentClass(this.alignment)].filter(Boolean).join(' ');

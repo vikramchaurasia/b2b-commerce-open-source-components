@@ -1,6 +1,8 @@
 import { LightningElement, api, wire } from 'lwc';
-import { NavigationContext, navigate } from 'lightning/navigation';
+import { NavigationContext, CurrentPageReference } from 'lightning/navigation';
 import { AppContextAdapter } from 'commerce/contextApi';
+import { navigateToNamedPage } from 'site/navUtils';
+
 /**
  * @slot edit
  */
@@ -11,6 +13,8 @@ export default class CheckoutShippingAddressEditButton extends LightningElement 
   checkoutDetails;
   @wire(NavigationContext)
   navContext;
+  @wire(CurrentPageReference)
+  _currentPageReference;
   @wire(AppContextAdapter)
   appContextHandler(response) {
     if (!response.loading) {
@@ -20,12 +24,9 @@ export default class CheckoutShippingAddressEditButton extends LightningElement 
   handleEdit(event) {
     if (this._splitShipEnabled && Number(this.checkoutDetails?.deliveryGroups?.items.length) > 1) {
       event.stopPropagation();
-      this.navContext && navigate(this.navContext, {
-        type: 'comm__namedPage',
-        attributes: {
-          name: 'Split_Shipment'
-        }
-      });
+      if (this.navContext) {
+        navigateToNamedPage(this.navContext, 'Split_Shipment', this._currentPageReference);
+      }
     }
   }
 }
