@@ -64,10 +64,23 @@ export default class PaymentProcessing extends LightningElement {
   _checkoutUrl;
   _appContext;
   _navigationContext;
+  _urlParams = {
+    recordId: null,
+    checkoutId: null,
+    legacyCartId: null
+  };
   @api
   hideReturnToCheckoutButton = false;
   get showReturnToCheckoutButton() {
     return !this.hideReturnToCheckoutButton;
+  }
+  connectedCallback() {
+    const params = new URLSearchParams(window.location.search);
+    this._urlParams = {
+      recordId: params.get('recordId'),
+      checkoutId: params.get('checkoutId'),
+      legacyCartId: params.get('cartId')
+    };
   }
   @wire(AppContextAdapter)
   appContextHandler({
@@ -117,27 +130,36 @@ export default class PaymentProcessing extends LightningElement {
         billingDetails
       } = paymentResult;
       const placeOrderV2Enabled = Boolean(this._appContext?.placeOrderV2Enabled);
+      const {
+        recordId: urlRecordId,
+        checkoutId: urlCheckoutId,
+        legacyCartId
+      } = this._urlParams;
+      const explicitCheckoutId = urlRecordId && urlCheckoutId ? urlCheckoutId : undefined;
       if ((paymentData?.redirectResultId || !placeOrderV2Enabled) && paymentToken) {
         const address = getAddress(billingDetails);
-        const postAuthResponse = await postAuthorizePayment('active', paymentToken, address, paymentData);
+        const postAuthResponse = await postAuthorizePayment(explicitCheckoutId ?? 'active', paymentToken, address, paymentData);
         if (!isPostAuthSuccessful(postAuthResponse)) {
           this._paymentFailed = true;
           return;
         }
       }
+      const orderOptions = explicitCheckoutId ? {
+        options: {
+          checkoutId: explicitCheckoutId
+        }
+      } : undefined;
       let orderReferenceNumber;
       if (placeOrderV2Enabled) {
-        const submitOrderResponse = await checkoutSubmitOrder();
+        const submitOrderResponse = await checkoutSubmitOrder(orderOptions);
         orderReferenceNumber = toCheckoutOrderReferenceNumber(submitOrderResponse);
       } else {
-        const placeOrderResponse = await checkoutPlaceOrder();
+        const placeOrderResponse = await checkoutPlaceOrder(orderOptions);
         orderReferenceNumber = placeOrderResponse?.orderReferenceNumber;
       }
       if (orderReferenceNumber) {
         this.navigateToOrder(orderReferenceNumber);
-        const queryString = window.location.search;
-        const urlParams = new URLSearchParams(queryString);
-        const cartId = urlParams.get('cartId');
+        const cartId = urlRecordId ?? legacyCartId;
         const paymentDataD360 = {
           isExpressPayment: false,
           paymentMethod: paymentData?.type,
@@ -168,6 +190,16 @@ export default class PaymentProcessing extends LightningElement {
         },
         state: {
           paymentLinkId: payByLinkId
+        }
+      });
+    } else if (this._urlParams.recordId) {
+      navigate(this._navigationContext, {
+        type: 'comm__namedPage',
+        attributes: {
+          name: 'Current_Checkout'
+        },
+        state: {
+          recordId: this._urlParams.recordId
         }
       });
     } else {

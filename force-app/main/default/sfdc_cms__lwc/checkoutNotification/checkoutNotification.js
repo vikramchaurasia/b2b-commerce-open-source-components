@@ -1,6 +1,6 @@
 import { setHostElementForEkg } from 'site/checkoutEkg';
 import { api, wire } from 'lwc';
-import { NavigationContext, navigate } from 'lightning/navigation';
+import { NavigationContext, navigate, CurrentPageReference } from 'lightning/navigation';
 import { CheckoutComponentBase } from 'commerce/checkoutApi';
 import { isDesignMode } from 'experience/clientApi';
 import { fatalErrorLabels, generateErrorLabel, generateNotificationLabel, noErrorLabels } from 'site/checkoutErrorHandler';
@@ -64,6 +64,12 @@ export default class CheckoutNotification extends CheckoutComponentBase {
   _cartUrl = '';
   @wire(NavigationContext)
   _navigationContext;
+  _currentPageRecordId;
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    const recordId = pageRef?.state?.recordId;
+    this._currentPageRecordId = typeof recordId === 'string' && recordId ? recordId : undefined;
+  }
   get sessionError() {
     return this._checkoutSessionError?.error;
   }
@@ -146,7 +152,21 @@ export default class CheckoutNotification extends CheckoutComponentBase {
     return isDesignMode ? false : !!this._errorLabels.returnToCart && !this.checkoutPaymentLink?.paymentMethodSetDevName;
   }
   navigateToCartPage() {
-    this._navigationContext && navigate(this._navigationContext, CART_PAGE_REF);
+    if (this._navigationContext) {
+      if (this._currentPageRecordId) {
+        navigate(this._navigationContext, {
+          type: 'comm__namedPage',
+          attributes: {
+            name: 'Current_Cart'
+          },
+          state: {
+            recordId: this._currentPageRecordId
+          }
+        });
+      } else {
+        navigate(this._navigationContext, CART_PAGE_REF);
+      }
+    }
   }
   handleClose(e) {
     const {
