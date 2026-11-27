@@ -3,7 +3,7 @@
   <apiVersion>67</apiVersion>
   <isExposed>true</isExposed>
   <masterLabel>Copy Quote to Cart</masterLabel>
-  <description>Button for duplicating a quote to the shopping cart</description>
+  <description>Lets buyers copy items from a quote to their cart.</description>
   <targets>
     <target>lightningCommunity__Page</target>
     <target>lightningCommunity__Default</target>
@@ -18,16 +18,16 @@
       <property name="buttonText" type="String" default="Copy to Cart" label="Button Text" translatable="true"></property>
       <property name="orderId" type="String" default="{!QuoteDetail.orderId}" label="Order ID" description="Order ID associated with the quote"></property>
       <property name="hasLineItems" type="String" default="{!QuoteDetail.hasLineItems}" label="Has Line Items" description="Whether the quote has line items from QuoteDetail."></property>
-      <property name="variant" type="String" default="tertiary" label="Button Variant" datasource="java://siteforce.customComponent.datasource.ButtonStyleDataSource"></property>
+      <property name="variant" type="String" default="secondary" label="Button Style" datasource="java://siteforce.customComponent.datasource.ButtonStyleDataSource"></property>
       <property name="size" type="String" default="standard" label="Button Size" datasource="java://siteforce.customComponent.datasource.ButtonSizeDataSource"></property>
       <property name="width" type="String" default="stretch" label="Max Button Width" datasource="java://siteforce.customComponent.datasource.ButtonStretchDataSource"></property>
-      <property name="titleText" type="String" default="Copy items to cart?" label="Header Text" translatable="true"></property>
-      <property name="descriptionLabel" type="String" default="Copying this quote adds its products to your cart." label="Subtitle Text" translatable="true"></property>
-      <property name="infoText" type="String" default="This action clears any existing items in your cart." label="Info Text" translatable="true"></property>
+      <property name="titleText" type="String" default="Copy items from your quote to cart?" label="Header Text" translatable="true"></property>
+      <property name="descriptionLabel" type="String" default="Copying this quote adds its products to your default cart." label="Subtitle Text" translatable="true"></property>
+      <property name="infoText" type="String" default="This action adds products to your cart at current store prices, not quote prices." label="Info Text" translatable="true"></property>
       <property name="cancelButtonLabel" type="String" default="Cancel" label="Button Text" translatable="true"></property>
       <property name="sendRequestButtonLabel" type="String" default="Copy to Cart" label="Button Text" translatable="true"></property>
       <designLayout>
-        <designSection name="actionButton">
+        <designSection name="Action Button">
           <designLayoutItems>
             <designLayoutProperty name="quoteId" cbVisibleIf="quoteId=false"></designLayoutProperty>
             <designLayoutProperty name="quoteStatus" cbVisibleIf="quoteStatus=false"></designLayoutProperty>

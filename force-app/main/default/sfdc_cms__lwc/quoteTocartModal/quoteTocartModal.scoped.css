@@ -1,24 +1,26 @@
-.quote-to-cart-modal-body .confirm-heading,
-.quote-to-cart-modal-body .description-text {
+.quote-to-cart-modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
-.info-box {
+.info-icon-container {
     display: flex;
-    margin: 0;
-    background-color: rgba(229, 229, 229, 1);
-    padding: 0.75rem 1rem;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 8px;
-    text-align: left;
+    justify-content: center;
 }
-.info-box lightning-icon {
-    fill: #706e6b;
+.info-icon {
+    display: block;
     flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
 }
-.info-box-text {
+.description-text {
+    font-size: var(--dxp-g-font-size-5, 1rem);
+    line-height: 1.5;
+}
+.info-text {
     font-size: 0.875rem;
     font-weight: 400;
     line-height: 1.4;
-    flex: 1;
+    color: var(--slds-g-color-neutral-base-10, #444444);
 }
