@@ -3,7 +3,7 @@
   <apiVersion>67</apiVersion>
   <isExposed>true</isExposed>
   <masterLabel>Order Summary</masterLabel>
-  <description>Displays a summary of an order, including order fields, products, and reorder action.</description>
+  <description>Order Summary</description>
   <targets>
     <target>lightningCommunity__Page</target>
     <target>lightningCommunity__Default</target>
@@ -17,7 +17,7 @@
       <property name="viewDetailsLinkLabel" label="View Details Link Text" type="String" default="View Details" translatable="true"></property>
       <property name="showReorderButton" label="Show reorder button" type="Boolean" default="true"></property>
       <property name="reorderButtonLabel" label="Reorder Button Text" type="String" default="Start Reorder" translatable="true"></property>
-      <property name="orderSummaryFieldMapping" label="Fields" type="String" default="[]" translatable="true" description="Select the fields to show on the order summary card."></property>
+      <property name="orderSummaryFieldMapping" label="Fields" type="String" default="[]" translatable="true"></property>
       <property name="headerBgColor" label="Header Background Color" type="Color" default="#F7F9FA"></property>
       <property name="borderColor" label="Border Color" type="Color" default="#ecebea"></property>
       <property name="imageSize" label="Image Size" type="String" default="contain" datasource="cover,contain"></property>
