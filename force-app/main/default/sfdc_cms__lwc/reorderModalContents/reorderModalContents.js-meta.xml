@@ -5,8 +5,4 @@
   <masterLabel>Reorder Modal Contents</masterLabel>
   <description>Renders the body contents (loading spinner, success/error states, unavailable items list) inside the reorder
         modal.</description>
-  <targets>
-    <target>lightningCommunity__Page</target>
-    <target>lightningCommunity__Default</target>
-  </targets>
 </LightningComponentBundle>

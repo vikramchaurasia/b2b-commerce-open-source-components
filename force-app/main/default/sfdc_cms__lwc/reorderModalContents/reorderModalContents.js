@@ -61,6 +61,9 @@ export default class ReorderModalContents extends LightningElement {
   get _subHeadingBodyContainerClassGenerator() {
     return `sub-heading-body-container ${this.unaddedProductList?.length ? 'slds-m-vertical_small' : 'slds-m-vertical_x-large'}`;
   }
+  get _ariaLiveMessage() {
+    return this._isLoading ? undefined : this._modalSubheading;
+  }
   getImage(productMedia) {
     const url = productMedia.url ?? '';
     return {
