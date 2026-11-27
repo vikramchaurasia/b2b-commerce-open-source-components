@@ -16,6 +16,7 @@
       <property name="items" label="Items" type="String" default="{!Cart.Items}"></property>
       <property name="checkoutDetails" label="Checkout Details" type="String" default="{!Checkout.Details}"></property>
       <property name="giftWraps" label="Gift Wraps" type="String" default="{!Checkout.GiftWraps}"></property>
+      <property name="cartDetails" label="Cart Details" type="String" default="{!Checkout.CartDetails}"></property>
     </targetConfig>
   </targetConfigs>
 </LightningComponentBundle>

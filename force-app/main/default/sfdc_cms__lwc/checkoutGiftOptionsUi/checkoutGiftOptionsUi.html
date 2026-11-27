@@ -1,7 +1,13 @@
 <template lwc:render-mode="light">
     <!-- Conditional rendering: Check if gifting config is enabled -->
     <template if:true={isGiftingEnabled}>
-        <template lwc:if={_summaryMode}>
+        <template lwc:if={showStencil}>
+            <site-checkout-stencil
+                data-gifting-component-stencil
+                stencil-type={_stencilType}
+                item-count="1"></site-checkout-stencil>
+        </template>
+        <template lwc:elseif={_summaryMode}>
             <span class="slds-badge custom-badge">{badgeContent}</span>
         </template>
 
