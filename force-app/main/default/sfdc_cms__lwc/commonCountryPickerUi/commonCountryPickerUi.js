@@ -1,7 +1,7 @@
 import { LightningElement, api } from 'lwc';
 import CountrySelectorConfirmationModal from 'site/commonCountryPickerConfirmationModal';
 import { generateStyleProperties } from 'experience/styling';
-import { sortLocales } from './util';
+import { sortLocales, getLocaleDisplayLabel } from './util';
 export default class CommonCountryPickerUi extends LightningElement {
   static renderMode = 'light';
   @api
@@ -75,6 +75,7 @@ export default class CommonCountryPickerUi extends LightningElement {
       this.displayPanel = false;
       await CountrySelectorConfirmationModal.open({
         locale: e.detail,
+        localeDisplayLabel: getLocaleDisplayLabel(this.locales, e.detail),
         onconfirmselection: () => {
           this.dispatchLocaleChangeEvent(e.detail);
         }

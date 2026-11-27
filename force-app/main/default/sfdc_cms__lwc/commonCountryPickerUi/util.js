@@ -19,3 +19,11 @@ export function sortLocales(locales, sort, language) {
     return collator.compare(a[secondarySortField], b[secondarySortField]);
   });
 }
+export function getLocaleDisplayLabel(locales, localeCode) {
+  const locale = locales?.find(l => l.locale === localeCode);
+  if (!locale) {
+    return localeCode;
+  }
+  const label = locale.countryLabel ? `${locale.countryLabel} | ${locale.languageLabel}` : locale.languageLabel;
+  return `${label} - ${locale.currencyCode}`;
+}

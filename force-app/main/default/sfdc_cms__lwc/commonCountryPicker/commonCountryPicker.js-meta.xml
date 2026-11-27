@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
   <masterLabel>Country Selector</masterLabel>
-  <description>Your store &amp;apos; s market configuration determines which countries are shown to your customers. You can view
-        any changes made by clicking preview.</description>
+  <description>Your store&amp;apos;s market configuration determines which countries are shown to your customers. You can view any changes made by clicking preview.</description>
   <apiVersion>64</apiVersion>
   <isExposed>true</isExposed>
   <capabilities>
@@ -20,6 +19,11 @@
       <property name="sort" type="String" default="country" datasource="java://siteforce.customComponent.datasource.CountryPickerDataSource" label="Sort By"></property>
       <property name="languageDisplayType" type="String" datasource="java://siteforce.customComponent.datasource.CountryPickerLanguageDisplayDataSource" default="short" label="Select Language Display Type" description="Use either the full language name or abbreviation."></property>
       <property name="headingLabelText" type="String" translatable="true" default="Select Your Location" label="Heading Text"></property>
+      <property name="headingTextDisplayInfo" type="TextStyle" default="{&quot;textStyle&quot;: &quot;heading-large&quot;, &quot;headingTag&quot;: &quot;h2&quot;}" label="Heading Text Style"></property>
+      <property name="headingTextAlignment" type="String" datasource="java://siteforce.customComponent.datasource.DxpFormAlignmentDataSource" default="center" label="Heading Text Alignment"></property>
+      <property name="headingTextDecoration" type="TextDecoration" default="{}" label="Heading Text Emphasis"></property>
+      <property name="headingPaddingVertical" type="String" datasource="java://siteforce.customComponent.datasource.DxpSpacingSizeDataSource" default="none" label="Heading Vertical Padding"></property>
+      <property name="headingTextColor" type="Color" label="Heading Text Color"></property>
       <property name="countryTextColor" type="Color" label="Country Text Color"></property>
       <property name="countryHoverTextColor" type="Color" label="Country Hover Text Color"></property>
       <property name="countryTextAlignment" type="String" datasource="java://siteforce.customComponent.datasource.DxpFormAlignmentDataSource" default="left" label="Country Text Alignment"></property>
@@ -29,9 +33,9 @@
       <property name="pickerButtonSize" type="String" datasource="java://siteforce.customComponent.datasource.ButtonSizeDataSource" label="Select Button Size"></property>
       <property name="pickerButtonLabelText" type="String" translatable="true" default="" label="Select Button Label Text" description="The country and language are always displayed in the button."></property>
       <property name="showGlobeIcon" type="Boolean" default="true" label="Show Globe Icon"></property>
-      <property name="markets" type="String" default="{!Markets.Items}"></property>
-      <property name="languages" type="String" default="{!Markets.Languages}"></property>
-      <property name="countries" type="String" default="{!Markets.Countries}"></property>
+      <property name="markets" type="String" default="{!Markets.Items}" label="Markets"></property>
+      <property name="languages" type="String" default="{!Markets.Languages}" label="Languages"></property>
+      <property name="countries" type="String" default="{!Markets.Countries}" label="Countries"></property>
       <designLayout>
         <designSection>
           <designLayoutItems>
@@ -42,6 +46,11 @@
           <designLayoutItems>
             <designLayoutProperty name="languageDisplayType"></designLayoutProperty>
             <designLayoutProperty name="headingLabelText"></designLayoutProperty>
+            <designLayoutProperty name="headingTextDisplayInfo"></designLayoutProperty>
+            <designLayoutProperty name="headingTextAlignment"></designLayoutProperty>
+            <designLayoutProperty name="headingTextDecoration"></designLayoutProperty>
+            <designLayoutProperty name="headingPaddingVertical"></designLayoutProperty>
+            <designLayoutProperty name="headingTextColor"></designLayoutProperty>
             <designLayoutProperty name="countryTextColor"></designLayoutProperty>
             <designLayoutProperty name="countryHoverTextColor"></designLayoutProperty>
             <designLayoutProperty name="countryTextAlignment"></designLayoutProperty>

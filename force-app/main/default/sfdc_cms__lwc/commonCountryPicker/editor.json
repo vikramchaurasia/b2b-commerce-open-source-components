@@ -2,7 +2,7 @@
     "presets": [
         {
             "view": {
-                "definition": "commerce_builder:countryPickerV2",
+                "definition": "site:commonCountryPicker",
                 "type": "component",
                 "dataProviders": [
                     {

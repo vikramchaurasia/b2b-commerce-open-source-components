@@ -15,7 +15,50 @@
                     variant="bare"
                     onclick={handleClose}></lightning-button-icon>
             </div>
-            <h2 class="heading-title slds-text-heading_large slds-text-align_center">{headingLabelText}</h2>
+            <div class="heading-title">
+                <h1
+                    lwc:if={isH1}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h1>
+                <h2
+                    lwc:elseif={isH2}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h2>
+                <h3
+                    lwc:elseif={isH3}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h3>
+                <h4
+                    lwc:elseif={isH4}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h4>
+                <h5
+                    lwc:elseif={isH5}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h5>
+                <h6
+                    lwc:elseif={isH6}
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </h6>
+                <p
+                    lwc:else
+                    class={headingClasses}
+                    style={headingStyles}>
+                    {headingLabelText}
+                </p>
+            </div>
         </div>
         <div class="slds-panel__body">
             <site-common-country-picker-grid
