@@ -5,7 +5,7 @@ import { CheckoutStage } from 'commerce/checkoutApi';
 import { isPreviewMode } from 'experience/clientApi';
 import emailMessageWhenPatternMismatchLabel from '@salesforce/label/site.checkoutContactInfo.emailMessageWhenPatternMismatch';
 import { getI18nCountries } from 'experience/internationalizationApi';
-import { NavigationContext } from 'lightning/navigation';
+import { NavigationContext, CurrentPageReference } from 'lightning/navigation';
 import { reCaptchaDisclaimerLabel } from './labels';
 import { COMMERCE_REG_PROCESS, SMS_VERIFICATION_METHOD, PRIVACY_POLICY_URL, TERMS_OF_SERVICE_URL } from './constants';
 import { initializeUser, loadCaptcha } from 'site/commonLoginHandler';
@@ -89,7 +89,20 @@ export default class CheckoutContactInfo extends CheckoutComponentBase {
       loadCaptcha(COMMERCE_REG_PROCESS, this);
     }
   }
-  @wire(CartContentsAdapter)
+  _currentPageReference;
+  @wire(CurrentPageReference)
+  wireCurrentPageReference(pageRef) {
+    if (pageRef) {
+      this._currentPageReference = pageRef;
+    }
+  }
+  get effectiveCartId() {
+    const recordId = this._currentPageReference?.state?.recordId;
+    return typeof recordId === 'string' && recordId ? recordId : 'current';
+  }
+  @wire(CartContentsAdapter, {
+    cartId: '$effectiveCartId'
+  })
   cartSummary({
     data
   }) {

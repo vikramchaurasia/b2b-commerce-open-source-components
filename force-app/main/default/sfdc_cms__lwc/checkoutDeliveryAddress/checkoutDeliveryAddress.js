@@ -1,5 +1,6 @@
 import { api, wire, track } from 'lwc';
-import { NavigationContext, navigate } from 'lightning/navigation';
+import { NavigationContext, CurrentPageReference } from 'lightning/navigation';
+import { navigateToNamedPage } from 'site/navUtils';
 import { getI18nCountries } from 'experience/internationalizationApi';
 import { createCheckoutAddressesPageChangeAction, createCheckoutAddressesCreateAction, createCheckoutAddressesUpdateAction, dispatchAction, dispatchActionAsync } from 'commerce/actionApi';
 import { AppContextAdapter, SessionContextAdapter } from 'commerce/contextApi';
@@ -261,6 +262,8 @@ export default class CheckoutDeliveryAddress extends CheckoutComponentBase {
   }
   @wire(NavigationContext)
   navContext;
+  @wire(CurrentPageReference)
+  _currentPageReference;
   _onSetPropertiesInitialized = false;
   onSetProperties() {
     if (!this._sessionContext || !this.isConnected) {
@@ -398,12 +401,7 @@ export default class CheckoutDeliveryAddress extends CheckoutComponentBase {
     this._showScopedNotification = false;
     this._displaySpinner = false;
     if (this._navToSplitShip && this._splitShipEnabled && this.navContext) {
-      navigate(this.navContext, {
-        type: 'comm__namedPage',
-        attributes: {
-          name: 'Split_Shipment'
-        }
-      });
+      navigateToNamedPage(this.navContext, 'Split_Shipment', this._currentPageReference);
     }
     this._navToSplitShip = false;
     return true;
